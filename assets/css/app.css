@@ -3,3 +3,141 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  font-family: "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  @apply transition-all;
+}
+
+*:disabled {
+  @apply bg-gray-200 cursor-not-allowed;
+}
+
+/* This file is for your main application CSS */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Kanit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  @apply text-base font-semibold;
+}
+
+h1 {
+  @apply text-6xl;
+}
+
+h2 {
+  @apply text-5xl;
+}
+
+h3 {
+  @apply text-4xl;
+}
+
+h4 {
+  @apply text-3xl;
+}
+
+h5 {
+  @apply text-2xl;
+}
+
+h6 {
+  @apply text-xl;
+}
+
+.voile-gradient {
+  @apply bg-gradient-to-br from-purple-600 via-violet-500 to-purple-400;
+}
+
+.gallery-gradient {
+  @apply bg-gradient-to-br from-purple-500 to-yellow-500;
+}
+
+.library-gradient {
+  @apply bg-gradient-to-br from-yellow-500 to-rose-500;
+}
+
+.archive-gradient {
+  @apply bg-gradient-to-br from-rose-500 to-emerald-500;
+}
+
+.museum-gradient {
+  @apply bg-gradient-to-br from-emerald-500 to-purple-500;
+}
+
+.active-voile-menu {
+  @apply bg-white text-blue-500;
+}
+
+.voile-text-gradient {
+  @apply bg-gradient-to-br from-blue-500 to-green-500 inline-block text-transparent bg-clip-text;
+}
+
+.sticky-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.search-tab {
+  @apply flex items-center justify-between;
+}
+
+.tab-content {
+  @apply w-full;
+}
+
+.tab-option {
+  @apply w-full;
+}
+
+.tab-blocks {
+  @apply bg-violet-200 p-5 rounded-bl-lg rounded-br-lg flex gap-2;
+}
+
+.search-tab-item {
+  @apply bg-violet-50 p-2 w-full text-center rounded-tl-lg rounded-tr-lg cursor-pointer transition-all hover:bg-violet-200;
+}
+
+.active-tab-item {
+  @apply bg-violet-200 p-2 hover:bg-violet-200;
+}
+
+.input-main-search {
+  @apply w-full p-2 rounded-md border-violet-500 focus:border-violet-500 focus:outline-none;
+}
+
+.default-btn {
+  @apply voile-gradient py-2 px-4 rounded-lg text-white hover:bg-gradient-to-tl transition ease-in-out duration-300;
+}
+
+.default-menu {
+  @apply px-3 py-2 rounded-lg transition-all hover:bg-violet-100;
+}
+
+.default-voile-menu {
+  @apply px-6 py-2 rounded-lg transition-all hover:bg-white;
+}
+
+.active-menu {
+  @apply voile-gradient rounded-lg text-white;
+}
+
+.voile-card {
+  @apply flex flex-col items-center rounded-lg bg-white shadow-lg p-12 text-justify;
+}
+
+.default-card {
+  @apply bg-white w-full rounded-xl p-5;
+}
+
+.sidebar-size {
+  @apply w-full max-w-64;
+}

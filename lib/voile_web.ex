@@ -89,6 +89,7 @@ defmodule VoileWeb do
       import Phoenix.HTML
       # Core UI components
       import VoileWeb.CoreComponents
+      import VoileWeb.VoileComponents
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
