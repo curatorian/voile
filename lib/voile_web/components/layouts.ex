@@ -11,4 +11,8 @@ defmodule VoileWeb.Layouts do
   use VoileWeb, :html
 
   embed_templates "layouts/*"
+
+  def get_year() do
+    DateTime.utc_now().year
+  end
 end

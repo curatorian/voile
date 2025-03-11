@@ -49,7 +49,7 @@
             <.button class="default-btn">{@current_user.username}</.button>
           </.link>
         <% else %> --%>
-        <.link navigate="/users/log_in">
+        <.link navigate="/login">
           <.button class="ml-2 default-btn">Masuk</.button>
         </.link>
         <%!-- <% end %> --%>
@@ -59,13 +59,13 @@
 </header>
 
 <main class="content">
-  <div class="w-full mb-10">
+  <div class="max-w-7xl mx-auto">
     <.flash_group flash={@flash} /> {@inner_content}
   </div>
 </main>
 
 <footer>
   <div class="bg-zinc-700 py-3 text-center text-violet-200">
-    &copy; Voile <span id="footeryear"></span>
+    &copy; Voile {get_year()}
   </div>
 </footer>
