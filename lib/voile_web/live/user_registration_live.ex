@@ -1,8 +1,8 @@
 defmodule VoileWeb.UserRegistrationLive do
   use VoileWeb, :live_view
 
-  alias Voile.Accounts
-  alias Voile.Accounts.User
+  alias Voile.Schema.Accounts
+  alias Voile.Schema.Accounts.User
 
   def render(assigns) do
     ~H"""

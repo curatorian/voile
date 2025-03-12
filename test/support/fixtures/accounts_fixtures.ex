@@ -18,7 +18,7 @@ defmodule Voile.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> Voile.Accounts.register_user()
+      |> Voile.Schema.Accounts.register_user()
 
     user
   end

@@ -1,4 +1,4 @@
-defmodule Voile.Accounts do
+defmodule Voile.Schema.Accounts do
   @moduledoc """
   The Accounts context.
   """
@@ -6,7 +6,7 @@ defmodule Voile.Accounts do
   import Ecto.Query, warn: false
   alias Voile.Repo
 
-  alias Voile.Accounts.{User, UserToken, UserNotifier}
+  alias Voile.Schema.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
 

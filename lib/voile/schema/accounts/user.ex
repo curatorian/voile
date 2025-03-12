@@ -1,13 +1,22 @@
-defmodule Voile.Accounts.User do
+defmodule Voile.Schema.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "users" do
+    field :username, :string
     field :email, :string
+    field :fullname, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+    field :user_type, :string
+    field :user_image, :string
+    field :social_media, :string
+    field :groups, {:array, :string}
+    field :node_id, :integer
+    field :last_login, :utc_datetime
+    field :last_login_ip, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -134,7 +143,7 @@ defmodule Voile.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Pbkdf2.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%Voile.Accounts.User{hashed_password: hashed_password}, password)
+  def valid_password?(%Voile.Schema.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Pbkdf2.verify_pass(password, hashed_password)
   end

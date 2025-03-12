@@ -6,8 +6,17 @@ defmodule Voile.Repo.Migrations.CreateUsersAuthTables do
 
     create table(:users) do
       add :email, :citext, null: false
+      add :username, :citext, null: false
+      add :fullname, :string
       add :hashed_password, :string, null: false
       add :confirmed_at, :utc_datetime
+      add :user_type, :string
+      add :user_image, :string
+      add :social_media, :string
+      add :groups, {:array, :string}
+      add :node_id, :integer
+      add :last_login, :utc_datetime
+      add :last_login_ip, :string
 
       timestamps(type: :utc_datetime)
     end

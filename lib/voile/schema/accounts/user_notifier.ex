@@ -1,4 +1,4 @@
-defmodule Voile.Accounts.UserNotifier do
+defmodule Voile.Schema.Accounts.UserNotifier do
   import Swoosh.Email
 
   alias Voile.Mailer

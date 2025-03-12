@@ -1,7 +1,7 @@
 defmodule VoileWeb.UserForgotPasswordLive do
   use VoileWeb, :live_view
 
-  alias Voile.Accounts
+  alias Voile.Schema.Accounts
 
   def render(assigns) do
     ~H"""
@@ -20,8 +20,7 @@ defmodule VoileWeb.UserForgotPasswordLive do
         </:actions>
       </.simple_form>
       <p class="text-center text-sm mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
-        | <.link href={~p"/users/log_in"}>Log in</.link>
+        <.link href={~p"/register"}>Register</.link> | <.link href={~p"/login"}>Log in</.link>
       </p>
     </div>
     """

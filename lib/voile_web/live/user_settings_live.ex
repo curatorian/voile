@@ -1,7 +1,7 @@
 defmodule VoileWeb.UserSettingsLive do
   use VoileWeb, :live_view
 
-  alias Voile.Accounts
+  alias Voile.Schema.Accounts
 
   def render(assigns) do
     ~H"""
@@ -37,7 +37,7 @@ defmodule VoileWeb.UserSettingsLive do
         <.simple_form
           for={@password_form}
           id="password_form"
-          action={~p"/users/log_in?_action=password_updated"}
+          action={~p"/login?_action=password_updated"}
           method="post"
           phx-change="validate_password"
           phx-submit="update_password"

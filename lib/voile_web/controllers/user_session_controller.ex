@@ -1,7 +1,7 @@
 defmodule VoileWeb.UserSessionController do
   use VoileWeb, :controller
 
-  alias Voile.Accounts
+  alias Voile.Schema.Accounts
   alias VoileWeb.UserAuth
 
   def create(conn, %{"_action" => "registered"} = params) do
