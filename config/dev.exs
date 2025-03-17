@@ -10,6 +10,14 @@ config :voile, Voile.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+# Configure OAuth with Assent
+config :assent,
+  google: [
+    client_id: System.get_env("VOILE_GOOGLE_CLIENT_ID"),
+    client_secret: System.get_env("VOILE_GOOGLE_CLIENT_SECRET"),
+    redirect_uri: System.get_env("VOILE_GOOGLE_REDIRECT_URI")
+  ]
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

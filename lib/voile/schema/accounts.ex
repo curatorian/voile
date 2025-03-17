@@ -45,6 +45,22 @@ defmodule Voile.Schema.Accounts do
   end
 
   @doc """
+  Get a user by email or register it it's doesn't exist.
+  """
+  def get_user_by_email_or_register(email) when is_binary(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        pw = :crypto.strong_rand_bytes(30) |> Base.encode64(padding: false)
+        username = String.split(email, "@") |> hd
+        {:ok, user} = register_user(%{email: email, username: username, password: pw})
+        user
+
+      user ->
+        user
+    end
+  end
+
+  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.

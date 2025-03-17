@@ -2,6 +2,7 @@ defmodule VoileWeb.Router do
   use VoileWeb, :router
 
   import VoileWeb.UserAuth
+  # import VoileWeb.UserAuthGoogle
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -82,5 +83,11 @@ defmodule VoileWeb.Router do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
+  end
+
+  scope "/auth/google", VoileWeb do
+    pipe_through [:browser]
+    get "/", GoogleAuthController, :request
+    get "/callback", GoogleAuthController, :callback
   end
 end

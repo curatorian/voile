@@ -6,5 +6,5 @@ defmodule VoileWeb.PageHTML do
   """
   use VoileWeb, :html
 
-  embed_templates "page_html/*"
+  embed_templates "*"
 end

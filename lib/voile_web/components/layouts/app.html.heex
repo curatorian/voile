@@ -53,12 +53,13 @@
           <.button class="ml-2 default-btn">Masuk</.button>
         </.link>
         <%!-- <% end %> --%>
+        {@current_user.username}
       </div>
     </div>
   </div>
 </header>
 
-<main>
+<main class="min-h-screen w-full h-full">
   <.flash_group flash={@flash} /> {@inner_content}
 </main>
 
