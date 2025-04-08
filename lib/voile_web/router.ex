@@ -12,6 +12,7 @@ defmodule VoileWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug VoileWeb.Plugs.GetCurrentPath
   end
 
   pipeline :api do
@@ -67,9 +68,18 @@ defmodule VoileWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{VoileWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      on_mount: [
+        {VoileWeb.UserAuth, :ensure_authenticated},
+        {VoileWeb.Utils.SaveRequestUri, :save_request_uri}
+      ] do
+      scope "/manage" do
+        live "/", DashboardLive, :index
+      end
+
+      scope "/users" do
+        live "/settings", UserSettingsLive, :edit
+        live "/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      end
     end
   end
 

@@ -1,0 +1,96 @@
+<main class="w-full min-h-screen h-full flex flex-col bg-blue-100">
+  <section class="voile-gradient text-white py-24 px-5">
+    <div class="max-w-7xl mx-auto">
+      <h3>Voile Dashboard</h3>
+      
+      <%= if @current_user do %>
+        <div>
+          <p>Hello, {@current_user.username}!</p>
+        </div>
+      <% else %>
+        <div>
+          <p>Hello, Guest!</p>
+        </div>
+      <% end %>
+    </div>
+  </section>
+  
+  <section class="w-full h-full flex flex-col max-w-7xl mx-auto">
+    <div>
+      <.flash_group flash={@flash} />
+    </div>
+    
+    <div class="-mt-24">
+      <div class="max-w-7xl mx-auto flex gap-2 items-end justify-end w-full text-white">
+        <.link navigate="/manage/gallery" class="default-voile-menu hover:text-blue-500">
+          Gallery
+        </.link>
+        
+        <.link navigate="/manage/library" class="default-voile-menu hover:text-blue-500">
+          Library
+        </.link>
+        
+        <.link navigate="/manage/archive" class="default-voile-menu hover:text-blue-500">
+          Archive
+        </.link>
+        
+        <.link navigate="/manage/museum" class="default-voile-menu hover:text-blue-500">
+          Museum
+        </.link>
+      </div>
+       <.nav_bar active_nav={@current_uri} />
+    </div>
+    
+    <section>
+      <div class="pb-10 px-4 xl:px-0">
+        <%= if @current_uri |> String.contains?("master") or @current_uri |> String.contains?("mst") do %>
+          <div class="flex gap-5">
+            <div class="max-w-64 w-full">
+              <.side_bar_dashboard>
+                <h6>Authority Files</h6>
+                
+                <div class="flex flex-col gap-2">
+                  <%= for item <- @master_authority do %>
+                    <.link
+                      navigate={item.url}
+                      class={["default-menu", @current_uri == item.url && "active-menu"]}
+                    >
+                      {item.name}
+                    </.link>
+                  <% end %>
+                </div>
+                
+                <h6>Lookup Files</h6>
+                
+                <div class="flex flex-col gap-2">
+                  <%= for lookup <- @master_lookup do %>
+                    <.link
+                      navigate={lookup.url}
+                      class={["default-menu", @current_uri == lookup.url && "active-menu"]}
+                    >
+                      {lookup.name}
+                    </.link>
+                  <% end %>
+                </div>
+              </.side_bar_dashboard>
+            </div>
+            
+            <div class="default-card">
+              {@inner_content}
+            </div>
+          </div>
+        <% else %>
+          <div class="w-full mx-4 md:mx-0">
+            {@inner_content}
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </section>
+</main>
+
+<footer class="flex flex-col items-center bg-gray-800 text-white">
+  <div class="py-5">
+    <p>Voile | {Date.utc_today().year}</p>
+  </div>
+</footer>
