@@ -1,0 +1,17 @@
+<.header>
+  Property {@property.id}
+  <:subtitle>This is a property record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/metadata_properties/#{@property}/edit"}>
+      <.button>Edit property</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Label">{@property.label}</:item>
+  <:item title="Local name">{@property.local_name}</:item>
+  <:item title="Information">{@property.information}</:item>
+</.list>
+
+<.back navigate={~p"/metadata_properties"}>Back to metadata_properties</.back>

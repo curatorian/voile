@@ -24,6 +24,11 @@ defmodule VoileWeb.Router do
 
     get "/", PageController, :home
     get "/about", PageController, :about
+    resources "/metadata_vocabularies", VocabularyController
+    resources "/metadata_properties", PropertyController
+    resources "/resource_class", ResourceClassController
+    resources "/resource_template", ResourceTemplateController
+    resources "/resource_template_property", ResourceTemplatePropertyController
   end
 
   # Other scopes may use custom stacks.

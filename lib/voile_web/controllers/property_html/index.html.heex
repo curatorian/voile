@@ -1,0 +1,25 @@
+<.header>
+  Listing Metadata properties
+  <:actions>
+    <.link href={~p"/metadata_properties/new"}>
+      <.button>New Property</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="metadata_properties" rows={@metadata_properties} row_click={&JS.navigate(~p"/metadata_properties/#{&1}")}>
+  <:col :let={property} label="Label">{property.label}</:col>
+  <:col :let={property} label="Local name">{property.local_name}</:col>
+  <:col :let={property} label="Information">{property.information}</:col>
+  <:action :let={property}>
+    <div class="sr-only">
+      <.link navigate={~p"/metadata_properties/#{property}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/metadata_properties/#{property}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={property}>
+    <.link href={~p"/metadata_properties/#{property}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

@@ -1,0 +1,8 @@
+<.header>
+  Edit Resource template {@resource_template.id}
+  <:subtitle>Use this form to manage resource_template records in your database.</:subtitle>
+</.header>
+
+<.resource_template_form changeset={@changeset} action={~p"/resource_template/#{@resource_template}"} />
+
+<.back navigate={~p"/resource_template"}>Back to resource_template</.back>

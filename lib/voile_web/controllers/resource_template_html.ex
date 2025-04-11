@@ -1,0 +1,13 @@
+defmodule VoileWeb.ResourceTemplateHTML do
+  use VoileWeb, :html
+
+  embed_templates "resource_template_html/*"
+
+  @doc """
+  Renders a resource_template form.
+  """
+  attr :changeset, Ecto.Changeset, required: true
+  attr :action, :string, required: true
+
+  def resource_template_form(assigns)
+end

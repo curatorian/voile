@@ -1,0 +1,20 @@
+<.header>
+  Resource template property {@resource_template_property.id}
+  <:subtitle>This is a resource_template_property record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/resource_template_property/#{@resource_template_property}/edit"}>
+      <.button>Edit resource_template_property</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Alternate label">{@resource_template_property.alternate_label}</:item>
+  <:item title="Alternate information">{@resource_template_property.alternate_information}</:item>
+  <:item title="Position">{@resource_template_property.position}</:item>
+  <:item title="Data type">{@resource_template_property.data_type}</:item>
+  <:item title="Is required">{@resource_template_property.is_required}</:item>
+  <:item title="Permission">{@resource_template_property.permission}</:item>
+</.list>
+
+<.back navigate={~p"/resource_template_property"}>Back to resource_template_property</.back>

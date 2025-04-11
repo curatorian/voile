@@ -1,0 +1,17 @@
+<.header>
+  Resource class {@resource_class.id}
+  <:subtitle>This is a resource_class record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/resource_class/#{@resource_class}/edit"}>
+      <.button>Edit resource_class</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Label">{@resource_class.label}</:item>
+  <:item title="Local name">{@resource_class.local_name}</:item>
+  <:item title="Information">{@resource_class.information}</:item>
+</.list>
+
+<.back navigate={~p"/resource_class"}>Back to resource_class</.back>
