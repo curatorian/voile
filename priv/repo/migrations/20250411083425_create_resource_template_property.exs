@@ -9,15 +9,15 @@ defmodule Voile.Repo.Migrations.CreateResourceTemplateProperty do
       add :data_type, {:array, :string}
       add :is_required, :boolean, default: false, null: false
       add :permission, :string
-      add :owner, references(:users, on_delete: :nothing)
-      add :resource_template, references(:resource_template, on_delete: :nothing)
-      add :property, references(:metadata_properties, on_delete: :nothing)
+      add :owner_id, references(:users, type: :uuid, on_delete: :nothing)
+      add :resource_template_id, references(:resource_template, on_delete: :nothing)
+      add :property_id, references(:metadata_properties, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:resource_template_property, [:owner])
-    create index(:resource_template_property, [:resource_template])
-    create index(:resource_template_property, [:property])
+    create index(:resource_template_property, [:owner_id])
+    create index(:resource_template_property, [:resource_template_id])
+    create index(:resource_template_property, [:property_id])
   end
 end

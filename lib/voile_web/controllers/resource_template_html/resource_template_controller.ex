@@ -1,8 +1,8 @@
 defmodule VoileWeb.ResourceTemplateController do
   use VoileWeb, :controller
 
-  alias Voile.Metadata
-  alias Voile.Metadata.ResourceTemplate
+  alias Voile.Schema.Metadata
+  alias Voile.Schema.Metadata.ResourceTemplate
 
   def index(conn, _params) do
     resource_template = Metadata.list_resource_template()

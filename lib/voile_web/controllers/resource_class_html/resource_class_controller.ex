@@ -1,8 +1,8 @@
 defmodule VoileWeb.ResourceClassController do
   use VoileWeb, :controller
 
-  alias Voile.Metadata
-  alias Voile.Metadata.ResourceClass
+  alias Voile.Schema.Metadata
+  alias Voile.Schema.Metadata.ResourceClass
 
   def index(conn, _params) do
     resource_class = Metadata.list_resource_class()

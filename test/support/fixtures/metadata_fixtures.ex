@@ -16,7 +16,7 @@ defmodule Voile.MetadataFixtures do
         namespace_url: "some namespace_url",
         prefix: "some prefix"
       })
-      |> Voile.Metadata.create_vocabulary()
+      |> Voile.Schema.Metadata.create_vocabulary()
 
     vocabulary
   end
@@ -32,7 +32,7 @@ defmodule Voile.MetadataFixtures do
         label: "some label",
         local_name: "some local_name"
       })
-      |> Voile.Metadata.create_resource_class()
+      |> Voile.Schema.Metadata.create_resource_class()
 
     resource_class
   end
@@ -46,7 +46,7 @@ defmodule Voile.MetadataFixtures do
       |> Enum.into(%{
         label: "some label"
       })
-      |> Voile.Metadata.create_resource_template()
+      |> Voile.Schema.Metadata.create_resource_template()
 
     resource_template
   end
@@ -65,7 +65,7 @@ defmodule Voile.MetadataFixtures do
         permission: "some permission",
         position: 42
       })
-      |> Voile.Metadata.create_resource_template_property()
+      |> Voile.Schema.Metadata.create_resource_template_property()
 
     resource_template_property
   end

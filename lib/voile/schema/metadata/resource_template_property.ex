@@ -1,4 +1,4 @@
-defmodule Voile.Metadata.ResourceTemplateProperty do
+defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -19,7 +19,21 @@ defmodule Voile.Metadata.ResourceTemplateProperty do
   @doc false
   def changeset(resource_template_property, attrs) do
     resource_template_property
-    |> cast(attrs, [:alternate_label, :alternate_information, :position, :data_type, :is_required, :permission])
-    |> validate_required([:alternate_label, :alternate_information, :position, :data_type, :is_required, :permission])
+    |> cast(attrs, [
+      :alternate_label,
+      :alternate_information,
+      :position,
+      :data_type,
+      :is_required,
+      :permission
+    ])
+    |> validate_required([
+      :alternate_label,
+      :alternate_information,
+      :position,
+      :data_type,
+      :is_required,
+      :permission
+    ])
   end
 end

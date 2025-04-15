@@ -1,8 +1,8 @@
 defmodule VoileWeb.ResourceTemplatePropertyController do
   use VoileWeb, :controller
 
-  alias Voile.Metadata
-  alias Voile.Metadata.ResourceTemplateProperty
+  alias Voile.Schema.Metadata
+  alias Voile.Schema.Metadata.ResourceTemplateProperty
 
   def index(conn, _params) do
     resource_template_property = Metadata.list_resource_template_property()
@@ -34,26 +34,41 @@ defmodule VoileWeb.ResourceTemplatePropertyController do
   def edit(conn, %{"id" => id}) do
     resource_template_property = Metadata.get_resource_template_property!(id)
     changeset = Metadata.change_resource_template_property(resource_template_property)
-    render(conn, :edit, resource_template_property: resource_template_property, changeset: changeset)
+
+    render(conn, :edit,
+      resource_template_property: resource_template_property,
+      changeset: changeset
+    )
   end
 
-  def update(conn, %{"id" => id, "resource_template_property" => resource_template_property_params}) do
+  def update(conn, %{
+        "id" => id,
+        "resource_template_property" => resource_template_property_params
+      }) do
     resource_template_property = Metadata.get_resource_template_property!(id)
 
-    case Metadata.update_resource_template_property(resource_template_property, resource_template_property_params) do
+    case Metadata.update_resource_template_property(
+           resource_template_property,
+           resource_template_property_params
+         ) do
       {:ok, resource_template_property} ->
         conn
         |> put_flash(:info, "Resource template property updated successfully.")
         |> redirect(to: ~p"/resource_template_property/#{resource_template_property}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, resource_template_property: resource_template_property, changeset: changeset)
+        render(conn, :edit,
+          resource_template_property: resource_template_property,
+          changeset: changeset
+        )
     end
   end
 
   def delete(conn, %{"id" => id}) do
     resource_template_property = Metadata.get_resource_template_property!(id)
-    {:ok, _resource_template_property} = Metadata.delete_resource_template_property(resource_template_property)
+
+    {:ok, _resource_template_property} =
+      Metadata.delete_resource_template_property(resource_template_property)
 
     conn
     |> put_flash(:info, "Resource template property deleted successfully.")

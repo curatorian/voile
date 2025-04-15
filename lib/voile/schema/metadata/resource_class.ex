@@ -1,4 +1,4 @@
-defmodule Voile.Metadata.ResourceClass do
+defmodule Voile.Schema.Metadata.ResourceClass do
   use Ecto.Schema
   import Ecto.Changeset
 

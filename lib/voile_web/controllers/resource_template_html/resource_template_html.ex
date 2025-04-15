@@ -1,7 +1,7 @@
 defmodule VoileWeb.ResourceTemplateHTML do
   use VoileWeb, :html
 
-  embed_templates "resource_template_html/*"
+  embed_templates "*"
 
   @doc """
   Renders a resource_template form.

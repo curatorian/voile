@@ -1,13 +1,13 @@
-defmodule VoileWeb.PropertyHTML do
+defmodule VoileWeb.VocabularyHTML do
   use VoileWeb, :html
 
-  embed_templates "property_html/*"
+  embed_templates "*"
 
   @doc """
-  Renders a property form.
+  Renders a vocabulary form.
   """
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
 
-  def property_form(assigns)
+  def vocabulary_form(assigns)
 end

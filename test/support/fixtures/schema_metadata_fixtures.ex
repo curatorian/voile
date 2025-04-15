@@ -15,7 +15,7 @@ defmodule Voile.SchemaMetadataFixtures do
         label: "some label",
         local_name: "some local_name"
       })
-      |> Voile.SchemaMetadata.create_property()
+      |> Voile.Schema.Metadata.create_property()
 
     property
   end
