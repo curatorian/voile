@@ -1,24 +1,32 @@
 <.header>
   Listing Resource class
   <:actions>
-    <.link href={~p"/resource_class/new"}>
+    <.link href={~p"/manage/metaresource/resource_class/new"}>
       <.button>New Resource class</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="resource_class" rows={@resource_class_collection} row_click={&JS.navigate(~p"/resource_class/#{&1}")}>
+<.table
+  id="resource_class"
+  rows={@resource_class_collection}
+  row_click={&JS.navigate(~p"/manage/metaresource/resource_class/#{&1}")}
+>
   <:col :let={resource_class} label="Label">{resource_class.label}</:col>
   <:col :let={resource_class} label="Local name">{resource_class.local_name}</:col>
   <:col :let={resource_class} label="Information">{resource_class.information}</:col>
   <:action :let={resource_class}>
     <div class="sr-only">
-      <.link navigate={~p"/resource_class/#{resource_class}"}>Show</.link>
+      <.link navigate={~p"/manage/metaresource/resource_class/#{resource_class}"}>Show</.link>
     </div>
-    <.link navigate={~p"/resource_class/#{resource_class}/edit"}>Edit</.link>
+    <.link navigate={~p"/manage/metaresource/resource_class/#{resource_class}/edit"}>Edit</.link>
   </:action>
   <:action :let={resource_class}>
-    <.link href={~p"/resource_class/#{resource_class}"} method="delete" data-confirm="Are you sure?">
+    <.link
+      href={~p"/manage/metaresource/resource_class/#{resource_class}"}
+      method="delete"
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

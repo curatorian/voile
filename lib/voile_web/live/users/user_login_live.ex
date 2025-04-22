@@ -16,7 +16,7 @@ defmodule VoileWeb.UserLoginLive do
       </.header>
 
       <div class="flex flex-col gap-8 items-center lg:flex-row lg:gap-36">
-        <.simple_form for={@form} id="login_form" action={~p"/login"} phx-update="ignore">
+        <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
           <.input field={@form[:email]} type="email" label="Email" required />
           <.input field={@form[:password]} type="password" label="Password" required />
 

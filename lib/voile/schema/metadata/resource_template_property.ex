@@ -2,6 +2,10 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Voile.Schema.Accounts.User
+  alias Voile.Schema.Metadata.Property
+  alias Voile.Schema.Metadata.ResourceTemplate
+
   schema "resource_template_property" do
     field :position, :integer
     field :data_type, {:array, :string}
@@ -9,9 +13,9 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
     field :alternate_information, :string
     field :is_required, :boolean, default: false
     field :permission, :string
-    field :owner, :id
-    field :resource_template, :id
-    field :property, :id
+    belongs_to :owner, User
+    belongs_to :property, Property
+    belongs_to :resource_template, ResourceTemplate
 
     timestamps(type: :utc_datetime)
   end

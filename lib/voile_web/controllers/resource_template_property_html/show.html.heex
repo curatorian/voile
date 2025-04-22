@@ -2,7 +2,9 @@
   Resource template property {@resource_template_property.id}
   <:subtitle>This is a resource_template_property record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/resource_template_property/#{@resource_template_property}/edit"}>
+    <.link href={
+      ~p"/manage/metaresource/resource_template_property/#{@resource_template_property}/edit"
+    }>
       <.button>Edit resource_template_property</.button>
     </.link>
   </:actions>
@@ -17,4 +19,6 @@
   <:item title="Permission">{@resource_template_property.permission}</:item>
 </.list>
 
-<.back navigate={~p"/resource_template_property"}>Back to resource_template_property</.back>
+<.back navigate={~p"/manage/metaresource/resource_template_property"}>
+  Back to resource_template_property
+</.back>

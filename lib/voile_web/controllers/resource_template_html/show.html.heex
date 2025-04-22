@@ -2,7 +2,7 @@
   Resource template {@resource_template.id}
   <:subtitle>This is a resource_template record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/resource_template/#{@resource_template}/edit"}>
+    <.link href={~p"/manage/metaresource/resource_template/#{@resource_template}/edit"}>
       <.button>Edit resource_template</.button>
     </.link>
   </:actions>
@@ -12,4 +12,4 @@
   <:item title="Label">{@resource_template.label}</:item>
 </.list>
 
-<.back navigate={~p"/resource_template"}>Back to resource_template</.back>
+<.back navigate={~p"/manage/metaresource/resource_template"}>Back to resource_template</.back>

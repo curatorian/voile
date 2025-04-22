@@ -54,6 +54,10 @@ defmodule VoileWeb.UserRegistrationLive do
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
+    # add username to the user_params
+    username = String.split(user_params["email"], "@") |> hd
+    user_params = Map.put(user_params, "username", username)
+
     case Accounts.register_user(user_params) do
       {:ok, user} ->
         {:ok, _} =

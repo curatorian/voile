@@ -2,7 +2,7 @@
   Property {@property.id}
   <:subtitle>This is a property record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/metadata_properties/#{@property}/edit"}>
+    <.link href={~p"/manage/metaresource/metadata_properties/#{@property}/edit"}>
       <.button>Edit property</.button>
     </.link>
   </:actions>
@@ -14,4 +14,4 @@
   <:item title="Information">{@property.information}</:item>
 </.list>
 
-<.back navigate={~p"/metadata_properties"}>Back to metadata_properties</.back>
+<.back navigate={~p"/manage/metaresource/metadata_properties"}>Back to metadata_properties</.back>

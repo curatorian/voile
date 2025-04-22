@@ -50,6 +50,20 @@ defmodule VoileWeb do
     end
   end
 
+  def controller_dashboard do
+    quote do
+      use Phoenix.Controller,
+        formats: [:html, :json],
+        layouts: [html: {VoileWeb.Layouts, :dashboard}]
+
+      use Gettext, backend: VoileWeb.Gettext
+
+      import Plug.Conn
+
+      unquote(verified_routes())
+    end
+  end
+
   def live_view do
     quote do
       use Phoenix.LiveView,

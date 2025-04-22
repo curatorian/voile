@@ -2,8 +2,13 @@ defmodule Voile.Schema.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Voile.Schema.Accounts.UserRole
+
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @derive {Phoenix.Param, key: :id}
   schema "users" do
     field :username, :string
+    field :identifier, :integer
     field :email, :string
     field :fullname, :string
     field :password, :string, virtual: true, redact: true
@@ -12,13 +17,51 @@ defmodule Voile.Schema.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :user_type, :string
     field :user_image, :string
-    field :social_media, :string
+    field :social_media, :map, type: :jsonb
     field :groups, {:array, :string}
     field :node_id, :integer
     field :last_login, :utc_datetime
     field :last_login_ip, :string
 
+    belongs_to :user_roles, UserRole
+
+    field :twitter, :string, virtual: true
+    field :facebook, :string, virtual: true
+    field :linkedin, :string, virtual: true
+    field :instagram, :string, virtual: true
+    field :website, :string, virtual: true
+
     timestamps(type: :utc_datetime)
+  end
+
+  def changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [
+      :username,
+      :identifier,
+      :email,
+      :fullname,
+      :user_type,
+      :user_role,
+      :password,
+      :confirmed_at,
+      :user_type,
+      :user_image,
+      :groups,
+      :node_id,
+      :twitter,
+      :facebook,
+      :linkedin,
+      :instagram,
+      :website,
+      :last_login,
+      :last_login_ip
+    ])
+    |> put_social_media
+    |> validate_length(:username, min: 3, max: 30)
+    |> validate_username(opts)
+    |> validate_email(opts)
+    |> validate_password(opts)
   end
 
   @doc """
@@ -59,6 +102,13 @@ defmodule Voile.Schema.Accounts.User do
     |> maybe_validate_unique_email(opts)
   end
 
+  defp validate_username(changeset, opts) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3, max: 30)
+    |> maybe_validate_username_unique(opts)
+  end
+
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
@@ -90,6 +140,16 @@ defmodule Voile.Schema.Accounts.User do
       changeset
       |> unsafe_validate_unique(:email, Voile.Repo)
       |> unique_constraint(:email)
+    else
+      changeset
+    end
+  end
+
+  defp maybe_validate_username_unique(changeset, opts) do
+    if Keyword.get(opts, :validate_username, true) do
+      changeset
+      |> unsafe_validate_unique(:username, Voile.Repo, message: "Username has already been taken")
+      |> unique_constraint(:username)
     else
       changeset
     end
@@ -164,5 +224,23 @@ defmodule Voile.Schema.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  defp put_social_media(changeset) do
+    twitter = get_field(changeset, :twitter)
+    facebook = get_field(changeset, :facebook)
+    linkedin = get_field(changeset, :linkedin)
+    instagram = get_field(changeset, :instagram)
+    website = get_field(changeset, :website)
+
+    social_media = %{
+      "twitter" => twitter,
+      "facebook" => facebook,
+      "linkedin" => linkedin,
+      "instagram" => instagram,
+      "website" => website
+    }
+
+    put_change(changeset, :social_media, social_media)
   end
 end

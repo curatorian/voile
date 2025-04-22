@@ -19,7 +19,7 @@ defmodule VoileWeb.ResourceClassController do
       {:ok, resource_class} ->
         conn
         |> put_flash(:info, "Resource class created successfully.")
-        |> redirect(to: ~p"/resource_class/#{resource_class}")
+        |> redirect(to: ~p"/manage/metaresource/resource_class/#{resource_class}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -44,7 +44,7 @@ defmodule VoileWeb.ResourceClassController do
       {:ok, resource_class} ->
         conn
         |> put_flash(:info, "Resource class updated successfully.")
-        |> redirect(to: ~p"/resource_class/#{resource_class}")
+        |> redirect(to: ~p"/manage/metaresource/resource_class/#{resource_class}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, resource_class: resource_class, changeset: changeset)
@@ -57,6 +57,6 @@ defmodule VoileWeb.ResourceClassController do
 
     conn
     |> put_flash(:info, "Resource class deleted successfully.")
-    |> redirect(to: ~p"/resource_class")
+    |> redirect(to: ~p"/manage/metaresource/resource_class")
   end
 end

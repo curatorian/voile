@@ -19,7 +19,7 @@ defmodule VoileWeb.PropertyController do
       {:ok, property} ->
         conn
         |> put_flash(:info, "Property created successfully.")
-        |> redirect(to: ~p"/metadata_properties/#{property}")
+        |> redirect(to: ~p"/manage/metaresource/metadata_properties/#{property}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -44,7 +44,7 @@ defmodule VoileWeb.PropertyController do
       {:ok, property} ->
         conn
         |> put_flash(:info, "Property updated successfully.")
-        |> redirect(to: ~p"/metadata_properties/#{property}")
+        |> redirect(to: ~p"/manage/metaresource/metadata_properties/#{property}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, property: property, changeset: changeset)
@@ -57,6 +57,6 @@ defmodule VoileWeb.PropertyController do
 
     conn
     |> put_flash(:info, "Property deleted successfully.")
-    |> redirect(to: ~p"/metadata_properties")
+    |> redirect(to: ~p"/manage/metaresource/metadata_properties")
   end
 end

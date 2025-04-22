@@ -24,11 +24,6 @@ defmodule VoileWeb.Router do
 
     get "/", PageController, :home
     get "/about", PageController, :about
-    resources "/metadata_vocabularies", VocabularyController
-    resources "/metadata_properties", PropertyController
-    resources "/resource_class", ResourceClassController
-    resources "/resource_template", ResourceTemplateController
-    resources "/resource_template_property", ResourceTemplatePropertyController
   end
 
   # Other scopes may use custom stacks.
@@ -79,6 +74,18 @@ defmodule VoileWeb.Router do
       ] do
       scope "/manage" do
         live "/", DashboardLive, :index
+
+        scope "/master" do
+          live "/", Dashboard.Master.MasterLive, :index
+        end
+
+        scope "/metaresource" do
+          resources "/metadata_vocabularies", VocabularyController
+          resources "/metadata_properties", PropertyController
+          resources "/resource_class", ResourceClassController
+          resources "/resource_template", ResourceTemplateController
+          resources "/resource_template_property", ResourceTemplatePropertyController
+        end
       end
 
       scope "/users" do

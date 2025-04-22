@@ -1,27 +1,55 @@
 <.header>
   Listing Resource template property
   <:actions>
-    <.link href={~p"/resource_template_property/new"}>
+    <.link href={~p"/manage/metaresource/resource_template_property/new"}>
       <.button>New Resource template property</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="resource_template_property" rows={@resource_template_property_collection} row_click={&JS.navigate(~p"/resource_template_property/#{&1}")}>
-  <:col :let={resource_template_property} label="Alternate label">{resource_template_property.alternate_label}</:col>
-  <:col :let={resource_template_property} label="Alternate information">{resource_template_property.alternate_information}</:col>
-  <:col :let={resource_template_property} label="Position">{resource_template_property.position}</:col>
-  <:col :let={resource_template_property} label="Data type">{resource_template_property.data_type}</:col>
-  <:col :let={resource_template_property} label="Is required">{resource_template_property.is_required}</:col>
-  <:col :let={resource_template_property} label="Permission">{resource_template_property.permission}</:col>
+<.table
+  id="resource_template_property"
+  rows={@resource_template_property_collection}
+  row_click={&JS.navigate(~p"/manage/metaresource/resource_template_property/#{&1}")}
+>
+  <:col :let={resource_template_property} label="Alternate label">
+    {resource_template_property.alternate_label}
+  </:col>
+  <:col :let={resource_template_property} label="Alternate information">
+    {resource_template_property.alternate_information}
+  </:col>
+  <:col :let={resource_template_property} label="Position">
+    {resource_template_property.position}
+  </:col>
+  <:col :let={resource_template_property} label="Data type">
+    {resource_template_property.data_type}
+  </:col>
+  <:col :let={resource_template_property} label="Is required">
+    {resource_template_property.is_required}
+  </:col>
+  <:col :let={resource_template_property} label="Permission">
+    {resource_template_property.permission}
+  </:col>
   <:action :let={resource_template_property}>
     <div class="sr-only">
-      <.link navigate={~p"/resource_template_property/#{resource_template_property}"}>Show</.link>
+      <.link navigate={
+        ~p"/manage/metaresource/resource_template_property/#{resource_template_property}"
+      }>
+        Show
+      </.link>
     </div>
-    <.link navigate={~p"/resource_template_property/#{resource_template_property}/edit"}>Edit</.link>
+    <.link navigate={
+      ~p"/manage/metaresource/resource_template_property/#{resource_template_property}/edit"
+    }>
+      Edit
+    </.link>
   </:action>
   <:action :let={resource_template_property}>
-    <.link href={~p"/resource_template_property/#{resource_template_property}"} method="delete" data-confirm="Are you sure?">
+    <.link
+      href={~p"/manage/metaresource/resource_template_property/#{resource_template_property}"}
+      method="delete"
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

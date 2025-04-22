@@ -1,25 +1,35 @@
 <.header>
   Listing Metadata vocabularies
   <:actions>
-    <.link href={~p"/metadata_vocabularies/new"}>
+    <.link href={~p"/manage/metaresource/metadata_vocabularies/new"}>
       <.button>New Vocabulary</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="metadata_vocabularies" rows={@metadata_vocabularies} row_click={&JS.navigate(~p"/metadata_vocabularies/#{&1}")}>
+<.table
+  id="metadata_vocabularies"
+  rows={@metadata_vocabularies}
+  row_click={&JS.navigate(~p"/manage/metaresource/metadata_vocabularies/#{&1}")}
+>
   <:col :let={vocabulary} label="Label">{vocabulary.label}</:col>
   <:col :let={vocabulary} label="Prefix">{vocabulary.prefix}</:col>
   <:col :let={vocabulary} label="Namespace url">{vocabulary.namespace_url}</:col>
   <:col :let={vocabulary} label="Information">{vocabulary.information}</:col>
   <:action :let={vocabulary}>
     <div class="sr-only">
-      <.link navigate={~p"/metadata_vocabularies/#{vocabulary}"}>Show</.link>
+      <.link navigate={~p"/manage/metaresource/metadata_vocabularies/#{vocabulary}"}>Show</.link>
     </div>
-    <.link navigate={~p"/metadata_vocabularies/#{vocabulary}/edit"}>Edit</.link>
+    <.link navigate={~p"/manage/metaresource/metadata_vocabularies/#{vocabulary}/edit"}>
+      Edit
+    </.link>
   </:action>
   <:action :let={vocabulary}>
-    <.link href={~p"/metadata_vocabularies/#{vocabulary}"} method="delete" data-confirm="Are you sure?">
+    <.link
+      href={~p"/manage/metaresource/metadata_vocabularies/#{vocabulary}"}
+      method="delete"
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

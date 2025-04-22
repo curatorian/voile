@@ -1,5 +1,5 @@
 defmodule VoileWeb.VocabularyController do
-  use VoileWeb, :controller
+  use VoileWeb, :controller_dashboard
 
   alias Voile.Schema.Metadata
   alias Voile.Schema.Metadata.Vocabulary
@@ -19,7 +19,7 @@ defmodule VoileWeb.VocabularyController do
       {:ok, vocabulary} ->
         conn
         |> put_flash(:info, "Vocabulary created successfully.")
-        |> redirect(to: ~p"/metadata_vocabularies/#{vocabulary}")
+        |> redirect(to: ~p"/manage/metaresource/metadata_vocabularies/#{vocabulary}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -44,7 +44,7 @@ defmodule VoileWeb.VocabularyController do
       {:ok, vocabulary} ->
         conn
         |> put_flash(:info, "Vocabulary updated successfully.")
-        |> redirect(to: ~p"/metadata_vocabularies/#{vocabulary}")
+        |> redirect(to: ~p"/manage/metaresource/metadata_vocabularies/#{vocabulary}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, vocabulary: vocabulary, changeset: changeset)
@@ -57,6 +57,6 @@ defmodule VoileWeb.VocabularyController do
 
     conn
     |> put_flash(:info, "Vocabulary deleted successfully.")
-    |> redirect(to: ~p"/metadata_vocabularies")
+    |> redirect(to: ~p"/manage/metaresource/metadata_vocabularies")
   end
 end

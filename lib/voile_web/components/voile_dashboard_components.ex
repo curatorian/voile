@@ -16,7 +16,7 @@ defmodule VoileWeb.VoileDashboardComponents do
     default: [
       %{
         name: "Home",
-        url: "/manage"
+        url: "/manage/"
       },
       %{
         name: "Master",
@@ -24,7 +24,7 @@ defmodule VoileWeb.VoileDashboardComponents do
       },
       %{
         name: "Metadata",
-        url: "/manage/metadata"
+        url: "/manage/metaresource"
       },
       %{
         name: "Settings",
@@ -43,7 +43,10 @@ defmodule VoileWeb.VoileDashboardComponents do
       
       <div class="w-full text-blue-500 flex gap-4">
         <%= for menu <- @list_menu do %>
-          <.link patch={menu.url} class={["default-menu", @active_nav == menu.url && "active-menu"]}>
+          <.link
+            patch={menu.url}
+            class={["default-menu", @active_nav |> String.starts_with?(menu.url) && "active-menu"]}
+          >
             {menu.name}
           </.link>
         <% end %>

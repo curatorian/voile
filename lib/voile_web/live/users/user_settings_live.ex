@@ -1,5 +1,5 @@
 defmodule VoileWeb.UserSettingsLive do
-  use VoileWeb, :live_view
+  use VoileWeb, :live_view_dashboard
 
   alias Voile.Schema.Accounts
 
@@ -11,7 +11,7 @@ defmodule VoileWeb.UserSettingsLive do
     </.header>
 
     <div class="space-y-12 divide-y">
-      <div>
+      <div class="bg-white rounded-lg p-4">
         <.simple_form
           for={@email_form}
           id="email_form"
@@ -33,11 +33,11 @@ defmodule VoileWeb.UserSettingsLive do
           </:actions>
         </.simple_form>
       </div>
-      <div>
+      <div class="bg-white rounded-lg p-4">
         <.simple_form
           for={@password_form}
           id="password_form"
-          action={~p"/login?_action=password_updated"}
+          action={~p"/users/log_in?_action=password_updated"}
           method="post"
           phx-change="validate_password"
           phx-submit="update_password"

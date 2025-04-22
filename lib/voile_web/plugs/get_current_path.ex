@@ -5,6 +5,6 @@ defmodule VoileWeb.Plugs.GetCurrentPath do
 
   def call(conn, _opts) do
     current_path = conn.request_path
-    conn |> assign(:current_path, current_path)
+    conn |> assign(:current_uri, current_path)
   end
 end

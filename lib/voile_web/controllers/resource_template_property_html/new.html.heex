@@ -1,8 +1,15 @@
 <.header>
   New Resource template property
-  <:subtitle>Use this form to manage resource_template_property records in your database.</:subtitle>
+  <:subtitle>
+    Use this form to manage resource_template_property records in your database.
+  </:subtitle>
 </.header>
 
-<.resource_template_property_form changeset={@changeset} action={~p"/resource_template_property"} />
+<.resource_template_property_form
+  changeset={@changeset}
+  action={~p"/manage/metaresource/resource_template_property"}
+/>
 
-<.back navigate={~p"/resource_template_property"}>Back to resource_template_property</.back>
+<.back navigate={~p"/manage/metaresource/resource_template_property"}>
+  Back to resource_template_property
+</.back>

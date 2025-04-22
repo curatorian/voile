@@ -2,7 +2,7 @@
   Vocabulary {@vocabulary.id}
   <:subtitle>This is a vocabulary record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/metadata_vocabularies/#{@vocabulary}/edit"}>
+    <.link href={~p"/manage/metaresource/metadata_vocabularies/#{@vocabulary}/edit"}>
       <.button>Edit vocabulary</.button>
     </.link>
   </:actions>
@@ -15,4 +15,6 @@
   <:item title="Information">{@vocabulary.information}</:item>
 </.list>
 
-<.back navigate={~p"/metadata_vocabularies"}>Back to metadata_vocabularies</.back>
+<.back navigate={~p"/manage/metaresource/metadata_vocabularies"}>
+  Back to metadata_vocabularies
+</.back>
