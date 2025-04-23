@@ -15,10 +15,6 @@ defmodule VoileWeb.VoileDashboardComponents do
   attr :list_menu, :list,
     default: [
       %{
-        name: "Home",
-        url: "/manage/"
-      },
-      %{
         name: "Master",
         url: "/manage/master"
       },
@@ -36,12 +32,15 @@ defmodule VoileWeb.VoileDashboardComponents do
     ~H"""
     <div class="w-full bg-white flex items-center my-5 p-5 rounded-lg gap-6">
       <div class="nav-bar-logo">
-        <.link patch="/manage">
+        <.link patch="/manage#">
           <img src="/images/v.png" class="w-10 h-8" alt="GLAM Logo" />
         </.link>
       </div>
       
       <div class="w-full text-blue-500 flex gap-4">
+        <.link patch="/manage" class={["default-menu", @active_nav == "/manage" && "active-menu"]}>
+          Dashboard
+        </.link>
         <%= for menu <- @list_menu do %>
           <.link
             patch={menu.url}
