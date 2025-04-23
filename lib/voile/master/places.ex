@@ -3,7 +3,7 @@ defmodule Voile.Master.Places do
   import Ecto.Changeset
 
   schema "mst_places" do
-    field :place_name, :string
+    field :name, :string
 
     timestamps(type: :utc_datetime)
   end

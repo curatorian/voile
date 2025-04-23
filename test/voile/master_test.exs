@@ -21,7 +21,12 @@ defmodule Voile.MasterTest do
     end
 
     test "create_creator/1 with valid data creates a creator" do
-      valid_attrs = %{type: "some type", creator_name: "some creator_name", creator_contact: "some creator_contact", affiliation: "some affiliation"}
+      valid_attrs = %{
+        type: "some type",
+        creator_name: "some creator_name",
+        creator_contact: "some creator_contact",
+        affiliation: "some affiliation"
+      }
 
       assert {:ok, %Creator{} = creator} = Master.create_creator(valid_attrs)
       assert creator.type == "some type"
@@ -36,7 +41,13 @@ defmodule Voile.MasterTest do
 
     test "update_creator/2 with valid data updates the creator" do
       creator = creator_fixture()
-      update_attrs = %{type: "some updated type", creator_name: "some updated creator_name", creator_contact: "some updated creator_contact", affiliation: "some updated affiliation"}
+
+      update_attrs = %{
+        type: "some updated type",
+        creator_name: "some updated creator_name",
+        creator_contact: "some updated creator_contact",
+        affiliation: "some updated affiliation"
+      }
 
       assert {:ok, %Creator{} = creator} = Master.update_creator(creator, update_attrs)
       assert creator.type == "some updated type"
@@ -81,7 +92,11 @@ defmodule Voile.MasterTest do
     end
 
     test "create_frequency/1 with valid data creates a frequency" do
-      valid_attrs = %{time_unit: "some time_unit", frequency: "some frequency", time_increment: 42}
+      valid_attrs = %{
+        time_unit: "some time_unit",
+        frequency: "some frequency",
+        time_increment: 42
+      }
 
       assert {:ok, %Frequency{} = frequency} = Master.create_frequency(valid_attrs)
       assert frequency.time_unit == "some time_unit"
@@ -95,7 +110,12 @@ defmodule Voile.MasterTest do
 
     test "update_frequency/2 with valid data updates the frequency" do
       frequency = frequency_fixture()
-      update_attrs = %{time_unit: "some updated time_unit", frequency: "some updated frequency", time_increment: 43}
+
+      update_attrs = %{
+        time_unit: "some updated time_unit",
+        frequency: "some updated frequency",
+        time_increment: 43
+      }
 
       assert {:ok, %Frequency{} = frequency} = Master.update_frequency(frequency, update_attrs)
       assert frequency.time_unit == "some updated time_unit"
@@ -126,7 +146,16 @@ defmodule Voile.MasterTest do
 
     import Voile.MasterFixtures
 
-    @invalid_attrs %{name: nil, loan_limit: nil, loan_period: nil, enable_reserve: nil, membership_period: nil, reloan_limit: nil, loan_fine: nil, loan_grace_period: nil}
+    @invalid_attrs %{
+      name: nil,
+      loan_limit: nil,
+      loan_period: nil,
+      enable_reserve: nil,
+      membership_period: nil,
+      reloan_limit: nil,
+      loan_fine: nil,
+      loan_grace_period: nil
+    }
 
     test "list_mst_member_types/0 returns all mst_member_types" do
       member_type = member_type_fixture()
@@ -139,7 +168,16 @@ defmodule Voile.MasterTest do
     end
 
     test "create_member_type/1 with valid data creates a member_type" do
-      valid_attrs = %{name: "some name", loan_limit: 42, loan_period: 42, enable_reserve: true, membership_period: 42, reloan_limit: 42, loan_fine: 42, loan_grace_period: 42}
+      valid_attrs = %{
+        name: "some name",
+        loan_limit: 42,
+        loan_period: 42,
+        enable_reserve: true,
+        membership_period: 42,
+        reloan_limit: 42,
+        loan_fine: 42,
+        loan_grace_period: 42
+      }
 
       assert {:ok, %MemberType{} = member_type} = Master.create_member_type(valid_attrs)
       assert member_type.name == "some name"
@@ -158,9 +196,21 @@ defmodule Voile.MasterTest do
 
     test "update_member_type/2 with valid data updates the member_type" do
       member_type = member_type_fixture()
-      update_attrs = %{name: "some updated name", loan_limit: 43, loan_period: 43, enable_reserve: false, membership_period: 43, reloan_limit: 43, loan_fine: 43, loan_grace_period: 43}
 
-      assert {:ok, %MemberType{} = member_type} = Master.update_member_type(member_type, update_attrs)
+      update_attrs = %{
+        name: "some updated name",
+        loan_limit: 43,
+        loan_period: 43,
+        enable_reserve: false,
+        membership_period: 43,
+        reloan_limit: 43,
+        loan_fine: 43,
+        loan_grace_period: 43
+      }
+
+      assert {:ok, %MemberType{} = member_type} =
+               Master.update_member_type(member_type, update_attrs)
+
       assert member_type.name == "some updated name"
       assert member_type.loan_limit == 43
       assert member_type.loan_period == 43
@@ -207,7 +257,11 @@ defmodule Voile.MasterTest do
     end
 
     test "create_locations/1 with valid data creates a locations" do
-      valid_attrs = %{location_code: "some location_code", location_name: "some location_name", location_place: "some location_place"}
+      valid_attrs = %{
+        location_code: "some location_code",
+        location_name: "some location_name",
+        location_place: "some location_place"
+      }
 
       assert {:ok, %Locations{} = locations} = Master.create_locations(valid_attrs)
       assert locations.location_code == "some location_code"
@@ -221,7 +275,12 @@ defmodule Voile.MasterTest do
 
     test "update_locations/2 with valid data updates the locations" do
       locations = locations_fixture()
-      update_attrs = %{location_code: "some updated location_code", location_name: "some updated location_name", location_place: "some updated location_place"}
+
+      update_attrs = %{
+        location_code: "some updated location_code",
+        location_name: "some updated location_name",
+        location_place: "some updated location_place"
+      }
 
       assert {:ok, %Locations{} = locations} = Master.update_locations(locations, update_attrs)
       assert locations.location_code == "some updated location_code"
@@ -252,7 +311,7 @@ defmodule Voile.MasterTest do
 
     import Voile.MasterFixtures
 
-    @invalid_attrs %{place_name: nil}
+    @invalid_attrs %{name: nil}
 
     test "list_mst_places/0 returns all mst_places" do
       places = places_fixture()
@@ -265,10 +324,10 @@ defmodule Voile.MasterTest do
     end
 
     test "create_places/1 with valid data creates a places" do
-      valid_attrs = %{place_name: "some place_name"}
+      valid_attrs = %{name: "some name"}
 
       assert {:ok, %Places{} = places} = Master.create_places(valid_attrs)
-      assert places.place_name == "some place_name"
+      assert places.name == "some name"
     end
 
     test "create_places/1 with invalid data returns error changeset" do
@@ -277,10 +336,10 @@ defmodule Voile.MasterTest do
 
     test "update_places/2 with valid data updates the places" do
       places = places_fixture()
-      update_attrs = %{place_name: "some updated place_name"}
+      update_attrs = %{name: "some updated name"}
 
       assert {:ok, %Places{} = places} = Master.update_places(places, update_attrs)
-      assert places.place_name == "some updated place_name"
+      assert places.name == "some updated name"
     end
 
     test "update_places/2 with invalid data returns error changeset" do
@@ -319,7 +378,12 @@ defmodule Voile.MasterTest do
     end
 
     test "create_publishers/1 with valid data creates a publishers" do
-      valid_attrs = %{name: "some name", address: "some address", city: "some city", contact: "some contact"}
+      valid_attrs = %{
+        name: "some name",
+        address: "some address",
+        city: "some city",
+        contact: "some contact"
+      }
 
       assert {:ok, %Publishers{} = publishers} = Master.create_publishers(valid_attrs)
       assert publishers.name == "some name"
@@ -334,9 +398,17 @@ defmodule Voile.MasterTest do
 
     test "update_publishers/2 with valid data updates the publishers" do
       publishers = publishers_fixture()
-      update_attrs = %{name: "some updated name", address: "some updated address", city: "some updated city", contact: "some updated contact"}
 
-      assert {:ok, %Publishers{} = publishers} = Master.update_publishers(publishers, update_attrs)
+      update_attrs = %{
+        name: "some updated name",
+        address: "some updated address",
+        city: "some updated city",
+        contact: "some updated contact"
+      }
+
+      assert {:ok, %Publishers{} = publishers} =
+               Master.update_publishers(publishers, update_attrs)
+
       assert publishers.name == "some updated name"
       assert publishers.address == "some updated address"
       assert publishers.city == "some updated city"
@@ -393,7 +465,12 @@ defmodule Voile.MasterTest do
 
     test "update_topic/2 with valid data updates the topic" do
       topic = topic_fixture()
-      update_attrs = %{name: "some updated name", type: "some updated type", description: "some updated description"}
+
+      update_attrs = %{
+        name: "some updated name",
+        type: "some updated type",
+        description: "some updated description"
+      }
 
       assert {:ok, %Topic{} = topic} = Master.update_topic(topic, update_attrs)
       assert topic.name == "some updated name"

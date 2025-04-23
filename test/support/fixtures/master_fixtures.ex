@@ -81,7 +81,7 @@ defmodule Voile.MasterFixtures do
     {:ok, places} =
       attrs
       |> Enum.into(%{
-        place_name: "some place_name"
+        name: "some name"
       })
       |> Voile.Master.create_places()
 
