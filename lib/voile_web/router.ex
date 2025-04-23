@@ -13,6 +13,7 @@ defmodule VoileWeb.Router do
     plug :put_secure_browser_headers
     plug :fetch_current_user
     plug VoileWeb.Plugs.GetCurrentPath
+    plug VoileWeb.Utils.SideBarMenuMaster
   end
 
   pipeline :api do
@@ -70,16 +71,18 @@ defmodule VoileWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [
         {VoileWeb.UserAuth, :ensure_authenticated},
-        {VoileWeb.Utils.SaveRequestUri, :save_request_uri}
+        {VoileWeb.Utils.SaveRequestUri, :save_request_uri},
+        {VoileWeb.Utils.SideBarMenuMaster, :master_menu}
       ] do
       scope "/manage" do
         live "/", DashboardLive, :index
 
         scope "/master" do
-          live "/", Dashboard.Master.MasterLive, :index
+          live "/", Dashboard.Master.MasterLive
         end
 
         scope "/metaresource" do
+          live "/", Dashboard.Metaresource.MetaresourceLive
           resources "/metadata_vocabularies", VocabularyController
           resources "/metadata_properties", PropertyController
           resources "/resource_class", ResourceClassController

@@ -38,41 +38,47 @@
           Museum
         </.link>
       </div>
-       <.nav_bar active_nav={@current_uri} /> {@current_uri}
+       <.nav_bar active_nav={@current_uri} />
     </div>
     
     <section>
       <div class="pb-10 px-4 xl:px-0">
-        <%= if @current_uri |> String.contains?("master") or @current_uri |> String.contains?("mst") do %>
+        <%= if String.contains?(@current_uri, "master") or String.contains?(@current_uri, "metaresource") do %>
           <div class="flex gap-5">
             <div class="max-w-64 w-full">
-              <.side_bar_dashboard>
-                <h6>Authority Files</h6>
-                
-                <div class="flex flex-col gap-2">
-                  <%= for item <- @master_authority do %>
-                    <.link
-                      navigate={item.url}
-                      class={["default-menu", @current_uri == item.url && "active-menu"]}
-                    >
-                      {item.name}
-                    </.link>
-                  <% end %>
-                </div>
-                
-                <h6>Lookup Files</h6>
-                
-                <div class="flex flex-col gap-2">
-                  <%= for lookup <- @master_lookup do %>
-                    <.link
-                      navigate={lookup.url}
-                      class={["default-menu", @current_uri == lookup.url && "active-menu"]}
-                    >
-                      {lookup.name}
-                    </.link>
-                  <% end %>
-                </div>
-              </.side_bar_dashboard>
+              <%= if String.contains?(@current_uri, "master") do %>
+                <.side_bar_dashboard>
+                  <h6>Master Data</h6>
+                  
+                  <div class="flex flex-col gap-2">
+                    <%= for item <- @master_menu do %>
+                      <.link
+                        navigate={item.url}
+                        class={["default-menu", @current_uri == item.url && "active-menu"]}
+                      >
+                        {item.name}
+                      </.link>
+                    <% end %>
+                  </div>
+                </.side_bar_dashboard>
+              <% end %>
+              
+              <%= if String.contains?(@current_uri, "metaresource") do %>
+                <.side_bar_dashboard>
+                  <h6>Master Data</h6>
+                  
+                  <div class="flex flex-col gap-2">
+                    <%= for item <- @metaresource_menu do %>
+                      <.link
+                        navigate={item.url}
+                        class={["default-menu", @current_uri == item.url && "active-menu"]}
+                      >
+                        {item.name}
+                      </.link>
+                    <% end %>
+                  </div>
+                </.side_bar_dashboard>
+              <% end %>
             </div>
             
             <div class="default-card">

@@ -1,5 +1,5 @@
 defmodule VoileWeb.ResourceTemplateController do
-  use VoileWeb, :controller
+  use VoileWeb, :controller_dashboard
 
   alias Voile.Schema.Metadata
   alias Voile.Schema.Metadata.ResourceTemplate
