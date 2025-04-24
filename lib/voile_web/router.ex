@@ -109,7 +109,7 @@ defmodule VoileWeb.Router do
           resources "/metadata_properties", PropertyController
           resources "/resource_class", ResourceClassController
           resources "/resource_template", ResourceTemplateController
-          resources "/resource_template_property", ResourceTemplatePropertyController
+          resources "/resource_templ_property", ResourceTemplatePropertyController
         end
       end
 

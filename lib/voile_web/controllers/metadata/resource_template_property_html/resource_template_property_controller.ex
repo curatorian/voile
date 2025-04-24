@@ -20,7 +20,7 @@ defmodule VoileWeb.ResourceTemplatePropertyController do
         conn
         |> put_flash(:info, "Resource template property created successfully.")
         |> redirect(
-          to: ~p"/manage/metaresource/resource_template_property/#{resource_template_property}"
+          to: ~p"/manage/metaresource/resource_templ_property/#{resource_template_property}"
         )
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -57,7 +57,7 @@ defmodule VoileWeb.ResourceTemplatePropertyController do
         conn
         |> put_flash(:info, "Resource template property updated successfully.")
         |> redirect(
-          to: ~p"/manage/metaresource/resource_template_property/#{resource_template_property}"
+          to: ~p"/manage/metaresource/resource_templ_property/#{resource_template_property}"
         )
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -76,6 +76,6 @@ defmodule VoileWeb.ResourceTemplatePropertyController do
 
     conn
     |> put_flash(:info, "Resource template property deleted successfully.")
-    |> redirect(to: ~p"/manage/metaresource/resource_template_property")
+    |> redirect(to: ~p"/manage/metaresource/resource_templ_property")
   end
 end

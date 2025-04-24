@@ -58,7 +58,10 @@
                     <%= for item <- @master_menu do %>
                       <.link
                         navigate={item.url}
-                        class={["default-menu", @current_uri == item.url && "active-menu"]}
+                        class={[
+                          "default-menu",
+                          @current_uri |> String.starts_with?(item.url) && "active-menu"
+                        ]}
                       >
                         {item.name}
                       </.link>
@@ -75,7 +78,10 @@
                     <%= for item <- @metaresource_menu do %>
                       <.link
                         navigate={item.url}
-                        class={["default-menu", @current_uri == item.url && "active-menu"]}
+                        class={[
+                          "default-menu",
+                          @current_uri |> String.starts_with?(item.url) && "active-menu"
+                        ]}
                       >
                         {item.name}
                       </.link>

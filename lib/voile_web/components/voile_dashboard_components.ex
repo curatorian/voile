@@ -97,7 +97,8 @@ defmodule VoileWeb.VoileDashboardComponents do
             patch="/manage/catalog/collections"
             class={[
               "dashboard-menu-btn",
-              @active_menu == "/manage/catalog/collections" && "dashboard-menu-btn-active"
+              @active_menu |> String.starts_with?("/manage/catalog/collections") &&
+                "dashboard-menu-btn-active"
             ]}
           >
             Collections
@@ -107,7 +108,8 @@ defmodule VoileWeb.VoileDashboardComponents do
             patch="/manage/catalog/items"
             class={[
               "dashboard-menu-btn",
-              @active_menu == "/manage/catalog/items" && "dashboard-menu-btn-active"
+              @active_menu |> String.starts_with?("/manage/catalog/items") &&
+                "dashboard-menu-btn-active"
             ]}
           >
             Items

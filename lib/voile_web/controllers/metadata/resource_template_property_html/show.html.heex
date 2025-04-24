@@ -1,9 +1,10 @@
 <.header>
   Resource template property {@resource_template_property.id}
   <:subtitle>This is a resource_template_property record from your database.</:subtitle>
+  
   <:actions>
     <.link href={
-      ~p"/manage/metaresource/resource_template_property/#{@resource_template_property}/edit"
+      ~p"/manage/metaresource/resource_templ_property/#{@resource_template_property}/edit"
     }>
       <.button>Edit resource_template_property</.button>
     </.link>
@@ -12,13 +13,18 @@
 
 <.list>
   <:item title="Alternate label">{@resource_template_property.alternate_label}</:item>
+  
   <:item title="Alternate information">{@resource_template_property.alternate_information}</:item>
+  
   <:item title="Position">{@resource_template_property.position}</:item>
+  
   <:item title="Data type">{@resource_template_property.data_type}</:item>
+  
   <:item title="Is required">{@resource_template_property.is_required}</:item>
+  
   <:item title="Permission">{@resource_template_property.permission}</:item>
 </.list>
 
-<.back navigate={~p"/manage/metaresource/resource_template_property"}>
+<.back navigate={~p"/manage/metaresource/resource_templ_property"}>
   Back to resource_template_property
 </.back>

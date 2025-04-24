@@ -77,7 +77,7 @@ defmodule VoileWeb.Utils.SideBarMenuMaster do
       },
       %{
         name: "Resource Template Property",
-        url: "/manage/metaresource/resource_template_property"
+        url: "/manage/metaresource/resource_templ_property"
       }
     ]
   end
