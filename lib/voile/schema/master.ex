@@ -6,7 +6,7 @@ defmodule Voile.Master do
   import Ecto.Query, warn: false
   alias Voile.Repo
 
-  alias Voile.Master.Creator
+  alias Voile.Schema.Master.Creator
 
   @doc """
   Returns the list of mst_creator.
@@ -102,7 +102,7 @@ defmodule Voile.Master do
     Creator.changeset(creator, attrs)
   end
 
-  alias Voile.Master.Frequency
+  alias Voile.Schema.Master.Frequency
 
   @doc """
   Returns the list of mst_frequency.
@@ -198,7 +198,7 @@ defmodule Voile.Master do
     Frequency.changeset(frequency, attrs)
   end
 
-  alias Voile.Master.MemberType
+  alias Voile.Schema.Master.MemberType
 
   @doc """
   Returns the list of mst_member_types.
@@ -294,7 +294,7 @@ defmodule Voile.Master do
     MemberType.changeset(member_type, attrs)
   end
 
-  alias Voile.Master.Locations
+  alias Voile.Schema.Master.Locations
 
   @doc """
   Returns the list of mst_locations.
@@ -390,7 +390,7 @@ defmodule Voile.Master do
     Locations.changeset(locations, attrs)
   end
 
-  alias Voile.Master.Places
+  alias Voile.Schema.Master.Places
 
   @doc """
   Returns the list of mst_places.
@@ -486,7 +486,7 @@ defmodule Voile.Master do
     Places.changeset(places, attrs)
   end
 
-  alias Voile.Master.Publishers
+  alias Voile.Schema.Master.Publishers
 
   @doc """
   Returns the list of mst_publishers.
@@ -582,7 +582,7 @@ defmodule Voile.Master do
     Publishers.changeset(publishers, attrs)
   end
 
-  alias Voile.Master.Topic
+  alias Voile.Schema.Master.Topic
 
   @doc """
   Returns the list of mst_topics.

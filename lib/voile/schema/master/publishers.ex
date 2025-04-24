@@ -1,4 +1,4 @@
-defmodule Voile.Master.Publishers do
+defmodule Voile.Schema.Master.Publishers do
   use Ecto.Schema
   import Ecto.Changeset
 

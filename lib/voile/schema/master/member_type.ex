@@ -1,4 +1,4 @@
-defmodule Voile.Master.MemberType do
+defmodule Voile.Schema.Master.MemberType do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -18,7 +18,25 @@ defmodule Voile.Master.MemberType do
   @doc false
   def changeset(member_type, attrs) do
     member_type
-    |> cast(attrs, [:name, :loan_limit, :loan_period, :enable_reserve, :membership_period, :reloan_limit, :loan_fine, :loan_grace_period])
-    |> validate_required([:name, :loan_limit, :loan_period, :enable_reserve, :membership_period, :reloan_limit, :loan_fine, :loan_grace_period])
+    |> cast(attrs, [
+      :name,
+      :loan_limit,
+      :loan_period,
+      :enable_reserve,
+      :membership_period,
+      :reloan_limit,
+      :loan_fine,
+      :loan_grace_period
+    ])
+    |> validate_required([
+      :name,
+      :loan_limit,
+      :loan_period,
+      :enable_reserve,
+      :membership_period,
+      :reloan_limit,
+      :loan_fine,
+      :loan_grace_period
+    ])
   end
 end

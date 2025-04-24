@@ -4,7 +4,7 @@ defmodule VoileWeb.Dashboard.Metaresource.MetaresourceLive do
   def render(assigns) do
     ~H"""
     <div class="">
-      <h1>Metaresource Dashboard</h1>
+      <h5>Metaresource Dashboard</h5>
     </div>
     """
   end

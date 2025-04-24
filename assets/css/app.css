@@ -53,7 +53,7 @@ h6 {
 }
 
 .voile-gradient {
-  @apply bg-gradient-to-br from-purple-600 via-violet-500 to-purple-400;
+  @apply bg-gradient-to-br from-violet-400 via-purple-700 to-violet-400;
 }
 
 .gallery-gradient {
@@ -118,20 +118,32 @@ h6 {
   @apply voile-gradient py-2 px-4 rounded-lg text-white hover:bg-gradient-to-tl transition ease-in-out duration-300;
 }
 
-.default-menu {
-  @apply px-3 py-2 rounded-lg transition-all hover:bg-violet-100;
+.dashboard-menu-btn {
+  @apply py-2 px-4 bg-violet-100 text-violet-600 rounded-lg hover:bg-violet-600 hover:text-white transition duration-500 ease-in-out;
 }
 
-.default-voile-menu {
-  @apply px-6 py-2 rounded-lg transition-all hover:bg-white;
+.dashboard-menu-btn-active {
+  @apply py-2 px-4 bg-violet-600 text-white rounded-lg;
+}
+
+.default-menu {
+  @apply px-3 py-2 rounded-lg transition-all hover:bg-violet-100;
 }
 
 .active-menu {
   @apply voile-gradient rounded-lg text-white;
 }
 
+.default-voile-menu {
+  @apply px-6 py-2 rounded-lg transition-all hover:bg-white hover:text-violet-500;
+}
+
+.default-voile-menu-active {
+  @apply px-6 py-2 rounded-lg transition-all bg-white text-violet-500;
+}
+
 .voile-card {
-  @apply flex flex-col items-center rounded-lg bg-white shadow-lg p-12 text-justify;
+  @apply flex flex-col items-center rounded-lg bg-violet-100 shadow-lg p-12 text-justify;
 }
 
 .default-card {

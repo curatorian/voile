@@ -77,6 +77,28 @@ defmodule VoileWeb.Router do
       scope "/manage" do
         live "/", DashboardLive, :index
 
+        scope "/catalog" do
+          live "/", Dashboard.Catalog.Index, :index
+
+          scope "/collections" do
+            live "/", Dashboard.Catalog.CollectionLive.Index, :index
+            live "/new", Dashboard.Catalog.CollectionLive.Index, :new
+            live "/:id/edit", Dashboard.Catalog.CollectionLive.Index, :edit
+
+            live "/:id", Dashboard.Catalog.CollectionLive.Show, :show
+            live "/:id/show/edit", Dashboard.Catalog.CollectionLive.Show, :edit
+          end
+
+          scope "/items" do
+            live "/", Dashboard.Catalog.ItemLive.Index, :index
+            live "/new", Dashboard.Catalog.ItemLive.Index, :new
+            live "/:id/edit", Dashboard.Catalog.ItemLive.Index, :edit
+
+            live "/:id", Dashboard.Catalog.ItemLive.Show, :show
+            live "/:id/show/edit", Dashboard.Catalog.ItemLive.Show, :edit
+          end
+        end
+
         scope "/master" do
           live "/", Dashboard.Master.MasterLive
         end

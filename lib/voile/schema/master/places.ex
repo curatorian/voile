@@ -1,4 +1,4 @@
-defmodule Voile.Master.Places do
+defmodule Voile.Schema.Master.Places do
   use Ecto.Schema
   import Ecto.Changeset
 

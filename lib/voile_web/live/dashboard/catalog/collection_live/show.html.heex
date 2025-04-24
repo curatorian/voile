@@ -1,0 +1,48 @@
+<section class="flex flex-col gap-4">
+  <.dashboard_menu_bar />
+  <div class="bg-white p-4 rounded-xl shadow-md">
+    <.header>
+      Collection {@collection.id}
+      <:subtitle>This is a collection record from your database.</:subtitle>
+      
+      <:actions>
+        <.link
+          patch={~p"/manage/catalog/collections/#{@collection}/show/edit"}
+          phx-click={JS.push_focus()}
+        >
+          <.button>Edit collection</.button>
+        </.link>
+      </:actions>
+    </.header>
+    
+    <.list>
+      <:item title="Title">{@collection.title}</:item>
+      
+      <:item title="Description">{@collection.description}</:item>
+      
+      <:item title="Status">{@collection.status}</:item>
+      
+      <:item title="Thumbnail">{@collection.thumbnail}</:item>
+      
+      <:item title="Access Level">{@collection.access_level}</:item>
+    </.list>
+    
+    <.back navigate={~p"/manage/catalog/collections"}>Back to collections</.back>
+    
+    <.modal
+      :if={@live_action == :edit}
+      id="collection-modal"
+      show
+      on_cancel={JS.patch(~p"/manage/catalog/collections/#{@collection}")}
+    >
+      <.live_component
+        module={VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent}
+        id={@collection.id}
+        title={@page_title}
+        action={@live_action}
+        collection={@collection}
+        patch={~p"/manage/catalog/collections/#{@collection}"}
+      />
+    </.modal>
+  </div>
+</section>

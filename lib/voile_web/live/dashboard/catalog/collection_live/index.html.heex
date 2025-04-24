@@ -1,0 +1,63 @@
+<section class="flex flex-col gap-4">
+  <.dashboard_menu_bar />
+  <div class="bg-white p-4 rounded-xl shadow-md">
+    <.header>
+      Listing Collections
+      <:actions>
+        <.link patch={~p"/manage/catalog/collections/new"}>
+          <.button>New Collection</.button>
+        </.link>
+      </:actions>
+    </.header>
+    
+    <.table
+      id="collections"
+      rows={@streams.collections}
+      row_click={
+        fn {_id, collection} -> JS.navigate(~p"/manage/catalog/collections/#{collection}") end
+      }
+    >
+      <:col :let={{_id, collection}} label="Title">{collection.title}</:col>
+      
+      <:col :let={{_id, collection}} label="Description">{collection.description}</:col>
+      
+      <:col :let={{_id, collection}} label="Status">{collection.status}</:col>
+      
+      <:col :let={{_id, collection}} label="Thumbnail">{collection.thumbnail}</:col>
+      
+      <:col :let={{_id, collection}} label="Access">{collection.access_level}</:col>
+      
+      <:action :let={{_id, collection}}>
+        <div class="sr-only">
+          <.link navigate={~p"/manage/catalog/collections/#{collection}"}>Show</.link>
+        </div>
+         <.link patch={~p"/manage/catalog/collections/#{collection}/edit"}>Edit</.link>
+      </:action>
+      
+      <:action :let={{id, collection}}>
+        <.link
+          phx-click={JS.push("delete", value: %{id: collection.id}) |> hide("##{id}")}
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      </:action>
+    </.table>
+    
+    <.modal
+      :if={@live_action in [:new, :edit]}
+      id="collection-modal"
+      show
+      on_cancel={JS.patch(~p"/manage/catalog/collections")}
+    >
+      <.live_component
+        module={VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent}
+        id={@collection.id || :new}
+        title={@page_title}
+        action={@live_action}
+        collection={@collection}
+        patch={~p"/manage/catalog/collections"}
+      />
+    </.modal>
+  </div>
+</section>

@@ -1,4 +1,4 @@
-defmodule Voile.Master.Frequency do
+defmodule Voile.Schema.Master.Frequency do
   use Ecto.Schema
   import Ecto.Changeset
 

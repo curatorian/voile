@@ -1,4 +1,4 @@
-defmodule Voile.System.SystemLog do
+defmodule Voile.Schema.System.SystemLog do
   use Ecto.Schema
   import Ecto.Changeset
 

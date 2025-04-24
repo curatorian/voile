@@ -1,4 +1,4 @@
-<main class="w-full min-h-screen h-full flex flex-col bg-blue-100">
+<main class="w-full min-h-screen h-full flex flex-col bg-violet-50">
   <section class="voile-gradient text-white py-24 px-5">
     <div class="max-w-7xl mx-auto">
       <h3>Voile Dashboard</h3>
@@ -22,20 +22,24 @@
     
     <div class="-mt-24">
       <div class="max-w-7xl mx-auto flex gap-2 items-end justify-end w-full text-white">
-        <.link navigate="/manage/gallery" class="default-voile-menu hover:text-blue-500">
-          Gallery
+        <.link
+          navigate="/manage/master"
+          class={[
+            "default-voile-menu",
+            @current_uri == "/manage/master" && "default-voile-menu-active"
+          ]}
+        >
+          Master
         </.link>
         
-        <.link navigate="/manage/library" class="default-voile-menu hover:text-blue-500">
-          Library
-        </.link>
-        
-        <.link navigate="/manage/archive" class="default-voile-menu hover:text-blue-500">
-          Archive
-        </.link>
-        
-        <.link navigate="/manage/museum" class="default-voile-menu hover:text-blue-500">
-          Museum
+        <.link
+          navigate="/manage/metaresource"
+          class={[
+            "default-voile-menu",
+            @current_uri == "/manage/metaresource" && "default-voile-menu-active"
+          ]}
+        >
+          Metadata
         </.link>
       </div>
        <.nav_bar active_nav={@current_uri} />

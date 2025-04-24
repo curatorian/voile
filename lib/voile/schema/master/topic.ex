@@ -1,4 +1,4 @@
-defmodule Voile.Master.Topic do
+defmodule Voile.Schema.Master.Topic do
   use Ecto.Schema
   import Ecto.Changeset
 

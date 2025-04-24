@@ -1,0 +1,195 @@
+defmodule Voile.CatalogTest do
+  use Voile.DataCase
+
+  alias Voile.Catalog
+
+  describe "collections" do
+    alias Voile.Catalog.Collection
+
+    import Voile.CatalogFixtures
+
+    @invalid_attrs %{status: nil, description: nil, title: nil, thumbnail: nil, access_level: nil}
+
+    test "list_collections/0 returns all collections" do
+      collection = collection_fixture()
+      assert Catalog.list_collections() == [collection]
+    end
+
+    test "get_collection!/1 returns the collection with given id" do
+      collection = collection_fixture()
+      assert Catalog.get_collection!(collection.id) == collection
+    end
+
+    test "create_collection/1 with valid data creates a collection" do
+      valid_attrs = %{status: "some status", description: "some description", title: "some title", thumbnail: "some thumbnail", access_level: "some access_level"}
+
+      assert {:ok, %Collection{} = collection} = Catalog.create_collection(valid_attrs)
+      assert collection.status == "some status"
+      assert collection.description == "some description"
+      assert collection.title == "some title"
+      assert collection.thumbnail == "some thumbnail"
+      assert collection.access_level == "some access_level"
+    end
+
+    test "create_collection/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_collection(@invalid_attrs)
+    end
+
+    test "update_collection/2 with valid data updates the collection" do
+      collection = collection_fixture()
+      update_attrs = %{status: "some updated status", description: "some updated description", title: "some updated title", thumbnail: "some updated thumbnail", access_level: "some updated access_level"}
+
+      assert {:ok, %Collection{} = collection} = Catalog.update_collection(collection, update_attrs)
+      assert collection.status == "some updated status"
+      assert collection.description == "some updated description"
+      assert collection.title == "some updated title"
+      assert collection.thumbnail == "some updated thumbnail"
+      assert collection.access_level == "some updated access_level"
+    end
+
+    test "update_collection/2 with invalid data returns error changeset" do
+      collection = collection_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_collection(collection, @invalid_attrs)
+      assert collection == Catalog.get_collection!(collection.id)
+    end
+
+    test "delete_collection/1 deletes the collection" do
+      collection = collection_fixture()
+      assert {:ok, %Collection{}} = Catalog.delete_collection(collection)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_collection!(collection.id) end
+    end
+
+    test "change_collection/1 returns a collection changeset" do
+      collection = collection_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_collection(collection)
+    end
+  end
+
+  describe "items" do
+    alias Voile.Catalog.Item
+
+    import Voile.CatalogFixtures
+
+    @invalid_attrs %{status: nil, location: nil, item_code: nil, inventory_code: nil, barcode: nil, condition: nil, availability: nil}
+
+    test "list_items/0 returns all items" do
+      item = item_fixture()
+      assert Catalog.list_items() == [item]
+    end
+
+    test "get_item!/1 returns the item with given id" do
+      item = item_fixture()
+      assert Catalog.get_item!(item.id) == item
+    end
+
+    test "create_item/1 with valid data creates a item" do
+      valid_attrs = %{status: "some status", location: "some location", item_code: "some item_code", inventory_code: "some inventory_code", barcode: "some barcode", condition: "some condition", availability: "some availability"}
+
+      assert {:ok, %Item{} = item} = Catalog.create_item(valid_attrs)
+      assert item.status == "some status"
+      assert item.location == "some location"
+      assert item.item_code == "some item_code"
+      assert item.inventory_code == "some inventory_code"
+      assert item.barcode == "some barcode"
+      assert item.condition == "some condition"
+      assert item.availability == "some availability"
+    end
+
+    test "create_item/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_item(@invalid_attrs)
+    end
+
+    test "update_item/2 with valid data updates the item" do
+      item = item_fixture()
+      update_attrs = %{status: "some updated status", location: "some updated location", item_code: "some updated item_code", inventory_code: "some updated inventory_code", barcode: "some updated barcode", condition: "some updated condition", availability: "some updated availability"}
+
+      assert {:ok, %Item{} = item} = Catalog.update_item(item, update_attrs)
+      assert item.status == "some updated status"
+      assert item.location == "some updated location"
+      assert item.item_code == "some updated item_code"
+      assert item.inventory_code == "some updated inventory_code"
+      assert item.barcode == "some updated barcode"
+      assert item.condition == "some updated condition"
+      assert item.availability == "some updated availability"
+    end
+
+    test "update_item/2 with invalid data returns error changeset" do
+      item = item_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_item(item, @invalid_attrs)
+      assert item == Catalog.get_item!(item.id)
+    end
+
+    test "delete_item/1 deletes the item" do
+      item = item_fixture()
+      assert {:ok, %Item{}} = Catalog.delete_item(item)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_item!(item.id) end
+    end
+
+    test "change_item/1 returns a item changeset" do
+      item = item_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_item(item)
+    end
+  end
+
+  describe "collection_fields" do
+    alias Voile.Catalog.CollectionField
+
+    import Voile.CatalogFixtures
+
+    @invalid_attrs %{label: nil, name: nil, field_type: nil, required: nil, sort_order: nil}
+
+    test "list_collection_fields/0 returns all collection_fields" do
+      collection_field = collection_field_fixture()
+      assert Catalog.list_collection_fields() == [collection_field]
+    end
+
+    test "get_collection_field!/1 returns the collection_field with given id" do
+      collection_field = collection_field_fixture()
+      assert Catalog.get_collection_field!(collection_field.id) == collection_field
+    end
+
+    test "create_collection_field/1 with valid data creates a collection_field" do
+      valid_attrs = %{label: "some label", name: "some name", field_type: "some field_type", required: true, sort_order: 42}
+
+      assert {:ok, %CollectionField{} = collection_field} = Catalog.create_collection_field(valid_attrs)
+      assert collection_field.label == "some label"
+      assert collection_field.name == "some name"
+      assert collection_field.field_type == "some field_type"
+      assert collection_field.required == true
+      assert collection_field.sort_order == 42
+    end
+
+    test "create_collection_field/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_collection_field(@invalid_attrs)
+    end
+
+    test "update_collection_field/2 with valid data updates the collection_field" do
+      collection_field = collection_field_fixture()
+      update_attrs = %{label: "some updated label", name: "some updated name", field_type: "some updated field_type", required: false, sort_order: 43}
+
+      assert {:ok, %CollectionField{} = collection_field} = Catalog.update_collection_field(collection_field, update_attrs)
+      assert collection_field.label == "some updated label"
+      assert collection_field.name == "some updated name"
+      assert collection_field.field_type == "some updated field_type"
+      assert collection_field.required == false
+      assert collection_field.sort_order == 43
+    end
+
+    test "update_collection_field/2 with invalid data returns error changeset" do
+      collection_field = collection_field_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_collection_field(collection_field, @invalid_attrs)
+      assert collection_field == Catalog.get_collection_field!(collection_field.id)
+    end
+
+    test "delete_collection_field/1 deletes the collection_field" do
+      collection_field = collection_field_fixture()
+      assert {:ok, %CollectionField{}} = Catalog.delete_collection_field(collection_field)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_collection_field!(collection_field.id) end
+    end
+
+    test "change_collection_field/1 returns a collection_field changeset" do
+      collection_field = collection_field_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_collection_field(collection_field)
+    end
+  end
+end

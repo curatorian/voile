@@ -6,9 +6,9 @@ defmodule Voile.System do
   import Ecto.Query, warn: false
   alias Voile.Repo
 
-  alias Voile.System.Node
-  alias Voile.System.Setting
-  alias Voile.System.SystemLog
+  alias Voile.Schema.System.Node
+  alias Voile.Schema.System.Setting
+  alias Voile.Schema.System.SystemLog
 
   @doc """
   Returns the list of nodes.

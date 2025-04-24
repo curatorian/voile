@@ -4,7 +4,7 @@ defmodule VoileWeb.Dashboard.Master.MasterLive do
   def render(assigns) do
     ~H"""
     <div class="">
-      <h1>Master Dashboard</h1>
+      <h5>Master Dashboard</h5>
     </div>
     """
   end

@@ -16,8 +16,8 @@ defmodule VoileWeb.DashboardLive do
       
       <div class="grid grid-cols-2 gap-8">
         <div class="voile-card">
-          <.icon name="hero-photo" class="w-32 h-32 glamm-gradient" />
-          <h5 class="text-emerald-600">Gallery</h5>
+          <.icon name="hero-photo" class="w-32 h-32 voile-gradient" />
+          <h5 class="text-violet-600">Gallery</h5>
           
           <p class="text-sm pt-4">
             Galleries can host a variety of exhibitions, ranging from contemporary art to historical pieces, and often include paintings, sculptures, photographs, and other visual media. They play a vital role in promoting cultural expression and fostering a deeper understanding of artistic practices and movements.
@@ -25,8 +25,8 @@ defmodule VoileWeb.DashboardLive do
         </div>
         
         <div class="voile-card">
-          <.icon name="hero-book-open" class="w-32 h-32 glamm-gradient" />
-          <h5 class="text-emerald-600">Library</h5>
+          <.icon name="hero-book-open" class="w-32 h-32 voile-gradient" />
+          <h5 class="text-violet-600">Library</h5>
           
           <p class="text-sm pt-4">
             A library is a collection of materials, such as books, periodicals, and other resources, that are organized for use by the public. Libraries serve as repositories of knowledge and information, providing access to a wide range of materials for research, study, and leisure.
@@ -34,8 +34,8 @@ defmodule VoileWeb.DashboardLive do
         </div>
         
         <div class="voile-card">
-          <.icon name="hero-archive-box" class="w-32 h-32 glamm-gradient" />
-          <h5 class="text-emerald-600">Archive</h5>
+          <.icon name="hero-archive-box" class="w-32 h-32 voile-gradient" />
+          <h5 class="text-violet-600">Archive</h5>
           
           <p class="text-sm pt-4">
             An archive is a collection of historical records, documents, and other materials that are preserved for research and reference purposes. Archives can include a wide range of materials, such as manuscripts, photographs, maps, and audiovisual recordings, and are often organized by subject, creator, or format.
@@ -43,8 +43,8 @@ defmodule VoileWeb.DashboardLive do
         </div>
         
         <div class="voile-card">
-          <.icon name="hero-globe-asia-australia" class="w-32 h-32 glamm-gradient" />
-          <h5 class="text-emerald-600">Museum</h5>
+          <.icon name="hero-globe-asia-australia" class="w-32 h-32 voile-gradient" />
+          <h5 class="text-violet-600">Museum</h5>
           
           <p class="text-sm pt-4">
             A museum is an institution that collects, preserves, and exhibits objects and artifacts of cultural, historical, or scientific significance. Museums can include a wide range of collections, such as art, natural history, science, and technology, and often feature exhibitions, programs, and events for the public.
