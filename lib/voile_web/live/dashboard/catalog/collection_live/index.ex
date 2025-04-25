@@ -6,7 +6,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :collections, Catalog.list_collections())}
+    socket =
+      socket
+      |> stream(:collections, Catalog.list_collections())
+      |> assign(:step, 1)
+
+    {:ok, socket}
   end
 
   @impl true

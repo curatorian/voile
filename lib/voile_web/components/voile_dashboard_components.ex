@@ -17,11 +17,15 @@ defmodule VoileWeb.VoileDashboardComponents do
   attr :list_menu, :list,
     default: [
       %{
-        name: "Catalog",
+        name: "Katalog",
         url: "/manage/catalog"
       },
       %{
-        name: "Settings",
+        name: "Sirkulasi",
+        url: "/manage/circulation"
+      },
+      %{
+        name: "Pengaturan",
         url: "/users/settings"
       }
     ]
@@ -89,7 +93,7 @@ defmodule VoileWeb.VoileDashboardComponents do
         <div>
           <h5>Halo, Admin!</h5>
           
-          <p>Data Katalog bisa kamu cek disini</p>
+          <p>Data Koleksi bisa kamu cek disini</p>
         </div>
         
         <div class="flex gap-2">

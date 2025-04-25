@@ -9,6 +9,7 @@ defmodule Voile.System do
   alias Voile.Schema.System.Node
   alias Voile.Schema.System.Setting
   alias Voile.Schema.System.SystemLog
+  alias Voile.System.CollectionLog
 
   @doc """
   Returns the list of nodes.
@@ -290,5 +291,99 @@ defmodule Voile.System do
   """
   def change_system_log(%SystemLog{} = system_log, attrs \\ %{}) do
     SystemLog.changeset(system_log, attrs)
+  end
+
+  @doc """
+  Returns the list of collection_logs.
+
+  ## Examples
+
+      iex> list_collection_logs()
+      [%CollectionLog{}, ...]
+
+  """
+  def list_collection_logs do
+    Repo.all(CollectionLog)
+  end
+
+  @doc """
+  Gets a single collection_log.
+
+  Raises `Ecto.NoResultsError` if the Collection log does not exist.
+
+  ## Examples
+
+      iex> get_collection_log!(123)
+      %CollectionLog{}
+
+      iex> get_collection_log!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_collection_log!(id), do: Repo.get!(CollectionLog, id)
+
+  @doc """
+  Creates a collection_log.
+
+  ## Examples
+
+      iex> create_collection_log(%{field: value})
+      {:ok, %CollectionLog{}}
+
+      iex> create_collection_log(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_collection_log(attrs \\ %{}) do
+    %CollectionLog{}
+    |> CollectionLog.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a collection_log.
+
+  ## Examples
+
+      iex> update_collection_log(collection_log, %{field: new_value})
+      {:ok, %CollectionLog{}}
+
+      iex> update_collection_log(collection_log, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_collection_log(%CollectionLog{} = collection_log, attrs) do
+    collection_log
+    |> CollectionLog.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a collection_log.
+
+  ## Examples
+
+      iex> delete_collection_log(collection_log)
+      {:ok, %CollectionLog{}}
+
+      iex> delete_collection_log(collection_log)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_collection_log(%CollectionLog{} = collection_log) do
+    Repo.delete(collection_log)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking collection_log changes.
+
+  ## Examples
+
+      iex> change_collection_log(collection_log)
+      %Ecto.Changeset{data: %CollectionLog{}}
+
+  """
+  def change_collection_log(%CollectionLog{} = collection_log, attrs \\ %{}) do
+    CollectionLog.changeset(collection_log, attrs)
   end
 end

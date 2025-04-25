@@ -51,4 +51,20 @@ defmodule Voile.SystemFixtures do
 
     system_log
   end
+
+  @doc """
+  Generate a collection_log.
+  """
+  def collection_log_fixture(attrs \\ %{}) do
+    {:ok, collection_log} =
+      attrs
+      |> Enum.into(%{
+        action: "some action",
+        message: "some message",
+        title: "some title"
+      })
+      |> Voile.System.create_collection_log()
+
+    collection_log
+  end
 end

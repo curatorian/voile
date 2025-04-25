@@ -176,4 +176,62 @@ defmodule Voile.SystemTest do
       assert %Ecto.Changeset{} = System.change_system_log(system_log)
     end
   end
+
+  describe "collection_logs" do
+    alias Voile.System.CollectionLog
+
+    import Voile.SystemFixtures
+
+    @invalid_attrs %{message: nil, title: nil, action: nil}
+
+    test "list_collection_logs/0 returns all collection_logs" do
+      collection_log = collection_log_fixture()
+      assert System.list_collection_logs() == [collection_log]
+    end
+
+    test "get_collection_log!/1 returns the collection_log with given id" do
+      collection_log = collection_log_fixture()
+      assert System.get_collection_log!(collection_log.id) == collection_log
+    end
+
+    test "create_collection_log/1 with valid data creates a collection_log" do
+      valid_attrs = %{message: "some message", title: "some title", action: "some action"}
+
+      assert {:ok, %CollectionLog{} = collection_log} = System.create_collection_log(valid_attrs)
+      assert collection_log.message == "some message"
+      assert collection_log.title == "some title"
+      assert collection_log.action == "some action"
+    end
+
+    test "create_collection_log/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = System.create_collection_log(@invalid_attrs)
+    end
+
+    test "update_collection_log/2 with valid data updates the collection_log" do
+      collection_log = collection_log_fixture()
+      update_attrs = %{message: "some updated message", title: "some updated title", action: "some updated action"}
+
+      assert {:ok, %CollectionLog{} = collection_log} = System.update_collection_log(collection_log, update_attrs)
+      assert collection_log.message == "some updated message"
+      assert collection_log.title == "some updated title"
+      assert collection_log.action == "some updated action"
+    end
+
+    test "update_collection_log/2 with invalid data returns error changeset" do
+      collection_log = collection_log_fixture()
+      assert {:error, %Ecto.Changeset{}} = System.update_collection_log(collection_log, @invalid_attrs)
+      assert collection_log == System.get_collection_log!(collection_log.id)
+    end
+
+    test "delete_collection_log/1 deletes the collection_log" do
+      collection_log = collection_log_fixture()
+      assert {:ok, %CollectionLog{}} = System.delete_collection_log(collection_log)
+      assert_raise Ecto.NoResultsError, fn -> System.get_collection_log!(collection_log.id) end
+    end
+
+    test "change_collection_log/1 returns a collection_log changeset" do
+      collection_log = collection_log_fixture()
+      assert %Ecto.Changeset{} = System.change_collection_log(collection_log)
+    end
+  end
 end
