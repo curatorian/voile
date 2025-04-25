@@ -49,7 +49,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           phx-change="validate"
           phx-submit="save"
         >
-          <.input field={@form[:unit]} type="text" label="Slug" />
+          <.inputs_for :let={col_field} field={@form[:collection_fields]}>
+            <.input field={col_field[:label]} type="text" label="Label" />
+            <.input field={col_field[:name]} type="text" label="Name" />
+            <.input field={col_field[:field_type]} type="text" label="Name" />
+            <.input field={col_field[:required]} type="checkbox" />
+            <.input field={col_field[:sort_order]} type="number" />
+          </.inputs_for>
+          
+          <%!-- <.button phx-click="add_collection_field" phx-target={@myself}>Tambah Field</.button> --%>
+          <.button phx-click="prev_step" phx-target={@myself}>Back</.button>
+          
           <:actions>
             <.button phx-disable-with="Saving...">Save Collection</.button>
           </:actions>
@@ -85,6 +95,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         |> assign(:collection, Changeset.apply_changes(changeset))
         |> assign(:changeset, changeset)
 
+      dbg(socket)
+
       {:noreply, socket}
     else
       socket
@@ -98,16 +110,23 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   def handle_event("prev_step", _params, socket) do
     socket =
       socket
-      |> assign(:step, &max(&1 - 1, 1))
+      |> assign(:step, socket.assigns.step - 1)
 
     {:noreply, socket}
   end
 
-  def handle_event("save", %{"collection" => collection_params}, socket) do
-    final_params = Map.merge(Map.from_struct(socket.assigns.collection), collection_params)
-    dbg(final_params)
+  def handle_event("add_collection_field", _params, socket) do
+    dbg(socket)
+    {:noreply, socket}
+  end
 
-    save_collection(socket, socket.assigns.action, final_params)
+  def handle_event("save", %{"collection" => collection_field}, socket) do
+    # final_params = Map.merge(Map.from_struct(socket.assigns.collection), collection_params)
+    dbg(collection_field)
+    dbg(socket.assigns.collection)
+
+    # save_collection(socket, socket.assigns.action, final_params)
+    {:noreply, socket}
   end
 
   defp save_collection(socket, :edit, collection_params) do
