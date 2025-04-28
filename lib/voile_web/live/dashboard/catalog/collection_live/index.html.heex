@@ -46,7 +46,7 @@
       </:action>
     </.table>
     
-    <.modal
+    <.collection_modal
       :if={@live_action in [:new, :edit]}
       id="collection-modal"
       show
@@ -58,9 +58,10 @@
         title={@page_title}
         action={@live_action}
         collection={@collection}
+        show_add_collection_field={@show_add_collection_field}
         step={@step}
         patch={~p"/manage/catalog/collections"}
       />
-    </.modal>
+    </.collection_modal>
   </div>
 </section>

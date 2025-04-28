@@ -59,4 +59,34 @@ defmodule Voile.CatalogFixtures do
 
     collection_field
   end
+
+  @doc """
+  Generate a collection_field_value.
+  """
+  def collection_field_value_fixture(attrs \\ %{}) do
+    {:ok, collection_field_value} =
+      attrs
+      |> Enum.into(%{
+        locale: "some locale",
+        value: "some value"
+      })
+      |> Voile.Catalog.create_collection_field_value()
+
+    collection_field_value
+  end
+
+  @doc """
+  Generate a item_field_value.
+  """
+  def item_field_value_fixture(attrs \\ %{}) do
+    {:ok, item_field_value} =
+      attrs
+      |> Enum.into(%{
+        locale: "some locale",
+        value: "some value"
+      })
+      |> Voile.Catalog.create_item_field_value()
+
+    item_field_value
+  end
 end

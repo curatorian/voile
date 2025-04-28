@@ -2,6 +2,8 @@ defmodule Voile.Catalog.Item do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Voile.Catalog.Collection
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "items" do
@@ -12,7 +14,7 @@ defmodule Voile.Catalog.Item do
     field :barcode, :string
     field :condition, :string
     field :availability, :string
-    field :collection, :binary_id
+    belongs_to :collection, Collection, on_replace: :nilify
 
     timestamps(type: :utc_datetime)
   end
@@ -20,7 +22,23 @@ defmodule Voile.Catalog.Item do
   @doc false
   def changeset(item, attrs) do
     item
-    |> cast(attrs, [:item_code, :inventory_code, :barcode, :location, :status, :condition, :availability])
-    |> validate_required([:item_code, :inventory_code, :barcode, :location, :status, :condition, :availability])
+    |> cast(attrs, [
+      :item_code,
+      :inventory_code,
+      :barcode,
+      :location,
+      :status,
+      :condition,
+      :availability
+    ])
+    |> validate_required([
+      :item_code,
+      :inventory_code,
+      :barcode,
+      :location,
+      :status,
+      :condition,
+      :availability
+    ])
   end
 end

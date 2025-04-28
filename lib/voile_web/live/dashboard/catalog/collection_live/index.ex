@@ -1,6 +1,7 @@
 defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
   use VoileWeb, :live_view_dashboard
 
+  alias Voile.Repo
   alias Voile.Catalog
   alias Voile.Catalog.Collection
 
@@ -9,7 +10,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
     socket =
       socket
       |> stream(:collections, Catalog.list_collections())
-      |> assign(:step, 1)
+      |> assign(:step, 2)
+      |> assign(:show_add_collection_field, true)
 
     {:ok, socket}
   end
@@ -26,9 +28,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    collection = %Collection{}
+
+    collection =
+      collection
+      |> Repo.preload([
+        :resource_class,
+        :resource_template,
+        :mst_creator,
+        :node,
+        :collection_fields
+      ])
+
     socket
     |> assign(:page_title, "New Collection")
-    |> assign(:collection, %Collection{})
+    |> assign(:collection, collection)
   end
 
   defp apply_action(socket, :index, _params) do

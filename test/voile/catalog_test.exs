@@ -192,4 +192,116 @@ defmodule Voile.CatalogTest do
       assert %Ecto.Changeset{} = Catalog.change_collection_field(collection_field)
     end
   end
+
+  describe "collection_field_values" do
+    alias Voile.Catalog.CollectionFieldValue
+
+    import Voile.CatalogFixtures
+
+    @invalid_attrs %{value: nil, locale: nil}
+
+    test "list_collection_field_values/0 returns all collection_field_values" do
+      collection_field_value = collection_field_value_fixture()
+      assert Catalog.list_collection_field_values() == [collection_field_value]
+    end
+
+    test "get_collection_field_value!/1 returns the collection_field_value with given id" do
+      collection_field_value = collection_field_value_fixture()
+      assert Catalog.get_collection_field_value!(collection_field_value.id) == collection_field_value
+    end
+
+    test "create_collection_field_value/1 with valid data creates a collection_field_value" do
+      valid_attrs = %{value: "some value", locale: "some locale"}
+
+      assert {:ok, %CollectionFieldValue{} = collection_field_value} = Catalog.create_collection_field_value(valid_attrs)
+      assert collection_field_value.value == "some value"
+      assert collection_field_value.locale == "some locale"
+    end
+
+    test "create_collection_field_value/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_collection_field_value(@invalid_attrs)
+    end
+
+    test "update_collection_field_value/2 with valid data updates the collection_field_value" do
+      collection_field_value = collection_field_value_fixture()
+      update_attrs = %{value: "some updated value", locale: "some updated locale"}
+
+      assert {:ok, %CollectionFieldValue{} = collection_field_value} = Catalog.update_collection_field_value(collection_field_value, update_attrs)
+      assert collection_field_value.value == "some updated value"
+      assert collection_field_value.locale == "some updated locale"
+    end
+
+    test "update_collection_field_value/2 with invalid data returns error changeset" do
+      collection_field_value = collection_field_value_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_collection_field_value(collection_field_value, @invalid_attrs)
+      assert collection_field_value == Catalog.get_collection_field_value!(collection_field_value.id)
+    end
+
+    test "delete_collection_field_value/1 deletes the collection_field_value" do
+      collection_field_value = collection_field_value_fixture()
+      assert {:ok, %CollectionFieldValue{}} = Catalog.delete_collection_field_value(collection_field_value)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_collection_field_value!(collection_field_value.id) end
+    end
+
+    test "change_collection_field_value/1 returns a collection_field_value changeset" do
+      collection_field_value = collection_field_value_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_collection_field_value(collection_field_value)
+    end
+  end
+
+  describe "item_field_values" do
+    alias Voile.Catalog.ItemFieldValue
+
+    import Voile.CatalogFixtures
+
+    @invalid_attrs %{value: nil, locale: nil}
+
+    test "list_item_field_values/0 returns all item_field_values" do
+      item_field_value = item_field_value_fixture()
+      assert Catalog.list_item_field_values() == [item_field_value]
+    end
+
+    test "get_item_field_value!/1 returns the item_field_value with given id" do
+      item_field_value = item_field_value_fixture()
+      assert Catalog.get_item_field_value!(item_field_value.id) == item_field_value
+    end
+
+    test "create_item_field_value/1 with valid data creates a item_field_value" do
+      valid_attrs = %{value: "some value", locale: "some locale"}
+
+      assert {:ok, %ItemFieldValue{} = item_field_value} = Catalog.create_item_field_value(valid_attrs)
+      assert item_field_value.value == "some value"
+      assert item_field_value.locale == "some locale"
+    end
+
+    test "create_item_field_value/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_item_field_value(@invalid_attrs)
+    end
+
+    test "update_item_field_value/2 with valid data updates the item_field_value" do
+      item_field_value = item_field_value_fixture()
+      update_attrs = %{value: "some updated value", locale: "some updated locale"}
+
+      assert {:ok, %ItemFieldValue{} = item_field_value} = Catalog.update_item_field_value(item_field_value, update_attrs)
+      assert item_field_value.value == "some updated value"
+      assert item_field_value.locale == "some updated locale"
+    end
+
+    test "update_item_field_value/2 with invalid data returns error changeset" do
+      item_field_value = item_field_value_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_item_field_value(item_field_value, @invalid_attrs)
+      assert item_field_value == Catalog.get_item_field_value!(item_field_value.id)
+    end
+
+    test "delete_item_field_value/1 deletes the item_field_value" do
+      item_field_value = item_field_value_fixture()
+      assert {:ok, %ItemFieldValue{}} = Catalog.delete_item_field_value(item_field_value)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_item_field_value!(item_field_value.id) end
+    end
+
+    test "change_item_field_value/1 returns a item_field_value changeset" do
+      item_field_value = item_field_value_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_item_field_value(item_field_value)
+    end
+  end
 end

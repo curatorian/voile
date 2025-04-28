@@ -1,7 +1,9 @@
 defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
+  alias Voile.Catalog.CollectionFieldValue
   use VoileWeb, :live_component
 
   alias Voile.Catalog
+  alias Voile.Catalog.CollectionField
   alias Ecto.Changeset
 
   @impl true
@@ -13,14 +15,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         <:subtitle>Use this form to manage collection records in your database.</:subtitle>
       </.header>
        {@step}
-      <%= if @step == 1 do %>
-        <.simple_form
-          for={@form}
-          id="collection-form-1"
-          phx-target={@myself}
-          phx-change="validate"
-          phx-submit="next_step"
-        >
+      <.simple_form
+        for={@form}
+        id="collection-form-1"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="next_step"
+      >
+        <%= if @step == 1 do %>
           <.input field={@form[:title]} type="text" label="Title" />
           <.input field={@form[:description]} type="text" label="Description" />
           <.input
@@ -35,36 +37,50 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             ]}
           /> <.input field={@form[:thumbnail]} type="text" label="Thumbnail" />
           <.input field={@form[:access_level]} type="text" label="Access Level" />
-          <:actions>
-            <.button phx-disable-with="Saving...">Next</.button>
-          </:actions>
-        </.simple_form>
-      <% end %>
-      
-      <%= if @step == 2 do %>
-        <.simple_form
-          for={@form}
-          id="collection-form-2"
-          phx-target={@myself}
-          phx-change="validate"
-          phx-submit="save"
-        >
+        <% end %>
+        
+        <%= if @step == 2 do %>
           <.inputs_for :let={col_field} field={@form[:collection_fields]}>
-            <.input field={col_field[:label]} type="text" label="Label" />
-            <.input field={col_field[:name]} type="text" label="Name" />
-            <.input field={col_field[:field_type]} type="text" label="Name" />
-            <.input field={col_field[:required]} type="checkbox" />
-            <.input field={col_field[:sort_order]} type="number" />
+            <div class="grid grid-cols-4 gap-2">
+              <.input field={col_field[:label]} type="text" label="Label" />
+              <.input field={col_field[:name]} type="text" label="Name" />
+              <.input field={col_field[:field_type]} type="text" label="Field Type" />
+              <.input field={col_field[:sort_order]} type="number" label="Order Sort" />
+              <.input field={col_field[:required]} type="checkbox" label="Required" />
+            </div>
+            <!-- Add input for collection_field_value -->
+            <.inputs_for :let={col_field_value} field={col_field[:collection_field_values]}>
+              <div class="field-value">
+                <.input field={col_field_value[:value]} label="Field Value" />
+              </div>
+            </.inputs_for>
+            
+            <%= if col_field.data.id do %>
+              <.button type="button" phx-click="add_collection_field" phx-target={@myself}>
+                Add Field
+              </.button>
+            <% else %>
+              <.button type="button" phx-click="remove_collection_field" phx-target={@myself}>
+                Remove Field
+              </.button>
+            <% end %>
           </.inputs_for>
           
-          <%!-- <.button phx-click="add_collection_field" phx-target={@myself}>Tambah Field</.button> --%>
-          <.button phx-click="prev_step" phx-target={@myself}>Back</.button>
+          <%= if @show_add_collection_field do %>
+            <.button type="button" phx-click="add_collection_field" phx-target={@myself}>
+              Add Field
+            </.button>
+          <% end %>
+        <% end %>
+        
+        <:actions>
+          <%= if @step > 1 do %>
+            <.button type="button" phx-click="prev_step" phx-target={@myself}>Back</.button>
+          <% end %>
           
-          <:actions>
-            <.button phx-disable-with="Saving...">Save Collection</.button>
-          </:actions>
-        </.simple_form>
-      <% end %>
+          <.button phx-disable-with="Saving...">Next</.button>
+        </:actions>
+      </.simple_form>
     </div>
     """
   end
@@ -99,9 +115,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
       {:noreply, socket}
     else
-      socket
-      |> put_flash(:info, "Harap isi data dengan benar!")
-      |> assign(:form, to_form(changeset))
+      socket =
+        socket
+        |> put_flash(:info, "Harap isi data dengan benar!")
+        |> assign(:form, to_form(changeset, action: :validate))
 
       {:noreply, socket}
     end
@@ -116,16 +133,44 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("add_collection_field", _params, socket) do
-    dbg(socket)
+    collection_params = socket.assigns.form.params
+    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
+
+    updated_collection = Changeset.apply_changes(changeset)
+
+    updated_collection = %{
+      updated_collection
+      | collection_fields:
+          updated_collection.collection_fields ++ [%CollectionField{id: Ecto.UUID.generate()}]
+    }
+
+    new_changeset = Catalog.change_collection(updated_collection)
+
+    socket =
+      socket
+      |> assign(collection: updated_collection)
+      |> assign(collection_field_values: %CollectionFieldValue{})
+      |> assign(form: to_form(new_changeset))
+
     {:noreply, socket}
   end
 
   def handle_event("save", %{"collection" => collection_field}, socket) do
-    # final_params = Map.merge(Map.from_struct(socket.assigns.collection), collection_params)
+    final_params = Map.merge(Map.from_struct(socket.assigns.collection), collection_field)
     dbg(collection_field)
     dbg(socket.assigns.collection)
 
-    # save_collection(socket, socket.assigns.action, final_params)
+    save_collection(socket, socket.assigns.action, final_params)
+    {:noreply, socket}
+  end
+
+  def handle_event("save", %{}, socket) do
+    dbg(socket.assigns.collection)
+
+    socket =
+      socket
+      |> put_flash(:error, "Form tidak valid!")
+
     {:noreply, socket}
   end
 

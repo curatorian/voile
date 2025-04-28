@@ -276,7 +276,7 @@ defmodule VoileWeb.CoreComponents do
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file month number password
-               range search select tel text textarea time url week)
+               range search select tel text textarea time url week hidden)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -558,7 +558,7 @@ defmodule VoileWeb.CoreComponents do
 
   def back(assigns) do
     ~H"""
-    <div>
+    <div class="mt-5">
       <.link
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"

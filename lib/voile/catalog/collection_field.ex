@@ -12,7 +12,11 @@ defmodule Voile.Catalog.CollectionField do
     field :field_type, :string
     field :required, :boolean, default: false
     field :sort_order, :integer
-    belongs_to :collection, Collection
+    belongs_to :collection, Collection, on_replace: :nilify
+
+    has_many :collection_field_values, Voile.Catalog.CollectionFieldValue,
+      foreign_key: :collection_field_id,
+      on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
