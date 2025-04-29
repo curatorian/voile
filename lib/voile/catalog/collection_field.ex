@@ -24,7 +24,7 @@ defmodule Voile.Catalog.CollectionField do
   @doc false
   def changeset(collection_field, attrs) do
     collection_field
-    |> cast(attrs, [:name, :label, :field_type, :required, :sort_order])
-    |> validate_required([:name, :label, :field_type, :required, :sort_order])
+    |> cast(attrs, [:name, :label, :field_type, :required, :sort_order, :collection_id])
+    |> validate_required([:name, :label, :field_type, :required, :sort_order, :collection_id])
   end
 end

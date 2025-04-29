@@ -49,21 +49,15 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               <.input field={col_field[:required]} type="checkbox" label="Required" />
             </div>
             <!-- Add input for collection_field_value -->
-            <.inputs_for :let={col_field_value} field={col_field[:collection_field_values]}>
-              <div class="field-value">
-                <.input field={col_field_value[:value]} label="Field Value" />
-              </div>
-            </.inputs_for>
-            
-            <%= if col_field.data.id do %>
-              <.button type="button" phx-click="add_collection_field" phx-target={@myself}>
-                Add Field
-              </.button>
-            <% else %>
-              <.button type="button" phx-click="remove_collection_field" phx-target={@myself}>
-                Remove Field
-              </.button>
-            <% end %>
+            <.input field={col_field[:col_field_values]} label="Field Value" />
+            <.button
+              type="button"
+              phx-click="delete_unsaved_field"
+              phx-target={@myself}
+              phx-value={col_field.id}
+            >
+              Remove Field {col_field.index}
+            </.button>
           </.inputs_for>
           
           <%= if @show_add_collection_field do %>
@@ -146,12 +140,19 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     new_changeset = Catalog.change_collection(updated_collection)
 
+    dbg(socket)
+
     socket =
       socket
       |> assign(collection: updated_collection)
       |> assign(collection_field_values: %CollectionFieldValue{})
       |> assign(form: to_form(new_changeset))
 
+    {:noreply, socket}
+  end
+
+  def handle_event("delete_unsaved_field", params, socket) do
+    dbg(params)
     {:noreply, socket}
   end
 

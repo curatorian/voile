@@ -8,9 +8,9 @@ defmodule Voile.Repo.Migrations.CreateCollectionFieldValues do
       add :locale, :string
 
       add :collection_field_id,
-          references(:collection_fields, on_delete: :nothing, type: :binary_id)
+          references(:collection_fields, on_delete: :nothing, type: :uuid)
 
-      add :item_id, references(:items, on_delete: :nothing, type: :binary_id)
+      add :item_id, references(:items, on_delete: :nothing, type: :uuid)
 
       timestamps(type: :utc_datetime)
     end

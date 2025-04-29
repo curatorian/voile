@@ -11,11 +11,11 @@ defmodule Voile.Repo.Migrations.CreateItems do
       add :status, :string
       add :condition, :string
       add :availability, :string
-      add :collection, references(:collections, on_delete: :nilify_all, type: :binary_id)
+      add :collection_id, references(:collections, on_delete: :nilify_all, type: :uuid)
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:items, [:collection])
+    create index(:items, [:collection_id])
   end
 end

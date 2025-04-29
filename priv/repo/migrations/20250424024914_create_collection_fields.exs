@@ -9,11 +9,11 @@ defmodule Voile.Repo.Migrations.CreateCollectionFields do
       add :field_type, :string
       add :required, :boolean, default: false, null: false
       add :sort_order, :integer
-      add :collections, references(:collections, on_delete: :nilify_all, type: :binary_id)
+      add :collection_id, references(:collections, on_delete: :nilify_all, type: :uuid)
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:collection_fields, [:collections])
+    create index(:collection_fields, [:collection_id])
   end
 end

@@ -8,11 +8,11 @@ defmodule Voile.Repo.Migrations.CreateSystemLogs do
       add :log_location, :string
       add :log_msg, :string
       add :log_date, :utc_datetime
-      add :users, references(:users, on_delete: :nothing, type: :binary_id)
+      add :owner_id, references(:users, on_delete: :nothing, type: :uuid)
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:system_logs, [:users])
+    create index(:system_logs, [:owner_id])
   end
 end

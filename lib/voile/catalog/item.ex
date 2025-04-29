@@ -19,6 +19,10 @@ defmodule Voile.Catalog.Item do
     timestamps(type: :utc_datetime)
   end
 
+  @statuses ~w(active inactive lost damaged)
+  @conditions ~w(new good fair poor)
+  @availabilities ~w(available checked_out reserved maintenance)
+
   @doc false
   def changeset(item, attrs) do
     item
@@ -29,7 +33,8 @@ defmodule Voile.Catalog.Item do
       :location,
       :status,
       :condition,
-      :availability
+      :availability,
+      :collection_id
     ])
     |> validate_required([
       :item_code,
@@ -40,5 +45,11 @@ defmodule Voile.Catalog.Item do
       :condition,
       :availability
     ])
+    |> unique_constraint(:barcode)
+    |> unique_constraint(:item_code)
+    |> unique_constraint(:inventory_code)
+    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:condition, @conditions)
+    |> validate_inclusion(:availability, @availabilities)
   end
 end
