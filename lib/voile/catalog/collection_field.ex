@@ -3,6 +3,7 @@ defmodule Voile.Catalog.CollectionField do
   import Ecto.Changeset
 
   alias Voile.Catalog.Collection
+  alias Voile.Catalog.CollectionFieldValue
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,6 +13,7 @@ defmodule Voile.Catalog.CollectionField do
     field :field_type, :string
     field :required, :boolean, default: false
     field :sort_order, :integer
+    field :col_field_values, :string, virtual: true
     belongs_to :collection, Collection, on_replace: :nilify
 
     has_many :collection_field_values, Voile.Catalog.CollectionFieldValue,
@@ -24,7 +26,19 @@ defmodule Voile.Catalog.CollectionField do
   @doc false
   def changeset(collection_field, attrs) do
     collection_field
-    |> cast(attrs, [:name, :label, :field_type, :required, :sort_order, :collection_id])
-    |> validate_required([:name, :label, :field_type, :required, :sort_order, :collection_id])
+    |> cast(attrs, [
+      :name,
+      :label,
+      :field_type,
+      :required,
+      :sort_order,
+      :collection_id,
+      :col_field_values
+    ])
+    |> cast_assoc(:collection_field_values,
+      with: &CollectionFieldValue.changeset/2,
+      required: false
+    )
+    |> validate_required([:name, :label, :field_type, :required, :sort_order])
   end
 end

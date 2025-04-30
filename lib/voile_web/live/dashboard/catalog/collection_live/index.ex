@@ -10,7 +10,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
     socket =
       socket
       |> stream(:collections, Catalog.list_collections())
-      |> assign(:step, 2)
+      |> assign(:step, 1)
       |> assign(:show_add_collection_field, true)
 
     {:ok, socket}

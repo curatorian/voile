@@ -4,7 +4,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   alias Voile.Catalog
   alias Voile.Catalog.CollectionField
+  alias Voile.Repo
   alias Ecto.Changeset
+  import Ecto.Query
 
   @impl true
   def render(assigns) do
@@ -20,7 +22,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         id="collection-form-1"
         phx-target={@myself}
         phx-change="validate"
-        phx-submit="next_step"
+        phx-submit="save"
       >
         <%= if @step == 1 do %>
           <.input field={@form[:title]} type="text" label="Title" />
@@ -54,7 +56,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               type="button"
               phx-click="delete_unsaved_field"
               phx-target={@myself}
-              phx-value={col_field.id}
+              phx-value-index={col_field.index}
             >
               Remove Field {col_field.index}
             </.button>
@@ -72,7 +74,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             <.button type="button" phx-click="prev_step" phx-target={@myself}>Back</.button>
           <% end %>
           
-          <.button phx-disable-with="Saving...">Next</.button>
+          <%= if @step == 2 do %>
+            <.button type="submit" phx-disable-with="Saving...">
+              Save
+            </.button>
+          <% else %>
+            <.button type="button" phx-click="next_step" phx-target={@myself}>Next</.button>
+          <% end %>
         </:actions>
       </.simple_form>
     </div>
@@ -95,8 +103,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  def handle_event("next_step", %{"collection" => collection_params}, socket) do
-    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
+  def handle_event("next_step", _params, socket) do
+    changeset = Catalog.change_collection(socket.assigns.collection, socket.assigns.form.params)
 
     if changeset.valid? do
       socket =
@@ -140,8 +148,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     new_changeset = Catalog.change_collection(updated_collection)
 
-    dbg(socket)
-
     socket =
       socket
       |> assign(collection: updated_collection)
@@ -151,58 +157,157 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("delete_unsaved_field", params, socket) do
-    dbg(params)
-    {:noreply, socket}
-  end
+  def handle_event("delete_unsaved_field", %{"index" => index_str}, socket) do
+    index = String.to_integer(index_str)
 
-  def handle_event("save", %{"collection" => collection_field}, socket) do
-    final_params = Map.merge(Map.from_struct(socket.assigns.collection), collection_field)
-    dbg(collection_field)
-    dbg(socket.assigns.collection)
+    # 1. Get current user-typed form values
+    collection_params = socket.assigns.form.params
 
-    save_collection(socket, socket.assigns.action, final_params)
-    {:noreply, socket}
-  end
+    # 2. Start with the changeset using current user input
+    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
 
-  def handle_event("save", %{}, socket) do
-    dbg(socket.assigns.collection)
+    # 3. Apply the changes so we can work with up-to-date data
+    updated_collection = Ecto.Changeset.apply_changes(changeset)
 
+    # 4. Remove the field at index
+    updated_collection_fields =
+      List.delete_at(updated_collection.collection_fields, index)
+
+    # 5. Replace fields in struct
+    updated_collection = %{updated_collection | collection_fields: updated_collection_fields}
+
+    # 6. Rebuild the changeset and reapply the old form params to preserve user input
+    new_changeset =
+      updated_collection
+      |> Catalog.change_collection()
+      |> Map.put(:params, collection_params)
+
+    # 7. Assign everything back
     socket =
       socket
-      |> put_flash(:error, "Form tidak valid!")
+      |> assign(collection: updated_collection)
+      |> assign(form: to_form(new_changeset))
 
     {:noreply, socket}
   end
 
-  defp save_collection(socket, :edit, collection_params) do
-    case Catalog.update_collection(socket.assigns.collection, collection_params) do
+  def handle_event("save", _params, socket) do
+    collection = socket.assigns.collection
+
+    # Convert nested structs to plain maps for create/update
+    collection_params = %{
+      "title" => collection.title,
+      "description" => collection.description,
+      "status" => collection.status,
+      "thumbnail" => collection.thumbnail,
+      "access_level" => collection.access_level,
+      "collection_fields" =>
+        Enum.with_index(collection.collection_fields)
+        |> Enum.reduce(%{}, fn {field, idx}, acc ->
+          Map.put(acc, "#{idx}", %{
+            "label" => field.label,
+            "name" => field.name,
+            "field_type" => field.field_type,
+            "sort_order" => field.sort_order,
+            "required" => field.required,
+            "col_field_values" => field.col_field_values || ""
+          })
+        end)
+    }
+
+    dbg(collection_params)
+
+    save_collection(socket, socket.assigns.action, collection_params)
+    {:noreply, socket}
+  end
+
+  defp save_collection(socket, action, params) do
+    Repo.transaction(fn ->
+      case action do
+        :new ->
+          with {:ok, collection} <- Catalog.create_collection(params) do
+            save_collection_fields(params["collection_fields"] || %{}, collection.id)
+            {:ok, collection}
+          end
+
+        :edit ->
+          with {:ok, collection} <- Catalog.update_collection(socket.assigns.collection, params) do
+            # Remove old fields if necessary (simpler: delete and re-insert all for now)
+            from(cf in CollectionField, where: cf.collection_id == ^collection.id)
+            |> Repo.delete_all()
+
+            save_collection_fields(params["collection_fields"] || %{}, collection.id)
+            {:ok, collection}
+          end
+      end
+    end)
+    |> case do
       {:ok, collection} ->
         notify_parent({:saved, collection})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Collection updated successfully")
+         |> put_flash(:info, "Collection saved successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
+
+      {:error, reason} ->
+        dbg(reason)
+        {:noreply, put_flash(socket, :error, "Failed to save collection")}
     end
   end
 
-  defp save_collection(socket, :new, collection_params) do
-    case Catalog.create_collection(collection_params) do
-      {:ok, collection} ->
-        notify_parent({:saved, collection})
+  # defp save_collection(socket, :edit, collection_params) do
+  #   case Catalog.update_collection(socket.assigns.collection, collection_params) do
+  #     {:ok, collection} ->
+  #       notify_parent({:saved, collection})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Collection created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "Collection updated successfully")
+  #        |> push_patch(to: socket.assigns.patch)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, form: to_form(changeset))}
+  #   end
+  # end
+
+  # defp save_collection(socket, :new, collection_params) do
+  #   case Catalog.create_collection(collection_params) do
+  #     {:ok, collection} ->
+  #       notify_parent({:saved, collection})
+
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "Collection created successfully")
+  #        |> push_patch(to: socket.assigns.patch)}
+
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, form: to_form(changeset))}
+  #   end
+  # end
+
+  defp save_collection_fields(fields_params, collection_id) do
+    Enum.each(fields_params, fn {_idx, field_params} ->
+      full_field_params = Map.put(field_params, "collection_id", collection_id)
+
+      with {:ok, field} <- Catalog.create_collection_field(full_field_params) do
+        (field_params["col_field_values"] || "")
+        |> String.split(",", trim: true)
+        |> Enum.map(&String.trim/1)
+        |> Enum.each(fn val ->
+          CollectionFieldValue.changeset(%CollectionFieldValue{}, %{
+            value: val,
+            # Adjust locale dynamically if needed
+            locale: "en",
+            collection_field_id: field.id
+          })
+          |> Repo.insert!()
+        end)
+      end
+    end)
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
