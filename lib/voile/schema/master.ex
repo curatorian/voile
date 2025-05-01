@@ -1,4 +1,4 @@
-defmodule Voile.Master do
+defmodule Voile.Schema.Master do
   @moduledoc """
   The Master context.
   """

@@ -5,6 +5,7 @@ defmodule Voile.Repo.Migrations.CreateNodes do
     create table(:nodes) do
       add :name, :string
       add :abbr, :string
+      add :description, :text
       add :image, :string
 
       timestamps(type: :utc_datetime)

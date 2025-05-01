@@ -16,7 +16,7 @@ defmodule Voile.MasterFixtures do
         creator_name: "some creator_name",
         type: "some type"
       })
-      |> Voile.Master.create_creator()
+      |> Voile.Schema.Master.create_creator()
 
     creator
   end
@@ -32,7 +32,7 @@ defmodule Voile.MasterFixtures do
         time_increment: 42,
         time_unit: "some time_unit"
       })
-      |> Voile.Master.create_frequency()
+      |> Voile.Schema.Master.create_frequency()
 
     frequency
   end
@@ -53,7 +53,7 @@ defmodule Voile.MasterFixtures do
         name: "some name",
         reloan_limit: 42
       })
-      |> Voile.Master.create_member_type()
+      |> Voile.Schema.Master.create_member_type()
 
     member_type
   end
@@ -69,7 +69,7 @@ defmodule Voile.MasterFixtures do
         location_name: "some location_name",
         location_place: "some location_place"
       })
-      |> Voile.Master.create_locations()
+      |> Voile.Schema.Master.create_locations()
 
     locations
   end
@@ -83,7 +83,7 @@ defmodule Voile.MasterFixtures do
       |> Enum.into(%{
         name: "some name"
       })
-      |> Voile.Master.create_places()
+      |> Voile.Schema.Master.create_places()
 
     places
   end
@@ -100,7 +100,7 @@ defmodule Voile.MasterFixtures do
         contact: "some contact",
         name: "some name"
       })
-      |> Voile.Master.create_publishers()
+      |> Voile.Schema.Master.create_publishers()
 
     publishers
   end
@@ -116,7 +116,7 @@ defmodule Voile.MasterFixtures do
         name: "some name",
         type: "some type"
       })
-      |> Voile.Master.create_topic()
+      |> Voile.Schema.Master.create_topic()
 
     topic
   end

@@ -1,4 +1,4 @@
-defmodule Voile.System.CollectionLog do
+defmodule Voile.Schema.System.CollectionLog do
   use Ecto.Schema
   import Ecto.Changeset
 

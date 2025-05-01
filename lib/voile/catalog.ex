@@ -24,8 +24,7 @@ defmodule Voile.Catalog do
       :resource_template,
       :mst_creator,
       :node,
-      :collection_fields,
-      :collection_field_values
+      :collection_fields
     ])
   end
 
@@ -43,7 +42,17 @@ defmodule Voile.Catalog do
       ** (Ecto.NoResultsError)
 
   """
-  def get_collection!(id), do: Repo.get!(Collection, id)
+  def get_collection!(id) do
+    Collection
+    |> Repo.get!(id)
+    |> Repo.preload([
+      :resource_class,
+      :resource_template,
+      :mst_creator,
+      :node,
+      :collection_fields
+    ])
+  end
 
   @doc """
   Creates a collection.
@@ -300,105 +309,6 @@ defmodule Voile.Catalog do
   """
   def change_collection_field(%CollectionField{} = collection_field, attrs \\ %{}) do
     CollectionField.changeset(collection_field, attrs)
-  end
-
-  alias Voile.Catalog.CollectionFieldValue
-
-  @doc """
-  Returns the list of collection_field_values.
-
-  ## Examples
-
-      iex> list_collection_field_values()
-      [%CollectionFieldValue{}, ...]
-
-  """
-  def list_collection_field_values do
-    Repo.all(CollectionFieldValue)
-  end
-
-  @doc """
-  Gets a single collection_field_value.
-
-  Raises `Ecto.NoResultsError` if the Collection field value does not exist.
-
-  ## Examples
-
-      iex> get_collection_field_value!(123)
-      %CollectionFieldValue{}
-
-      iex> get_collection_field_value!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_collection_field_value!(id), do: Repo.get!(CollectionFieldValue, id)
-
-  @doc """
-  Creates a collection_field_value.
-
-  ## Examples
-
-      iex> create_collection_field_value(%{field: value})
-      {:ok, %CollectionFieldValue{}}
-
-      iex> create_collection_field_value(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_collection_field_value(attrs \\ %{}) do
-    %CollectionFieldValue{}
-    |> CollectionFieldValue.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a collection_field_value.
-
-  ## Examples
-
-      iex> update_collection_field_value(collection_field_value, %{field: new_value})
-      {:ok, %CollectionFieldValue{}}
-
-      iex> update_collection_field_value(collection_field_value, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_collection_field_value(%CollectionFieldValue{} = collection_field_value, attrs) do
-    collection_field_value
-    |> CollectionFieldValue.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a collection_field_value.
-
-  ## Examples
-
-      iex> delete_collection_field_value(collection_field_value)
-      {:ok, %CollectionFieldValue{}}
-
-      iex> delete_collection_field_value(collection_field_value)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_collection_field_value(%CollectionFieldValue{} = collection_field_value) do
-    Repo.delete(collection_field_value)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking collection_field_value changes.
-
-  ## Examples
-
-      iex> change_collection_field_value(collection_field_value)
-      %Ecto.Changeset{data: %CollectionFieldValue{}}
-
-  """
-  def change_collection_field_value(
-        %CollectionFieldValue{} = collection_field_value,
-        attrs \\ %{}
-      ) do
-    CollectionFieldValue.changeset(collection_field_value, attrs)
   end
 
   alias Voile.Catalog.ItemFieldValue

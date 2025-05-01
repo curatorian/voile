@@ -1,4 +1,4 @@
-defmodule Voile.System do
+defmodule Voile.Schema.System do
   @moduledoc """
   The System context.
   """
@@ -9,7 +9,7 @@ defmodule Voile.System do
   alias Voile.Schema.System.Node
   alias Voile.Schema.System.Setting
   alias Voile.Schema.System.SystemLog
-  alias Voile.System.CollectionLog
+  alias Voile.Schema.System.CollectionLog
 
   @doc """
   Returns the list of nodes.

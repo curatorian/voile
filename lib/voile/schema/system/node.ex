@@ -6,6 +6,7 @@ defmodule Voile.Schema.System.Node do
     field :name, :string
     field :image, :string
     field :abbr, :string
+    field :description, :string
 
     timestamps(type: :utc_datetime)
   end

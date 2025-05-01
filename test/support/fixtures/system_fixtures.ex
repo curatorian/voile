@@ -15,7 +15,7 @@ defmodule Voile.SystemFixtures do
         image: "some image",
         name: "some name"
       })
-      |> Voile.System.create_node()
+      |> Voile.Schema.System.create_node()
 
     node
   end
@@ -30,7 +30,7 @@ defmodule Voile.SystemFixtures do
         setting_name: "some setting_name",
         setting_value: "some setting_value"
       })
-      |> Voile.System.create_setting()
+      |> Voile.Schema.System.create_setting()
 
     setting
   end
@@ -47,7 +47,7 @@ defmodule Voile.SystemFixtures do
         log_msg: "some log_msg",
         log_type: "some log_type"
       })
-      |> Voile.System.create_system_log()
+      |> Voile.Schema.System.create_system_log()
 
     system_log
   end
@@ -63,7 +63,7 @@ defmodule Voile.SystemFixtures do
         message: "some message",
         title: "some title"
       })
-      |> Voile.System.create_collection_log()
+      |> Voile.Schema.System.create_collection_log()
 
     collection_log
   end
