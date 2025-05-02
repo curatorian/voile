@@ -28,11 +28,11 @@ defmodule VoileWeb.Utils.SideBarMenuMaster do
     [
       %{
         name: "Creator",
-        url: "/manage/master/creator"
+        url: "/manage/master/creators"
       },
       %{
         name: "Frequency",
-        url: "/manage/master/frequency"
+        url: "/manage/master/frequencies"
       },
       %{
         name: "Locations",
@@ -40,7 +40,7 @@ defmodule VoileWeb.Utils.SideBarMenuMaster do
       },
       %{
         name: "Member Type",
-        url: "/manage/master/member_type"
+        url: "/manage/master/member_types"
       },
       %{
         name: "Places",
@@ -48,11 +48,11 @@ defmodule VoileWeb.Utils.SideBarMenuMaster do
       },
       %{
         name: "Publisher",
-        url: "/manage/master/publisher"
+        url: "/manage/master/publishers"
       },
       %{
         name: "Topic",
-        url: "/manage/master/topic"
+        url: "/manage/master/topics"
       }
     ]
   end

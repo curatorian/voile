@@ -35,8 +35,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               {"Published", "published"},
               {"Archived", "archived"}
             ]}
+          />
+          <.input
+            field={@form[:access_level]}
+            type="select"
+            label="Access Level"
+            options={[
+              {"Public", "public"},
+              {"Private", "private"},
+              {"Restricted", "restricted"}
+            ]}
           /> <.input field={@form[:thumbnail]} type="text" label="Thumbnail" />
-          <.input field={@form[:access_level]} type="text" label="Access Level" />
         <% end %>
         
         <%= if @step == 2 do %>
@@ -101,7 +110,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("next_step", _params, socket) do
-    changeset = Catalog.change_collection(socket.assigns.collection, socket.assigns.form.params)
+    params = socket.assigns.form.params
+
+    changeset =
+      Catalog.change_collection(socket.assigns.collection, params) |> Map.put(:action, :validate)
 
     if changeset.valid? do
       socket =
@@ -114,8 +126,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     else
       socket =
         socket
-        |> put_flash(:info, "Harap isi data dengan benar!")
+        |> put_flash(:error, "Please fill in all required fields.")
         |> assign(:form, to_form(changeset, action: :validate))
+
+      dbg(socket.assigns.form)
 
       {:noreply, socket}
     end
