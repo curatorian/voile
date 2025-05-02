@@ -5,7 +5,7 @@ defmodule Voile.Repo.Migrations.CreateCollections do
     create table(:collections, primary_key: false) do
       add :id, :binary_id, primary_key: true, null: false
       add :title, :string
-      add :description, :string
+      add :description, :text
       add :thumbnail, :string
       add :status, :string
       add :access_level, :string

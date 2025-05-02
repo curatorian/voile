@@ -26,6 +26,9 @@ defmodule Voile.Catalog.Collection do
     timestamps(type: :utc_datetime)
   end
 
+  @statuses ~w(draft pending published archived)
+  @access_levels ~w(public private restricted)
+
   @doc false
   def changeset(collection, attrs) do
     collection
@@ -44,5 +47,8 @@ defmodule Voile.Catalog.Collection do
     |> validate_required([:title, :description, :thumbnail, :status, :access_level],
       message: "Field ini tidak boleh kosong"
     )
+    |> unique_constraint(:title)
+    |> validate_inclusion(:status, @statuses, message: "Status tidak valid")
+    |> validate_inclusion(:access_level, @access_levels, message: "Access level tidak valid")
   end
 end

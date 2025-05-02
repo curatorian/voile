@@ -5,7 +5,7 @@ defmodule Voile.Repo.Migrations.CreateCollectionLogs do
     create table(:collection_logs, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :title, :string
-      add :message, :string
+      add :message, :text
       add :action, :string
       add :collection_id, references(:collections, on_delete: :nothing, type: :uuid)
       add :user_id, references(:users, on_delete: :nothing, type: :uuid)

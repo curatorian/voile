@@ -29,7 +29,7 @@
     
     <.back navigate={~p"/manage/catalog/collections"}>Back to collections</.back>
     
-    <.modal
+    <.collection_modal
       :if={@live_action == :edit}
       id="collection-modal"
       show
@@ -41,9 +41,10 @@
         title={@page_title}
         action={@live_action}
         collection={@collection}
+        show_add_collection_field={@show_add_collection_field}
         step={@step}
         patch={~p"/manage/catalog/collections/#{@collection}"}
       />
-    </.modal>
+    </.collection_modal>
   </div>
 </section>

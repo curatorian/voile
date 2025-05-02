@@ -5,7 +5,7 @@ defmodule Voile.Repo.Migrations.CreateResourceClass do
     create table(:resource_class) do
       add :label, :string
       add :local_name, :string
-      add :information, :string
+      add :information, :text
       add :owner_id, references(:users, type: :uuid, on_delete: :nothing)
       add :vocabulary_id, references(:metadata_vocabularies, on_delete: :nothing)
 

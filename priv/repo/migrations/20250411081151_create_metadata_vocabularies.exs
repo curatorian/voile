@@ -6,7 +6,7 @@ defmodule Voile.Repo.Migrations.CreateMetadataVocabularies do
       add :label, :string
       add :prefix, :string
       add :namespace_url, :string
-      add :information, :string
+      add :information, :text
       add :owner_id, references(:users, type: :uuid, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)

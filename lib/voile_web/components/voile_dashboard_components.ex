@@ -5,7 +5,7 @@ defmodule VoileWeb.VoileDashboardComponents do
 
   alias Phoenix.LiveView.JS
 
-  import VoileWeb.CoreComponents, only: [icon: 1]
+  import VoileWeb.CoreComponents, only: [icon: 1, modal: 1, button: 1]
 
   @doc """
   Navigation Bar Component for GLAM (Gallery, Library, Archive, Museum)
@@ -199,6 +199,26 @@ defmodule VoileWeb.VoileDashboardComponents do
         </div>
       </div>
     </div>
+    """
+  end
+
+  attr :id, :string, required: true
+
+  def delete_modal(assigns) do
+    ~H"""
+    <.modal id={@id}>
+      <div class="flex flex-col gap-2">
+        <h3 class="text-lg font-semibold">Delete Confirmation</h3>
+        
+        <p>Are you sure you want to delete this item?</p>
+      </div>
+      
+      <div class="flex justify-end gap-2 mt-4">
+        <.button phx-click={JS.exec("data-cancel", to: "#delete-modal")}>Cancel</.button>
+        
+        <.button phx-click={JS.exec("data-confirm", to: "#delete-modal")}>Delete</.button>
+      </div>
+    </.modal>
     """
   end
 

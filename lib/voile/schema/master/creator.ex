@@ -11,10 +11,14 @@ defmodule Voile.Schema.Master.Creator do
     timestamps(type: :utc_datetime)
   end
 
+  @types ~w(Person Organization Group Conference Event Project Institution)
+
   @doc false
   def changeset(creator, attrs) do
     creator
     |> cast(attrs, [:creator_name, :creator_contact, :affiliation, :type])
     |> validate_required([:creator_name, :creator_contact, :affiliation, :type])
+    |> unique_constraint(:creator_name)
+    |> validate_inclusion(:type, @types)
   end
 end

@@ -1,5 +1,4 @@
 alias Voile.Repo
-alias Voile.Schema.Master
 alias Voile.Schema.Master.Creator
 
 creator_list = [
@@ -152,11 +151,11 @@ creator_list = [
 
 for creator <- creator_list do
   %Creator{
-    id: creator_id,
-    type: type,
-    creator_name: creator_name,
-    creator_contact: creator_contact,
-    affiliation: affiliation
+    id: creator[:id],
+    type: "Person",
+    creator_name: creator[:creator_name],
+    creator_contact: creator[:creator_contact],
+    affiliation: creator[:affiliation]
   }
-  |> Master.create_creator()
+  |> Repo.insert!()
 end
