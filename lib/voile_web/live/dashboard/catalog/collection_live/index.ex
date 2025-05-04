@@ -4,12 +4,20 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
   alias Voile.Repo
   alias Voile.Catalog
   alias Voile.Catalog.Collection
+  alias Voile.Schema.Master
+  alias Voile.Schema.Metadata
 
   @impl true
   def mount(_params, _session, socket) do
+    collections = Catalog.list_collections()
+    collection_type = Metadata.list_resource_class()
+    creator = Master.list_mst_creator()
+
     socket =
       socket
-      |> stream(:collections, Catalog.list_collections())
+      |> stream(:collections, collections)
+      |> assign(:collection_type, collection_type)
+      |> assign(:creator, creator)
       |> assign(:step, 1)
       |> assign(:show_add_collection_field, true)
 

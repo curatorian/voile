@@ -5,7 +5,6 @@ defmodule Voile.Catalog.Item do
   alias Voile.Catalog.Collection
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "items" do
     field :status, :string
     field :location, :string
@@ -14,7 +13,7 @@ defmodule Voile.Catalog.Item do
     field :barcode, :string
     field :condition, :string
     field :availability, :string
-    belongs_to :collection, Collection, on_replace: :nilify
+    belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
 
     timestamps(type: :utc_datetime)
   end

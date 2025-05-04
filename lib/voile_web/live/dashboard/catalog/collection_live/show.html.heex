@@ -15,17 +15,20 @@
       </:actions>
     </.header>
     
-    <.list>
-      <:item title="Title">{@collection.title}</:item>
-      
-      <:item title="Description">{@collection.description}</:item>
-      
-      <:item title="Status">{@collection.status}</:item>
-      
-      <:item title="Thumbnail">{@collection.thumbnail}</:item>
-      
-      <:item title="Access Level">{@collection.access_level}</:item>
-    </.list>
+    <div class="flex gap-4">
+      <img src={@collection.thumbnail} />
+      <.list>
+        <:item title="Title">{@collection.title}</:item>
+        
+        <:item title="Description">{@collection.description}</:item>
+        
+        <:item title="Status">{@collection.status}</:item>
+        
+        <:item title="Thumbnail">{@collection.thumbnail}</:item>
+        
+        <:item title="Access Level">{@collection.access_level}</:item>
+      </.list>
+    </div>
     
     <.back navigate={~p"/manage/catalog/collections"}>Back to collections</.back>
     
@@ -44,6 +47,7 @@
         show_add_collection_field={@show_add_collection_field}
         step={@step}
         patch={~p"/manage/catalog/collections/#{@collection}"}
+        default_url={~p"/manage/catalog/collections/#{@collection}/edit"}
       />
     </.collection_modal>
   </div>

@@ -48,7 +48,7 @@
       on_cancel={JS.patch(~p"/manage/master/creators")}
     >
       <.live_component
-        module={VoileWeb.Dashboard.Catalog.ItemLive.FormComponent}
+        module={VoileWeb.Dashboard.Master.CreatorLive.FormComponent}
         id={@creator.id || :new}
         title={@page_title}
         action={@live_action}

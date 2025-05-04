@@ -60,7 +60,10 @@
         collection={@collection}
         show_add_collection_field={@show_add_collection_field}
         step={@step}
+        creator_list={@creator}
+        collection_type={@collection_type}
         patch={~p"/manage/catalog/collections"}
+        default_url={~p"/manage/catalog/collections/new"}
       />
     </.collection_modal>
   </div>

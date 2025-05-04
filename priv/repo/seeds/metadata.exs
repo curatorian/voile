@@ -11,7 +11,6 @@ vocabulary_4 = Repo.get!(Metadata.Vocabulary, 4)
 resource_class = [
   %{
     information: "A resource that acts or has the power to act.",
-    id: 1,
     label: "Agent",
     local_name: "Agent",
     owner_id: nil,
@@ -19,7 +18,6 @@ resource_class = [
   },
   %{
     information: "A group of agents.",
-    id: 2,
     label: "Agent Class",
     local_name: "AgentClass",
     owner_id: nil,
@@ -27,7 +25,6 @@ resource_class = [
   },
   %{
     information: "A book, article, or other documentary resource.",
-    id: 3,
     label: "Bibliographic Resource",
     local_name: "BibliographicResource",
     owner_id: nil,
@@ -35,7 +32,6 @@ resource_class = [
   },
   %{
     information: "A digital resource format.",
-    id: 4,
     label: "File Format",
     local_name: "FileFormat",
     owner_id: nil,
@@ -43,7 +39,6 @@ resource_class = [
   },
   %{
     information: "A rate at which something recurs.",
-    id: 5,
     label: "Frequency",
     local_name: "Frequency",
     owner_id: nil,
@@ -51,7 +46,6 @@ resource_class = [
   },
   %{
     information: "The extent or range of judicial, law enforcement, or other authority.",
-    id: 6,
     label: "Jurisdiction",
     local_name: "Jurisdiction",
     owner_id: nil,
@@ -59,7 +53,6 @@ resource_class = [
   },
   %{
     information: "A legal document giving official permission to do something with a Resource.",
-    id: 7,
     label: "License Document",
     local_name: "LicenseDocument",
     owner_id: nil,
@@ -67,7 +60,6 @@ resource_class = [
   },
   %{
     information: "A system of signs, symbols, sounds, gestures, or rules used in communication.",
-    id: 8,
     label: "Linguistic System",
     local_name: "LinguisticSystem",
     owner_id: nil,
@@ -75,7 +67,6 @@ resource_class = [
   },
   %{
     information: "A spatial region or named place.",
-    id: 9,
     label: "Location",
     local_name: "Location",
     owner_id: nil,
@@ -83,7 +74,6 @@ resource_class = [
   },
   %{
     information: "A location, period of time, or jurisdiction.",
-    id: 10,
     label: "Location, Period, or Jurisdiction",
     local_name: "LocationPeriodOrJurisdiction",
     owner_id: nil,
@@ -91,7 +81,6 @@ resource_class = [
   },
   %{
     information: "A file format or physical medium.",
-    id: 11,
     label: "Media Type",
     local_name: "MediaType",
     owner_id: nil,
@@ -99,7 +88,6 @@ resource_class = [
   },
   %{
     information: "A media type or extent.",
-    id: 12,
     label: "Media Type or Extent",
     local_name: "MediaTypeOrExtent",
     owner_id: nil,
@@ -107,7 +95,6 @@ resource_class = [
   },
   %{
     information: "A process that is used to engender knowledge, attitudes, and skills.",
-    id: 13,
     label: "Method of Instruction",
     local_name: "MethodOfInstruction",
     owner_id: nil,
@@ -115,7 +102,6 @@ resource_class = [
   },
   %{
     information: "A method by which resources are added to a collection.",
-    id: 14,
     label: "Method of Accrual",
     local_name: "MethodOfAccrual",
     owner_id: nil,
@@ -123,7 +109,6 @@ resource_class = [
   },
   %{
     information: "An interval of time that is named or defined by its start and end dates.",
-    id: 15,
     label: "Period of Time",
     local_name: "PeriodOfTime",
     owner_id: nil,
@@ -131,7 +116,6 @@ resource_class = [
   },
   %{
     information: "A physical material or carrier.",
-    id: 16,
     label: "Physical Medium",
     local_name: "PhysicalMedium",
     owner_id: nil,
@@ -139,7 +123,6 @@ resource_class = [
   },
   %{
     information: "A material thing.",
-    id: 17,
     label: "Physical Resource",
     local_name: "PhysicalResource",
     owner_id: nil,
@@ -148,7 +131,6 @@ resource_class = [
   %{
     information:
       "A plan or course of action by an authority, intended to influence and determine decisions, actions, and other matters.",
-    id: 18,
     label: "Policy",
     local_name: "Policy",
     owner_id: nil,
@@ -157,7 +139,6 @@ resource_class = [
   %{
     information:
       "A statement of any changes in ownership and custody of a resource since its creation that are significant for its authenticity, integrity, and interpretation.",
-    id: 19,
     label: "Provenance Statement",
     local_name: "ProvenanceStatement",
     owner_id: nil,
@@ -166,7 +147,6 @@ resource_class = [
   %{
     information:
       "A statement about the intellectual property rights (IPR) held in or over a Resource, a legal document giving official permission to do something with a resource, or a statement about access rights.",
-    id: 20,
     label: "Rights Statement",
     local_name: "RightsStatement",
     owner_id: nil,
@@ -174,7 +154,6 @@ resource_class = [
   },
   %{
     information: "A dimension or extent, or a time taken to play or execute.",
-    id: 21,
     label: "Size or Duration",
     local_name: "SizeOrDuration",
     owner_id: nil,
@@ -183,7 +162,6 @@ resource_class = [
   %{
     information:
       "A basis for comparison; a reference point against which other things can be evaluated.",
-    id: 22,
     label: "Standard",
     local_name: "Standard",
     owner_id: nil,
@@ -191,7 +169,6 @@ resource_class = [
   },
   %{
     information: "An aggregation of resources.",
-    id: 23,
     label: "Collection",
     local_name: "Collection",
     owner_id: nil,
@@ -199,7 +176,6 @@ resource_class = [
   },
   %{
     information: "Data encoded in a defined structure.",
-    id: 24,
     label: "Dataset",
     local_name: "Dataset",
     owner_id: nil,
@@ -207,7 +183,6 @@ resource_class = [
   },
   %{
     information: "A non-persistent, time-based occurrence.",
-    id: 25,
     label: "Event",
     local_name: "Event",
     owner_id: nil,
@@ -215,7 +190,6 @@ resource_class = [
   },
   %{
     information: "A visual representation other than text.",
-    id: 26,
     label: "Image",
     local_name: "Image",
     owner_id: nil,
@@ -224,7 +198,6 @@ resource_class = [
   %{
     information:
       "A resource requiring interaction from the user to be understood, executed, or experienced.",
-    id: 27,
     label: "Interactive Resource",
     local_name: "InteractiveResource",
     owner_id: nil,
@@ -232,7 +205,6 @@ resource_class = [
   },
   %{
     information: "A system that provides one or more functions.",
-    id: 28,
     label: "Service",
     local_name: "Service",
     owner_id: nil,
@@ -240,7 +212,6 @@ resource_class = [
   },
   %{
     information: "A computer program in source or compiled form.",
-    id: 29,
     label: "Software",
     local_name: "Software",
     owner_id: nil,
@@ -248,7 +219,6 @@ resource_class = [
   },
   %{
     information: "A resource primarily intended to be heard.",
-    id: 30,
     label: "Sound",
     local_name: "Sound",
     owner_id: nil,
@@ -256,7 +226,6 @@ resource_class = [
   },
   %{
     information: "A resource consisting primarily of words for reading.",
-    id: 31,
     label: "Text",
     local_name: "Text",
     owner_id: nil,
@@ -264,7 +233,6 @@ resource_class = [
   },
   %{
     information: "An inanimate, three-dimensional object or substance.",
-    id: 32,
     label: "Physical Object",
     local_name: "PhysicalObject",
     owner_id: nil,
@@ -272,7 +240,6 @@ resource_class = [
   },
   %{
     information: "A static visual representation.",
-    id: 33,
     label: "Still Image",
     local_name: "StillImage",
     owner_id: nil,
@@ -281,7 +248,6 @@ resource_class = [
   %{
     information:
       "A series of visual representations imparting an impression of motion when shown in succession.",
-    id: 34,
     label: "Moving Image",
     local_name: "MovingImage",
     owner_id: nil,
@@ -289,7 +255,6 @@ resource_class = [
   },
   %{
     information: "A scholarly academic article, typically published in a journal.",
-    id: 35,
     label: "Academic Article",
     local_name: "AcademicArticle",
     owner_id: nil,
@@ -298,7 +263,6 @@ resource_class = [
   %{
     information:
       "A written composition in prose, usually nonfiction, on a specific topic, forming an independent part of a book or other publication, as a newspaper or magazine.",
-    id: 36,
     label: "Article",
     local_name: "Article",
     owner_id: nil,
@@ -306,7 +270,6 @@ resource_class = [
   },
   %{
     information: "An audio document; aka record.",
-    id: 37,
     label: "audio document",
     local_name: "AudioDocument",
     owner_id: nil,
@@ -314,7 +277,6 @@ resource_class = [
   },
   %{
     information: "An audio-visual document; film, video, and so forth.",
-    id: 38,
     label: "audio-visual document",
     local_name: "AudioVisualDocument",
     owner_id: nil,
@@ -322,7 +284,6 @@ resource_class = [
   },
   %{
     information: "Draft legislation presented for discussion to a legal body.",
-    id: 39,
     label: "Bill",
     local_name: "Bill",
     owner_id: nil,
@@ -331,7 +292,6 @@ resource_class = [
   %{
     information:
       "A written or printed work of fiction or nonfiction, usually on sheets of paper fastened or bound together within covers.",
-    id: 40,
     label: "Book",
     local_name: "Book",
     owner_id: nil,
@@ -339,7 +299,6 @@ resource_class = [
   },
   %{
     information: "A section of a book.",
-    id: 41,
     label: "Book Section",
     local_name: "BookSection",
     owner_id: nil,
@@ -347,7 +306,6 @@ resource_class = [
   },
   %{
     information: "A written argument submitted to a court.",
-    id: 42,
     label: "Brief",
     local_name: "Brief",
     owner_id: nil,
@@ -355,7 +313,6 @@ resource_class = [
   },
   %{
     information: "A chapter of a book.",
-    id: 43,
     label: "Chapter",
     local_name: "Chapter",
     owner_id: nil,
@@ -363,7 +320,6 @@ resource_class = [
   },
   %{
     information: "A collection of statutes.",
-    id: 44,
     label: "Code",
     local_name: "Code",
     owner_id: nil,
@@ -371,7 +327,6 @@ resource_class = [
   },
   %{
     information: "A document that simultaneously contains other documents.",
-    id: 45,
     label: "Collected Document",
     local_name: "CollectedDocument",
     owner_id: nil,
@@ -379,7 +334,6 @@ resource_class = [
   },
   %{
     information: "A collection of Documents or Collections",
-    id: 46,
     label: "Collection",
     local_name: "Collection",
     owner_id: nil,
@@ -387,7 +341,6 @@ resource_class = [
   },
   %{
     information: "A meeting for consultation or discussion.",
-    id: 47,
     label: "Conference",
     local_name: "Conference",
     owner_id: nil,
@@ -395,7 +348,6 @@ resource_class = [
   },
   %{
     information: "A collection of legal cases.",
-    id: 48,
     label: "Court Reporter",
     local_name: "CourtReporter",
     owner_id: nil,
@@ -404,7 +356,6 @@ resource_class = [
   %{
     information:
       "A document (noun) is a bounded physical representation of body of information designed with the capacity (and usually intent) to communicate. A document may manifest symbolic, diagrammatic or sensory-representational information.",
-    id: 49,
     label: "Document",
     local_name: "Document",
     owner_id: nil,
@@ -412,7 +363,6 @@ resource_class = [
   },
   %{
     information: "a distinct part of a larger document or collected document.",
-    id: 50,
     label: "document part",
     local_name: "DocumentPart",
     owner_id: nil,
@@ -420,7 +370,6 @@ resource_class = [
   },
   %{
     information: "The status of the publication of a document.",
-    id: 51,
     label: "Document Status",
     local_name: "DocumentStatus",
     owner_id: nil,
@@ -428,7 +377,6 @@ resource_class = [
   },
   %{
     information: "An edited book.",
-    id: 52,
     label: "Edited Book",
     local_name: "EditedBook",
     owner_id: nil,
@@ -437,7 +385,6 @@ resource_class = [
   %{
     information:
       "A written communication addressed to a person or organization and transmitted electronically.",
-    id: 53,
     label: "Email",
     local_name: "Email",
     owner_id: nil,
@@ -445,7 +392,6 @@ resource_class = [
   },
   %{
     information: nil,
-    id: 54,
     label: "Event",
     local_name: "Event",
     owner_id: nil,
@@ -453,7 +399,6 @@ resource_class = [
   },
   %{
     information: "A passage selected from a larger work.",
-    id: 55,
     label: "Excerpt",
     local_name: "Excerpt",
     owner_id: nil,
@@ -461,7 +406,6 @@ resource_class = [
   },
   %{
     information: "aka movie.",
-    id: 56,
     label: "Film",
     local_name: "Film",
     owner_id: nil,
@@ -470,7 +414,6 @@ resource_class = [
   %{
     information:
       "An instance or a session in which testimony and arguments are presented, esp. before an official, as a judge in a lawsuit.",
-    id: 57,
     label: "Hearing",
     local_name: "Hearing",
     owner_id: nil,
@@ -478,7 +421,6 @@ resource_class = [
   },
   %{
     information: "A document that presents visual or diagrammatic information.",
-    id: 58,
     label: "Image",
     local_name: "Image",
     owner_id: nil,
@@ -486,7 +428,6 @@ resource_class = [
   },
   %{
     information: "A formalized discussion between two or more people.",
-    id: 59,
     label: "Interview",
     local_name: "Interview",
     owner_id: nil,
@@ -495,7 +436,6 @@ resource_class = [
   %{
     information:
       "something that is printed or published and distributed, esp. a given number of a periodical",
-    id: 60,
     label: "Issue",
     local_name: "Issue",
     owner_id: nil,
@@ -503,7 +443,6 @@ resource_class = [
   },
   %{
     information: "A periodical of scholarly journal Articles.",
-    id: 61,
     label: "Journal",
     local_name: "Journal",
     owner_id: nil,
@@ -511,7 +450,6 @@ resource_class = [
   },
   %{
     information: "A document accompanying a legal case.",
-    id: 62,
     label: "Legal Case Document",
     local_name: "LegalCaseDocument",
     owner_id: nil,
@@ -520,7 +458,6 @@ resource_class = [
   %{
     information:
       "A document containing an authoritative determination (as a decree or judgment) made after consideration of facts or law.",
-    id: 63,
     label: "Decision",
     local_name: "LegalDecision",
     owner_id: nil,
@@ -528,7 +465,6 @@ resource_class = [
   },
   %{
     information: "A legal document; for example, a court decision, a brief, and so forth.",
-    id: 64,
     label: "Legal Document",
     local_name: "LegalDocument",
     owner_id: nil,
@@ -536,7 +472,6 @@ resource_class = [
   },
   %{
     information: "A legal document proposing or enacting a law or a group of laws.",
-    id: 65,
     label: "Legislation",
     local_name: "Legislation",
     owner_id: nil,
@@ -545,7 +480,6 @@ resource_class = [
   %{
     information:
       "A written or printed communication addressed to a person or organization and usually transmitted by mail.",
-    id: 66,
     label: "Letter",
     local_name: "Letter",
     owner_id: nil,
@@ -554,7 +488,6 @@ resource_class = [
   %{
     information:
       "A periodical of magazine Articles. A magazine is a publication that is issued periodically, usually bound in a paper cover, and typically contains essays, stories, poems, etc., by many writers, and often photographs and drawings, frequently specializing in a particular subject or area, as hobbies, news, or sports.",
-    id: 67,
     label: "Magazine",
     local_name: "Magazine",
     owner_id: nil,
@@ -562,7 +495,6 @@ resource_class = [
   },
   %{
     information: "A small reference book, especially one giving instructions.",
-    id: 68,
     label: "Manual",
     local_name: "Manual",
     owner_id: nil,
@@ -571,7 +503,6 @@ resource_class = [
   %{
     information:
       "An unpublished Document, which may also be submitted to a publisher for publication.",
-    id: 69,
     label: "Manuscript",
     local_name: "Manuscript",
     owner_id: nil,
@@ -579,7 +510,6 @@ resource_class = [
   },
   %{
     information: "A graphical depiction of geographic features.",
-    id: 70,
     label: "Map",
     local_name: "Map",
     owner_id: nil,
@@ -587,7 +517,6 @@ resource_class = [
   },
   %{
     information: "A loose, thematic, collection of Documents, often Books.",
-    id: 71,
     label: "Multivolume Book",
     local_name: "MultiVolumeBook",
     owner_id: nil,
@@ -596,7 +525,6 @@ resource_class = [
   %{
     information:
       "A periodical of documents, usually issued daily or weekly, containing current news, editorials, feature articles, and usually advertising.",
-    id: 72,
     label: "Newspaper",
     local_name: "Newspaper",
     owner_id: nil,
@@ -604,7 +532,6 @@ resource_class = [
   },
   %{
     information: "Notes or annotations about a resource.",
-    id: 73,
     label: "Note",
     local_name: "Note",
     owner_id: nil,
@@ -613,7 +540,6 @@ resource_class = [
   %{
     information:
       "A document describing the exclusive right granted by a government to an inventor to manufacture, use, or sell an invention for a certain number of years.",
-    id: 74,
     label: "Patent",
     local_name: "Patent",
     owner_id: nil,
@@ -621,7 +547,6 @@ resource_class = [
   },
   %{
     information: "A public performance.",
-    id: 75,
     label: "Performance",
     local_name: "Performance",
     owner_id: nil,
@@ -629,7 +554,6 @@ resource_class = [
   },
   %{
     information: "A group of related documents issued at regular intervals.",
-    id: 76,
     label: "Periodical",
     local_name: "Periodical",
     owner_id: nil,
@@ -637,7 +561,6 @@ resource_class = [
   },
   %{
     information: "A communication between an agent and one or more specific recipients.",
-    id: 77,
     label: "Personal Communication",
     local_name: "PersonalCommunication",
     owner_id: nil,
@@ -645,7 +568,6 @@ resource_class = [
   },
   %{
     information: "A personal communication manifested in some document.",
-    id: 78,
     label: "Personal Communication Document",
     local_name: "PersonalCommunicationDocument",
     owner_id: nil,
@@ -653,7 +575,6 @@ resource_class = [
   },
   %{
     information: "A compilation of documents published from an event, such as a conference.",
-    id: 79,
     label: "Proceedings",
     local_name: "Proceedings",
     owner_id: nil,
@@ -661,7 +582,6 @@ resource_class = [
   },
   %{
     information: "An excerpted collection of words.",
-    id: 80,
     label: "Quote",
     local_name: "Quote",
     owner_id: nil,
@@ -670,7 +590,6 @@ resource_class = [
   %{
     information:
       "A document that presents authoritative reference information, such as a dictionary or encylopedia .",
-    id: 81,
     label: "Reference Source",
     local_name: "ReferenceSource",
     owner_id: nil,
@@ -679,7 +598,6 @@ resource_class = [
   %{
     information:
       "A document describing an account or statement describing in detail an event, situation, or the like, usually as the result of observation, inquiry, etc..",
-    id: 82,
     label: "Report",
     local_name: "Report",
     owner_id: nil,
@@ -687,7 +605,6 @@ resource_class = [
   },
   %{
     information: "A loose, thematic, collection of Documents, often Books.",
-    id: 83,
     label: "Series",
     local_name: "Series",
     owner_id: nil,
@@ -695,7 +612,6 @@ resource_class = [
   },
   %{
     information: "A slide in a slideshow",
-    id: 84,
     label: "Slide",
     local_name: "Slide",
     owner_id: nil,
@@ -704,7 +620,6 @@ resource_class = [
   %{
     information:
       "A presentation of a series of slides, usually presented in front of an audience with written text and images.",
-    id: 85,
     label: "Slideshow",
     local_name: "Slideshow",
     owner_id: nil,
@@ -712,7 +627,6 @@ resource_class = [
   },
   %{
     information: "A document describing a standard",
-    id: 86,
     label: "Standard",
     local_name: "Standard",
     owner_id: nil,
@@ -720,7 +634,6 @@ resource_class = [
   },
   %{
     information: "A bill enacted into law.",
-    id: 87,
     label: "Statute",
     local_name: "Statute",
     owner_id: nil,
@@ -729,7 +642,6 @@ resource_class = [
   %{
     information:
       "A document created to summarize research findings associated with the completion of an academic degree.",
-    id: 88,
     label: "Thesis",
     local_name: "Thesis",
     owner_id: nil,
@@ -737,7 +649,6 @@ resource_class = [
   },
   %{
     information: "The academic degree of a Thesis",
-    id: 89,
     label: "Thesis degree",
     local_name: "ThesisDegree",
     owner_id: nil,
@@ -746,7 +657,6 @@ resource_class = [
   %{
     information:
       "A web page is an online document available (at least initially) on the world wide web. A web page is written first and foremost to appear on the web, as distinct from other online resources such as books, manuscripts or audio documents which use the web primarily as a distribution mechanism alongside other more traditional methods such as print.",
-    id: 90,
     label: "Webpage",
     local_name: "Webpage",
     owner_id: nil,
@@ -754,7 +664,6 @@ resource_class = [
   },
   %{
     information: "A group of Webpages accessible on the Web.",
-    id: 91,
     label: "Website",
     local_name: "Website",
     owner_id: nil,
@@ -763,7 +672,6 @@ resource_class = [
   %{
     information:
       "A seminar, discussion group, or the like, that emphasizes zxchange of ideas and the demonstration and application of techniques, skills, etc.",
-    id: 92,
     label: "Workshop",
     local_name: "Workshop",
     owner_id: nil,
@@ -772,7 +680,6 @@ resource_class = [
   %{
     information:
       "A foaf:LabelProperty is any RDF property with texual values that serve as labels.",
-    id: 93,
     label: "Label Property",
     local_name: "LabelProperty",
     owner_id: nil,
@@ -780,7 +687,6 @@ resource_class = [
   },
   %{
     information: "A person.",
-    id: 94,
     label: "Person",
     local_name: "Person",
     owner_id: nil,
@@ -788,7 +694,6 @@ resource_class = [
   },
   %{
     information: "A document.",
-    id: 95,
     label: "Document",
     local_name: "Document",
     owner_id: nil,
@@ -796,7 +701,6 @@ resource_class = [
   },
   %{
     information: "An organization.",
-    id: 96,
     label: "Organization",
     local_name: "Organization",
     owner_id: nil,
@@ -804,7 +708,6 @@ resource_class = [
   },
   %{
     information: "A class of Agents.",
-    id: 97,
     label: "Group",
     local_name: "Group",
     owner_id: nil,
@@ -812,7 +715,6 @@ resource_class = [
   },
   %{
     information: "An agent (eg. person, group, software or physical artifact).",
-    id: 98,
     label: "Agent",
     local_name: "Agent",
     owner_id: nil,
@@ -820,7 +722,6 @@ resource_class = [
   },
   %{
     information: "A project (a collective endeavour of some kind).",
-    id: 99,
     label: "Project",
     local_name: "Project",
     owner_id: nil,
@@ -828,7 +729,6 @@ resource_class = [
   },
   %{
     information: "An image.",
-    id: 100,
     label: "Image",
     local_name: "Image",
     owner_id: nil,
@@ -836,7 +736,6 @@ resource_class = [
   },
   %{
     information: "A personal profile RDF document.",
-    id: 101,
     label: "PersonalProfileDocument",
     local_name: "PersonalProfileDocument",
     owner_id: nil,
@@ -844,7 +743,6 @@ resource_class = [
   },
   %{
     information: "An online account.",
-    id: 102,
     label: "Online Account",
     local_name: "OnlineAccount",
     owner_id: nil,
@@ -852,7 +750,6 @@ resource_class = [
   },
   %{
     information: "An online gaming account.",
-    id: 103,
     label: "Online Gaming Account",
     local_name: "OnlineGamingAccount",
     owner_id: nil,
@@ -860,7 +757,6 @@ resource_class = [
   },
   %{
     information: "An online e-commerce account.",
-    id: 104,
     label: "Online E-commerce Account",
     local_name: "OnlineEcommerceAccount",
     owner_id: nil,
@@ -868,7 +764,6 @@ resource_class = [
   },
   %{
     information: "An online chat account.",
-    id: 105,
     label: "Online Chat Account",
     local_name: "OnlineChatAccount",
     owner_id: nil,
@@ -878,7 +773,6 @@ resource_class = [
 
 for resource <- resource_class do
   %ResourceClass{
-    id: resource[:id],
     label: resource[:label],
     local_name: resource[:local_name],
     information: resource[:information],
@@ -896,7 +790,6 @@ end
 
 properties_list = [
   %{
-    id: 1,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "title",
@@ -904,7 +797,6 @@ properties_list = [
     comment: "A name given to the resource."
   },
   %{
-    id: 2,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "creator",
@@ -912,7 +804,6 @@ properties_list = [
     comment: "An entity primarily responsible for making the resource."
   },
   %{
-    id: 3,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "subject",
@@ -920,7 +811,6 @@ properties_list = [
     comment: "The topic of the resource."
   },
   %{
-    id: 4,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "description",
@@ -928,7 +818,6 @@ properties_list = [
     comment: "An account of the resource."
   },
   %{
-    id: 5,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "publisher",
@@ -936,7 +825,6 @@ properties_list = [
     comment: "An entity responsible for making the resource available."
   },
   %{
-    id: 6,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "contributor",
@@ -944,7 +832,6 @@ properties_list = [
     comment: "An entity responsible for making contributions to the resource."
   },
   %{
-    id: 7,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "date",
@@ -953,7 +840,6 @@ properties_list = [
       "A point or period of time associated with an event in the lifecycle of the resource."
   },
   %{
-    id: 8,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "type",
@@ -961,7 +847,6 @@ properties_list = [
     comment: "The nature or genre of the resource."
   },
   %{
-    id: 9,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "format",
@@ -969,7 +854,6 @@ properties_list = [
     comment: "The file format, physical medium, or dimensions of the resource."
   },
   %{
-    id: 10,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "identifier",
@@ -977,7 +861,6 @@ properties_list = [
     comment: "An unambiguous reference to the resource within a given context."
   },
   %{
-    id: 11,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "source",
@@ -985,7 +868,6 @@ properties_list = [
     comment: "A related resource from which the described resource is derived."
   },
   %{
-    id: 12,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "language",
@@ -993,7 +875,6 @@ properties_list = [
     comment: "A language of the resource."
   },
   %{
-    id: 13,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "relation",
@@ -1001,7 +882,6 @@ properties_list = [
     comment: "A related resource."
   },
   %{
-    id: 14,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "coverage",
@@ -1010,7 +890,6 @@ properties_list = [
       "The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant."
   },
   %{
-    id: 15,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "rights",
@@ -1018,7 +897,6 @@ properties_list = [
     comment: "Information about rights held in and over the resource."
   },
   %{
-    id: 16,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "audience",
@@ -1026,7 +904,6 @@ properties_list = [
     comment: "A class of entity for whom the resource is intended or useful."
   },
   %{
-    id: 17,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "alternative",
@@ -1034,7 +911,6 @@ properties_list = [
     comment: "An alternative name for the resource."
   },
   %{
-    id: 18,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "tableOfContents",
@@ -1042,7 +918,6 @@ properties_list = [
     comment: "A list of subunits of the resource."
   },
   %{
-    id: 19,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "abstract",
@@ -1050,7 +925,6 @@ properties_list = [
     comment: "A summary of the resource."
   },
   %{
-    id: 20,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "created",
@@ -1058,7 +932,6 @@ properties_list = [
     comment: "Date of creation of the resource."
   },
   %{
-    id: 21,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "valid",
@@ -1066,7 +939,6 @@ properties_list = [
     comment: "Date (often a range) of validity of a resource."
   },
   %{
-    id: 22,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "available",
@@ -1074,7 +946,6 @@ properties_list = [
     comment: "Date (often a range) that the resource became or will become available."
   },
   %{
-    id: 23,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "issued",
@@ -1082,7 +953,6 @@ properties_list = [
     comment: "Date of formal issuance (e.g., publication) of the resource."
   },
   %{
-    id: 24,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "modified",
@@ -1090,7 +960,6 @@ properties_list = [
     comment: "Date on which the resource was changed."
   },
   %{
-    id: 25,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "extent",
@@ -1098,7 +967,6 @@ properties_list = [
     comment: "The size or duration of the resource."
   },
   %{
-    id: 26,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "medium",
@@ -1106,7 +974,6 @@ properties_list = [
     comment: "The material or physical carrier of the resource."
   },
   %{
-    id: 27,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "isVersionOf",
@@ -1115,7 +982,6 @@ properties_list = [
       "A related resource of which the described resource is a version, edition, or adaptation."
   },
   %{
-    id: 28,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "hasVersion",
@@ -1124,7 +990,6 @@ properties_list = [
       "A related resource that is a version, edition, or adaptation of the described resource."
   },
   %{
-    id: 29,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "isReplacedBy",
@@ -1132,7 +997,6 @@ properties_list = [
     comment: "A related resource that supplants, displaces, or supersedes the described resource."
   },
   %{
-    id: 30,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "replaces",
@@ -1141,7 +1005,6 @@ properties_list = [
       "A related resource that is supplanted, displaced, or superseded by the described resource."
   },
   %{
-    id: 31,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "isRequiredBy",
@@ -1150,7 +1013,6 @@ properties_list = [
       "A related resource that requires the described resource to support its function, delivery, or coherence."
   },
   %{
-    id: 32,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "requires",
@@ -1159,7 +1021,6 @@ properties_list = [
       "A related resource that is required by the described resource to support its function, delivery, or coherence."
   },
   %{
-    id: 33,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "isPartOf",
@@ -1168,7 +1029,6 @@ properties_list = [
       "A related resource in which the described resource is physically or logically included."
   },
   %{
-    id: 34,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "hasPart",
@@ -1177,7 +1037,6 @@ properties_list = [
       "A related resource that is included either physically or logically in the described resource."
   },
   %{
-    id: 35,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "isReferencedBy",
@@ -1186,7 +1045,6 @@ properties_list = [
       "A related resource that references, cites, or otherwise points to the described resource."
   },
   %{
-    id: 36,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "references",
@@ -1195,7 +1053,6 @@ properties_list = [
       "A related resource that is referenced, cited, or otherwise pointed to by the described resource."
   },
   %{
-    id: 37,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "isFormatOf",
@@ -1204,7 +1061,6 @@ properties_list = [
       "A related resource that is substantially the same as the described resource, but in another format."
   },
   %{
-    id: 38,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "hasFormat",
@@ -1213,7 +1069,6 @@ properties_list = [
       "A related resource that is substantially the same as the pre-existing described resource, but in another format."
   },
   %{
-    id: 39,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "conformsTo",
@@ -1221,7 +1076,6 @@ properties_list = [
     comment: "An established standard to which the described resource conforms."
   },
   %{
-    id: 40,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "spatial",
@@ -1229,7 +1083,6 @@ properties_list = [
     comment: "Spatial characteristics of the resource."
   },
   %{
-    id: 41,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "temporal",
@@ -1237,7 +1090,6 @@ properties_list = [
     comment: "Temporal characteristics of the resource."
   },
   %{
-    id: 42,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "mediator",
@@ -1246,7 +1098,6 @@ properties_list = [
       "An entity that mediates access to the resource and for whom the resource is intended or useful."
   },
   %{
-    id: 43,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "dateAccepted",
@@ -1254,7 +1105,6 @@ properties_list = [
     comment: "Date of acceptance of the resource."
   },
   %{
-    id: 44,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "dateCopyrighted",
@@ -1262,7 +1112,6 @@ properties_list = [
     comment: "Date of copyright."
   },
   %{
-    id: 45,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "dateSubmitted",
@@ -1270,7 +1119,6 @@ properties_list = [
     comment: "Date of submission of the resource."
   },
   %{
-    id: 46,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "educationLevel",
@@ -1279,7 +1127,6 @@ properties_list = [
       "A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended."
   },
   %{
-    id: 47,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "accessRights",
@@ -1288,7 +1135,6 @@ properties_list = [
       "Information about who can access the resource or an indication of its security status."
   },
   %{
-    id: 48,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "bibliographicCitation",
@@ -1296,7 +1142,6 @@ properties_list = [
     comment: "A bibliographic reference for the resource."
   },
   %{
-    id: 49,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "license",
@@ -1304,7 +1149,6 @@ properties_list = [
     comment: "A legal document giving official permission to do something with the resource."
   },
   %{
-    id: 50,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "rightsHolder",
@@ -1312,7 +1156,6 @@ properties_list = [
     comment: "A person or organization owning or managing rights over the resource."
   },
   %{
-    id: 51,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "provenance",
@@ -1321,7 +1164,6 @@ properties_list = [
       "A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity, and interpretation."
   },
   %{
-    id: 52,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "instructionalMethod",
@@ -1330,7 +1172,6 @@ properties_list = [
       "A process, used to engender knowledge, attitudes and skills, that the described resource is designed to support."
   },
   %{
-    id: 53,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "accrualMethod",
@@ -1338,7 +1179,6 @@ properties_list = [
     comment: "The method by which items are added to a collection."
   },
   %{
-    id: 54,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "accrualPeriodicity",
@@ -1346,7 +1186,6 @@ properties_list = [
     comment: "The frequency with which items are added to a collection."
   },
   %{
-    id: 55,
     owner_id: nil,
     vocabulary_id: 1,
     local_name: "accrualPolicy",
@@ -1354,7 +1193,6 @@ properties_list = [
     comment: "The policy governing the addition of items to a collection."
   },
   %{
-    id: 56,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "affirmedBy",
@@ -1362,7 +1200,6 @@ properties_list = [
     comment: "A legal decision that affirms a ruling."
   },
   %{
-    id: 57,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "annotates",
@@ -1370,7 +1207,6 @@ properties_list = [
     comment: "Critical or explanatory note for a Document."
   },
   %{
-    id: 58,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "authorList",
@@ -1379,7 +1215,6 @@ properties_list = [
       "An ordered list of authors. Normally, this list is seen as a priority list that order authors by importance."
   },
   %{
-    id: 59,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "citedBy",
@@ -1387,7 +1222,6 @@ properties_list = [
     comment: "Relates a document to another document that cites the\nfirst document."
   },
   %{
-    id: 60,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "cites",
@@ -1396,7 +1230,6 @@ properties_list = [
       "Relates a document to another document that is cited\nby the first document as reference, comment, review, quotation or for\nanother purpose."
   },
   %{
-    id: 61,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "contributorList",
@@ -1405,7 +1238,6 @@ properties_list = [
       "An ordered list of contributors. Normally, this list is seen as a priority list that order contributors by importance."
   },
   %{
-    id: 62,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "court",
@@ -1414,7 +1246,6 @@ properties_list = [
       "A court associated with a legal document; for example, that which issues a decision."
   },
   %{
-    id: 63,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "degree",
@@ -1422,7 +1253,6 @@ properties_list = [
     comment: "The thesis degree."
   },
   %{
-    id: 64,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "director",
@@ -1430,7 +1260,6 @@ properties_list = [
     comment: "A Film director."
   },
   %{
-    id: 65,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "distributor",
@@ -1438,7 +1267,6 @@ properties_list = [
     comment: "Distributor of a document or a collection of documents."
   },
   %{
-    id: 66,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "editor",
@@ -1447,7 +1275,6 @@ properties_list = [
       "A person having managerial and sometimes policy-making responsibility for the editorial part of a publishing firm or of a newspaper, magazine, or other publication."
   },
   %{
-    id: 67,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "editorList",
@@ -1456,7 +1283,6 @@ properties_list = [
       "An ordered list of editors. Normally, this list is seen as a priority list that order editors by importance."
   },
   %{
-    id: 68,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "interviewee",
@@ -1464,7 +1290,6 @@ properties_list = [
     comment: "An agent that is interviewed by another agent."
   },
   %{
-    id: 69,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "interviewer",
@@ -1472,7 +1297,6 @@ properties_list = [
     comment: "An agent that interview another agent."
   },
   %{
-    id: 70,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "issuer",
@@ -1481,7 +1305,6 @@ properties_list = [
       "An entity responsible for issuing often informally published documents such as press releases, reports, etc."
   },
   %{
-    id: 71,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "organizer",
@@ -1490,7 +1313,6 @@ properties_list = [
       "The organizer of an event; includes conference organizers, but also government agencies or other bodies that are responsible for conducting hearings."
   },
   %{
-    id: 72,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "owner",
@@ -1498,7 +1320,6 @@ properties_list = [
     comment: "Owner of a document or a collection of documents."
   },
   %{
-    id: 73,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "performer",
@@ -1506,7 +1327,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 74,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "presentedAt",
@@ -1514,7 +1334,6 @@ properties_list = [
     comment: "Relates a document to an event; for example, a paper to a conference."
   },
   %{
-    id: 75,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "presents",
@@ -1522,7 +1341,6 @@ properties_list = [
     comment: "Relates an event to associated documents; for example, conference to a paper."
   },
   %{
-    id: 76,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "producer",
@@ -1530,7 +1348,6 @@ properties_list = [
     comment: "Producer of a document or a collection of documents."
   },
   %{
-    id: 77,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "recipient",
@@ -1538,7 +1355,6 @@ properties_list = [
     comment: "An agent that receives a communication document."
   },
   %{
-    id: 78,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "reproducedIn",
@@ -1546,7 +1362,6 @@ properties_list = [
     comment: "The resource in which another resource is reproduced."
   },
   %{
-    id: 79,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "reversedBy",
@@ -1554,7 +1369,6 @@ properties_list = [
     comment: "A legal decision that reverses a ruling."
   },
   %{
-    id: 80,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "reviewOf",
@@ -1562,7 +1376,6 @@ properties_list = [
     comment: "Relates a review document to a reviewed thing (resource, item, etc.)."
   },
   %{
-    id: 81,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "status",
@@ -1570,7 +1383,6 @@ properties_list = [
     comment: "The publication status of (typically academic) content."
   },
   %{
-    id: 82,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "subsequentLegalDecision",
@@ -1579,7 +1391,6 @@ properties_list = [
       "A legal decision on appeal that takes action on a case (affirming it, reversing it, etc.)."
   },
   %{
-    id: 83,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "transcriptOf",
@@ -1587,7 +1398,6 @@ properties_list = [
     comment: "Relates a document to some transcribed original."
   },
   %{
-    id: 84,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "translationOf",
@@ -1595,7 +1405,6 @@ properties_list = [
     comment: "Relates a translated document to the original document."
   },
   %{
-    id: 85,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "translator",
@@ -1603,7 +1412,6 @@ properties_list = [
     comment: "A person who translates written document from one language to another."
   },
   %{
-    id: 86,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "abstract",
@@ -1611,7 +1419,6 @@ properties_list = [
     comment: "A summary of the resource."
   },
   %{
-    id: 87,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "argued",
@@ -1619,7 +1426,6 @@ properties_list = [
     comment: "The date on which a legal case is argued before a court. Date is of format xsd:date"
   },
   %{
-    id: 88,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "asin",
@@ -1627,7 +1433,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 89,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "chapter",
@@ -1635,7 +1440,6 @@ properties_list = [
     comment: "An chapter number"
   },
   %{
-    id: 90,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "coden",
@@ -1643,7 +1447,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 91,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "content",
@@ -1652,7 +1455,6 @@ properties_list = [
       "This property is for a plain-text rendering of the content of a Document. While the plain-text content of an entire document could be described by this property."
   },
   %{
-    id: 92,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "doi",
@@ -1660,7 +1462,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 93,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "eanucc13",
@@ -1668,7 +1469,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 94,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "edition",
@@ -1677,7 +1477,6 @@ properties_list = [
       "The name defining a special edition of a document. Normally its a literal value composed of a version number and words."
   },
   %{
-    id: 95,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "eissn",
@@ -1685,7 +1484,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 96,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "gtin14",
@@ -1693,7 +1491,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 97,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "handle",
@@ -1701,7 +1498,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 98,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "identifier",
@@ -1709,7 +1505,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 99,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "isbn",
@@ -1717,7 +1512,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 100,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "isbn10",
@@ -1725,7 +1519,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 101,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "isbn13",
@@ -1733,7 +1526,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 102,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "issn",
@@ -1741,7 +1533,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 103,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "issue",
@@ -1749,7 +1540,6 @@ properties_list = [
     comment: "An issue number"
   },
   %{
-    id: 104,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "lccn",
@@ -1757,7 +1547,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 105,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "locator",
@@ -1766,7 +1555,6 @@ properties_list = [
       "A description (often numeric) that locates an item within a containing document or collection."
   },
   %{
-    id: 106,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "numPages",
@@ -1774,7 +1562,6 @@ properties_list = [
     comment: "The number of pages contained in a document"
   },
   %{
-    id: 107,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "numVolumes",
@@ -1783,7 +1570,6 @@ properties_list = [
       "The number of volumes contained in a collection of documents (usually a series, periodical, etc.)."
   },
   %{
-    id: 108,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "number",
@@ -1791,7 +1577,6 @@ properties_list = [
     comment: "A generic item or document number. Not to be confused with issue number."
   },
   %{
-    id: 109,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "oclcnum",
@@ -1799,7 +1584,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 110,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "pageEnd",
@@ -1807,7 +1591,6 @@ properties_list = [
     comment: "Ending page number within a continuous page range."
   },
   %{
-    id: 111,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "pageStart",
@@ -1815,7 +1598,6 @@ properties_list = [
     comment: "Starting page number within a continuous page range."
   },
   %{
-    id: 112,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "pages",
@@ -1824,7 +1606,6 @@ properties_list = [
       "A string of non-contiguous page spans that locate a Document within a Collection. Example: 23-25, 34, 54-56. For continuous page ranges, use the pageStart and pageEnd properties."
   },
   %{
-    id: 113,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "pmid",
@@ -1832,7 +1613,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 114,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "prefixName",
@@ -1840,7 +1620,6 @@ properties_list = [
     comment: "The prefix of a name"
   },
   %{
-    id: 115,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "section",
@@ -1848,7 +1627,6 @@ properties_list = [
     comment: "A section number"
   },
   %{
-    id: 116,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "shortDescription",
@@ -1856,7 +1634,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 117,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "shortTitle",
@@ -1864,7 +1641,6 @@ properties_list = [
     comment: "The abbreviation of a title."
   },
   %{
-    id: 118,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "sici",
@@ -1872,7 +1648,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 119,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "suffixName",
@@ -1880,7 +1655,6 @@ properties_list = [
     comment: "The suffix of a name"
   },
   %{
-    id: 120,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "upc",
@@ -1888,7 +1662,6 @@ properties_list = [
     comment: nil
   },
   %{
-    id: 121,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "uri",
@@ -1896,7 +1669,6 @@ properties_list = [
     comment: "Universal Resource Identifier of a document"
   },
   %{
-    id: 122,
     owner_id: nil,
     vocabulary_id: 3,
     local_name: "volume",
@@ -1904,7 +1676,6 @@ properties_list = [
     comment: "A volume number"
   },
   %{
-    id: 123,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "mbox",
@@ -1913,7 +1684,6 @@ properties_list = [
       "A  personal mailbox, ie. an Internet mailbox associated with exactly one owner, the first owner of this mailbox. This is a 'static inverse functional property', in that  there is (across time and change) at most one individual that ever has any particular value for foaf:mbox."
   },
   %{
-    id: 124,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "mbox_sha1sum",
@@ -1922,7 +1692,6 @@ properties_list = [
       "The sha1sum of the URI of an Internet mailbox associated with exactly one owner, the  first owner of the mailbox."
   },
   %{
-    id: 125,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "gender",
@@ -1930,7 +1699,6 @@ properties_list = [
     comment: "The gender of this Agent (typically but not necessarily 'male' or 'female')."
   },
   %{
-    id: 126,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "geekcode",
@@ -1938,7 +1706,6 @@ properties_list = [
     comment: "A textual geekcode for this person, see http:\/\/www.geekcode.com\/geek.html"
   },
   %{
-    id: 127,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "dnaChecksum",
@@ -1946,7 +1713,6 @@ properties_list = [
     comment: "A checksum for the DNA of some thing. Joke."
   },
   %{
-    id: 128,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "sha1",
@@ -1954,7 +1720,6 @@ properties_list = [
     comment: "A sha1sum hash, in hex."
   },
   %{
-    id: 129,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "based_near",
@@ -1962,7 +1727,6 @@ properties_list = [
     comment: "A location that something is based near, for some broadly human notion of near."
   },
   %{
-    id: 130,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "title",
@@ -1970,7 +1734,6 @@ properties_list = [
     comment: "Title (Mr, Mrs, Ms, Dr. etc)"
   },
   %{
-    id: 131,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "nick",
@@ -1979,7 +1742,6 @@ properties_list = [
       "A short informal nickname characterising an agent (includes login identifiers, IRC and other chat nicknames)."
   },
   %{
-    id: 132,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "jabberID",
@@ -1987,7 +1749,6 @@ properties_list = [
     comment: "A jabber ID for something."
   },
   %{
-    id: 133,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "aimChatID",
@@ -1995,7 +1756,6 @@ properties_list = [
     comment: "An AIM chat ID"
   },
   %{
-    id: 134,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "skypeID",
@@ -2003,7 +1763,6 @@ properties_list = [
     comment: "A Skype ID"
   },
   %{
-    id: 135,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "icqChatID",
@@ -2011,7 +1770,6 @@ properties_list = [
     comment: "An ICQ chat ID"
   },
   %{
-    id: 136,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "yahooChatID",
@@ -2019,7 +1777,6 @@ properties_list = [
     comment: "A Yahoo chat ID"
   },
   %{
-    id: 137,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "msnChatID",
@@ -2027,7 +1784,6 @@ properties_list = [
     comment: "An MSN chat ID"
   },
   %{
-    id: 138,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "name",
@@ -2035,7 +1791,6 @@ properties_list = [
     comment: "A name for some thing."
   },
   %{
-    id: 139,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "firstName",
@@ -2043,7 +1798,6 @@ properties_list = [
     comment: "The first name of a person."
   },
   %{
-    id: 140,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "lastName",
@@ -2051,7 +1805,6 @@ properties_list = [
     comment: "The last name of a person."
   },
   %{
-    id: 141,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "givenName",
@@ -2059,7 +1812,6 @@ properties_list = [
     comment: "The given name of some person."
   },
   %{
-    id: 142,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "givenname",
@@ -2067,7 +1819,6 @@ properties_list = [
     comment: "The given name of some person."
   },
   %{
-    id: 143,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "surname",
@@ -2075,7 +1826,6 @@ properties_list = [
     comment: "The surname of some person."
   },
   %{
-    id: 144,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "family_name",
@@ -2083,7 +1833,6 @@ properties_list = [
     comment: "The family name of some person."
   },
   %{
-    id: 145,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "familyName",
@@ -2091,7 +1840,6 @@ properties_list = [
     comment: "The family name of some person."
   },
   %{
-    id: 146,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "phone",
@@ -2100,7 +1848,6 @@ properties_list = [
       "A phone,  specified using fully qualified tel: URI scheme (refs: http:\/\/www.w3.org\/Addressing\/schemes.html#tel)."
   },
   %{
-    id: 147,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "homepage",
@@ -2108,7 +1855,6 @@ properties_list = [
     comment: "A homepage for some thing."
   },
   %{
-    id: 148,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "weblog",
@@ -2116,7 +1862,6 @@ properties_list = [
     comment: "A weblog of some thing (whether person, group, company etc.)."
   },
   %{
-    id: 149,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "openid",
@@ -2124,7 +1869,6 @@ properties_list = [
     comment: "An OpenID for an Agent."
   },
   %{
-    id: 150,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "tipjar",
@@ -2132,7 +1876,6 @@ properties_list = [
     comment: "A tipjar document for this agent, describing means for payment and reward."
   },
   %{
-    id: 151,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "plan",
@@ -2140,7 +1883,6 @@ properties_list = [
     comment: "A .plan comment, in the tradition of finger and '.plan' files."
   },
   %{
-    id: 152,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "made",
@@ -2148,7 +1890,6 @@ properties_list = [
     comment: "Something that was made by this agent."
   },
   %{
-    id: 153,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "maker",
@@ -2156,7 +1897,6 @@ properties_list = [
     comment: "An agent that  made this thing."
   },
   %{
-    id: 154,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "img",
@@ -2165,7 +1905,6 @@ properties_list = [
       "An image that can be used to represent some thing (ie. those depictions which are particularly representative of something, eg. one's photo on a homepage)."
   },
   %{
-    id: 155,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "depiction",
@@ -2173,7 +1912,6 @@ properties_list = [
     comment: "A depiction of some thing."
   },
   %{
-    id: 156,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "depicts",
@@ -2181,7 +1919,6 @@ properties_list = [
     comment: "A thing depicted in this representation."
   },
   %{
-    id: 157,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "thumbnail",
@@ -2189,7 +1926,6 @@ properties_list = [
     comment: "A derived thumbnail image."
   },
   %{
-    id: 158,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "myersBriggs",
@@ -2197,7 +1933,6 @@ properties_list = [
     comment: "A Myers Briggs (MBTI) personality classification."
   },
   %{
-    id: 159,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "workplaceHomepage",
@@ -2205,7 +1940,6 @@ properties_list = [
     comment: "A workplace homepage of some person; the homepage of an organization they work for."
   },
   %{
-    id: 160,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "workInfoHomepage",
@@ -2213,7 +1947,6 @@ properties_list = [
     comment: "A work info homepage of some person; a page about their work for some organization."
   },
   %{
-    id: 161,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "schoolHomepage",
@@ -2221,7 +1954,6 @@ properties_list = [
     comment: "A homepage of a school attended by the person."
   },
   %{
-    id: 162,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "knows",
@@ -2230,7 +1962,6 @@ properties_list = [
       "A person known by this person (indicating some level of reciprocated interaction between the parties)."
   },
   %{
-    id: 163,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "interest",
@@ -2238,7 +1969,6 @@ properties_list = [
     comment: "A page about a topic of interest to this person."
   },
   %{
-    id: 164,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "topic_interest",
@@ -2246,7 +1976,6 @@ properties_list = [
     comment: "A thing of interest to this person."
   },
   %{
-    id: 165,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "publications",
@@ -2254,7 +1983,6 @@ properties_list = [
     comment: "A link to the publications of this person."
   },
   %{
-    id: 166,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "currentProject",
@@ -2262,7 +1990,6 @@ properties_list = [
     comment: "A current project this person works on."
   },
   %{
-    id: 167,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "pastProject",
@@ -2270,7 +1997,6 @@ properties_list = [
     comment: "A project this person has previously worked on."
   },
   %{
-    id: 168,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "fundedBy",
@@ -2278,7 +2004,6 @@ properties_list = [
     comment: "An organization funding a project or person."
   },
   %{
-    id: 169,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "logo",
@@ -2286,7 +2011,6 @@ properties_list = [
     comment: "A logo representing some thing."
   },
   %{
-    id: 170,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "topic",
@@ -2294,7 +2018,6 @@ properties_list = [
     comment: "A topic of some page or document."
   },
   %{
-    id: 171,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "primaryTopic",
@@ -2302,7 +2025,6 @@ properties_list = [
     comment: "The primary topic of some page or document."
   },
   %{
-    id: 172,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "focus",
@@ -2310,7 +2032,6 @@ properties_list = [
     comment: "The underlying or 'focal' entity associated with some SKOS-described concept."
   },
   %{
-    id: 173,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "isPrimaryTopicOf",
@@ -2318,7 +2039,6 @@ properties_list = [
     comment: "A document that this thing is the primary topic of."
   },
   %{
-    id: 174,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "page",
@@ -2326,7 +2046,6 @@ properties_list = [
     comment: "A page or document about this thing."
   },
   %{
-    id: 175,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "theme",
@@ -2334,7 +2053,6 @@ properties_list = [
     comment: "A theme."
   },
   %{
-    id: 176,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "account",
@@ -2342,7 +2060,6 @@ properties_list = [
     comment: "Indicates an account held by this agent."
   },
   %{
-    id: 177,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "holdsAccount",
@@ -2350,7 +2067,6 @@ properties_list = [
     comment: "Indicates an account held by this agent."
   },
   %{
-    id: 178,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "accountServiceHomepage",
@@ -2358,7 +2074,6 @@ properties_list = [
     comment: "Indicates a homepage of the service provide for this online account."
   },
   %{
-    id: 179,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "accountName",
@@ -2366,7 +2081,6 @@ properties_list = [
     comment: "Indicates the name (identifier) associated with this online account."
   },
   %{
-    id: 180,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "member",
@@ -2374,7 +2088,6 @@ properties_list = [
     comment: "Indicates a member of a Group"
   },
   %{
-    id: 181,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "membershipClass",
@@ -2382,7 +2095,6 @@ properties_list = [
     comment: "Indicates the class of individuals that are a member of a Group"
   },
   %{
-    id: 182,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "birthday",
@@ -2390,7 +2102,6 @@ properties_list = [
     comment: "The birthday of this Agent, represented in mm-dd string form, eg. '12-31'."
   },
   %{
-    id: 183,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "age",
@@ -2398,7 +2109,6 @@ properties_list = [
     comment: "The age in years of some agent."
   },
   %{
-    id: 184,
     owner_id: nil,
     vocabulary_id: 4,
     local_name: "status",
@@ -2410,7 +2120,6 @@ properties_list = [
 
 for property <- properties_list do
   %Property{
-    id: property[:id],
     owner_id: property[:owner_id],
     vocabulary_id:
       case property[:vocabulary_id] do

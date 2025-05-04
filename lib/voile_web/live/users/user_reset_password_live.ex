@@ -7,7 +7,7 @@ defmodule VoileWeb.UserResetPasswordLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">Reset Password</.header>
-
+      
       <.simple_form
         for={@form}
         id="reset_password_form"
@@ -17,8 +17,7 @@ defmodule VoileWeb.UserResetPasswordLive do
         <.error :if={@form.errors != []}>
           Oops, something went wrong! Please check the errors below.
         </.error>
-
-        <.input field={@form[:password]} type="password" label="New password" required />
+         <.input field={@form[:password]} type="password" label="New password" required />
         <.input
           field={@form[:password_confirmation]}
           type="password"
@@ -29,7 +28,7 @@ defmodule VoileWeb.UserResetPasswordLive do
           <.button phx-disable-with="Resetting..." class="w-full">Reset Password</.button>
         </:actions>
       </.simple_form>
-
+      
       <p class="text-center text-sm mt-4">
         <.link href={~p"/register"}>Register</.link> | <.link href={~p"/users/log_in"}>Log in</.link>
       </p>
@@ -60,7 +59,7 @@ defmodule VoileWeb.UserResetPasswordLive do
         {:noreply,
          socket
          |> put_flash(:info, "Password reset successfully.")
-         |> redirect(to: ~p"/users/log_in")}
+         |> redirect(to: ~p"/login")}
 
       {:error, changeset} ->
         {:noreply, assign_form(socket, Map.put(changeset, :action, :insert))}

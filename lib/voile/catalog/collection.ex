@@ -9,7 +9,6 @@ defmodule Voile.Catalog.Collection do
   alias Voile.Catalog.CollectionField
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "collections" do
     field :status, :string
     field :description, :string

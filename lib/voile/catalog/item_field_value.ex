@@ -6,7 +6,6 @@ defmodule Voile.Catalog.ItemFieldValue do
   alias Voile.Catalog.CollectionField
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "item_field_values" do
     field :value, :string
     field :locale, :string

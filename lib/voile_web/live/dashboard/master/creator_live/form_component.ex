@@ -48,7 +48,7 @@ defmodule VoileWeb.Dashboard.Master.CreatorLive.FormComponent do
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"item" => creator_params}, socket) do
+  def handle_event("save", %{"creator" => creator_params}, socket) do
     save_item(socket, socket.assigns.action, creator_params)
   end
 

@@ -17,8 +17,8 @@ defmodule Voile.Schema.Master.Creator do
   def changeset(creator, attrs) do
     creator
     |> cast(attrs, [:creator_name, :creator_contact, :affiliation, :type])
-    |> validate_required([:creator_name, :creator_contact, :affiliation, :type])
-    |> unique_constraint(:creator_name)
+    |> validate_required([:creator_name])
+    # |> unique_constraint(:creator_name)
     |> validate_inclusion(:type, @types)
   end
 end

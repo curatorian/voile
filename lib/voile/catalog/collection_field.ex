@@ -5,7 +5,6 @@ defmodule Voile.Catalog.CollectionField do
   alias Voile.Catalog.Collection
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "collection_fields" do
     field :label, :string
     field :name, :string
@@ -13,7 +12,7 @@ defmodule Voile.Catalog.CollectionField do
     field :value_lang, :string
     field :sort_order, :integer
     field :col_field_values, :string, virtual: true
-    belongs_to :collection, Collection, on_replace: :nilify
+    belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
 
     timestamps(type: :utc_datetime)
   end

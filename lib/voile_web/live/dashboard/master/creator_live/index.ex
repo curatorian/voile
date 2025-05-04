@@ -17,31 +17,34 @@ defmodule VoileWeb.Dashboard.Master.CreatorLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Creator")
-    |> assign(:item, Master.get_creator!(id))
+    |> assign(:creator, Master.get_creator!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Item")
-    |> assign(:item, %Creator{})
+    |> assign(:creator, %Creator{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Creators")
-    |> assign(:item, nil)
+    |> assign(:creator, nil)
   end
 
   @impl true
-  def handle_info({VoileWeb.Dashboard.Master.CreatorLive.FormComponent, {:saved, item}}, socket) do
-    {:noreply, stream_insert(socket, :items, item)}
+  def handle_info(
+        {VoileWeb.Dashboard.Master.CreatorLive.FormComponent, {:saved, creator}},
+        socket
+      ) do
+    {:noreply, stream_insert(socket, :creators, creator)}
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    item = Master.get_creator!(id)
-    {:ok, _} = Master.delete_creator(item)
+    creator = Master.get_creator!(id)
+    {:ok, _} = Master.delete_creator(creator)
 
-    {:noreply, stream_delete(socket, :items, item)}
+    {:noreply, stream_delete(socket, :creators, creator)}
   end
 end
