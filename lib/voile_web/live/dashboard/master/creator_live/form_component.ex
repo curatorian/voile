@@ -68,7 +68,7 @@ defmodule VoileWeb.Dashboard.Master.CreatorLive.FormComponent do
   end
 
   defp save_item(socket, :new, creator_params) do
-    case Master.create_creator(creator_params) do
+    case Master.get_or_create_creator(creator_params) do
       {:ok, creator} ->
         notify_parent({:saved, creator})
 

@@ -6,7 +6,19 @@ defmodule VoileWeb.Dashboard.Master.CreatorLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :creators, Master.list_mst_creator())}
+    page = 1
+    per_page = 10
+    {creators, total_pages} = Master.list_mst_creator_paginated(page, per_page)
+
+    socket =
+      socket
+      |> assign(:page_title, "Listing Creators")
+      |> assign(:live_action, :index)
+      |> assign(:creators, creators)
+      |> assign(:page, page)
+      |> assign(:total_pages, total_pages)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -46,5 +58,22 @@ defmodule VoileWeb.Dashboard.Master.CreatorLive.Index do
     {:ok, _} = Master.delete_creator(creator)
 
     {:noreply, stream_delete(socket, :creators, creator)}
+  end
+
+  @impl true
+  def handle_event("paginate", %{"page" => page}, socket) do
+    page = String.to_integer(page)
+    per_page = 10
+    {creators, total_pages} = Master.list_mst_creator_paginated(page, per_page)
+
+    dbg(page)
+
+    socket =
+      socket
+      |> assign(:creators, creators)
+      |> assign(:page, page)
+      |> assign(:total_pages, total_pages)
+
+    {:noreply, socket}
   end
 end

@@ -222,6 +222,59 @@ defmodule VoileWeb.VoileDashboardComponents do
     """
   end
 
+  attr :page, :integer, required: true
+  attr :total_pages, :integer, required: true
+  attr :event, :string, default: "paginate"
+
+  def pagination(assigns) do
+    ~H"""
+    <nav class="pagination">
+      <%= if @page > 1 do %>
+        <.button phx-click={@event} phx-value-page={@page - 1}>Prev</.button>
+      <% else %>
+        <.button class="disabled-btn" disabled>Prev</.button>
+      <% end %>
+      
+      <%= for p <- pagination_range(@page, @total_pages) do %>
+        <button
+          class={if p == @page, do: "active-pagination", else: ""}
+          phx-click={if is_integer(p) and p != @page, do: @event}
+          phx-value-page={if is_integer(p) and p != @page, do: p}
+          disabled={p == @page or not is_integer(p)}
+        >
+          {if is_integer(p), do: p, else: "..."}
+        </button>
+      <% end %>
+      
+      <%= if @page < @total_pages do %>
+        <.button phx-click={@event} phx-value-page={@page + 1}>Next</.button>
+      <% else %>
+        <.button class="disabled-btn" disabled>Next</.button>
+      <% end %>
+    </nav>
+    """
+  end
+
+  defp pagination_range(current_page, total_pages) do
+    range = 1..total_pages
+
+    cond do
+      total_pages <= 5 ->
+        Enum.to_list(range)
+
+      current_page <= 3 ->
+        Enum.to_list(1..4) ++ ["..."] ++ [total_pages]
+
+      current_page >= total_pages - 2 ->
+        [1] ++ ["..."] ++ Enum.to_list((total_pages - 3)..total_pages)
+
+      true ->
+        [1] ++
+          ["..."] ++
+          Enum.to_list((current_page - 1)..(current_page + 1)) ++ ["..."] ++ [total_pages]
+    end
+  end
+
   def collection_show(js \\ %JS{}, selector) do
     JS.show(js,
       to: selector,

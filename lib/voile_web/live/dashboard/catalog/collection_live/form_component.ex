@@ -27,7 +27,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         <%= if @step == 1 do %>
           <.input field={@form[:title]} type="text" label="Title" />
           <.input type="text" name="creator" value={@creator_input} label="Creator" />
-          <%= if @creator_input != "" and @creator_suggestions != [] and @form[:creator_id] != nil do %>
+          <%= if @creator_input != "" and @creator_suggestions != [] and @form[:creator_id] != nil and @collection.creator_id == nil do %>
             <ul class="absolute z-10 bg-white border -mt-6 rounded shadow h-full max-h-64 overflow-y-auto max-w-full">
               <%= for creator <- @creator_suggestions do %>
                 <li
@@ -50,6 +50,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               phx-target={@myself}
             >
               Create {@creator_input}
+            </.button>
+          <% end %>
+          
+          <%= if @collection.creator_id != nil do %>
+            <.button phx-click="delete_creator" phx-target={@myself}>
+              Delete Author
             </.button>
           <% end %>
            <.input field={@form[:description]} type="textarea" label="Description" />
@@ -186,6 +192,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
 
+    dbg(changeset)
+
     socket =
       socket
       |> assign(:creator_input, creator_input)
@@ -218,19 +226,18 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("create_new_creator", %{"creator" => creator}, socket) do
-    # Handle the creation of a new creator here
-    # For example, you can call a function to create the creator in the database
-    # and then update the socket with the new creator.
-
-    case Master.create_creator(%{creator_name: creator}) do
+    case Master.get_or_create_creator(%{creator_name: creator}) do
       {:ok, new_creator} ->
+        updated_creator_list = [new_creator | socket.assigns.creator_list]
+
         socket =
           socket
           |> assign(:creator_input, new_creator.creator_name)
           |> assign(:creator_suggestions, [])
+          |> assign(:creator_list, updated_creator_list)
           |> assign(:collection, %{
             socket.assigns.collection
-            | mst_creator: new_creator.id
+            | creator_id: new_creator.id
           })
 
         {:noreply, socket}
@@ -244,6 +251,15 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
         {:noreply, socket}
     end
+  end
+
+  def handle_event("delete_creator", _params, socket) do
+    socket =
+      socket
+      |> assign(:creator_input, nil)
+      |> assign(:collection, %{socket.assigns.collection | creator_id: nil})
+
+    {:noreply, socket}
   end
 
   def handle_event("next_step", _params, socket) do

@@ -16,7 +16,7 @@ defmodule Voile.MasterFixtures do
         creator_name: "some creator_name",
         type: "some type"
       })
-      |> Voile.Schema.Master.create_creator()
+      |> Voile.Schema.Master.get_or_create_creator()
 
     creator
   end

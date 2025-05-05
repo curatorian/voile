@@ -22,6 +22,40 @@ defmodule Voile.Schema.Master do
   end
 
   @doc """
+  Return the list of mst_creator with the given filter.
+
+  ## Examples
+
+      iex> list_mst_creator(%{field: value})
+      [%Creator{}, ...]
+  """
+  def list_mst_creator(filter) do
+    Creator
+    |> where([c], c.creator_name == ^filter.creator_name)
+    |> Repo.all()
+  end
+
+  @doc """
+  Return the list of mst_creator with pagination.
+  """
+  def list_mst_creator_paginated(page \\ 1, per_page \\ 10) do
+    offset = (page - 1) * per_page
+
+    query =
+      from c in Creator,
+        order_by: [desc: c.id],
+        limit: ^per_page,
+        offset: ^offset
+
+    creators = Repo.all(query)
+
+    total_count = Repo.aggregate(Creator, :count, :id)
+    total_pages = div(total_count + per_page - 1, per_page)
+
+    {creators, total_pages}
+  end
+
+  @doc """
   Gets a single creator.
 
   Raises `Ecto.NoResultsError` if the Creator does not exist.
@@ -49,10 +83,16 @@ defmodule Voile.Schema.Master do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_creator(attrs \\ %{}) do
-    %Creator{}
-    |> Creator.changeset(attrs)
-    |> Repo.insert()
+  def get_or_create_creator(attrs \\ %{}) do
+    case Repo.get_by(Creator, attrs) do
+      nil ->
+        %Creator{}
+        |> Creator.changeset(attrs)
+        |> Repo.insert()
+
+      creator ->
+        {:ok, creator}
+    end
   end
 
   @doc """
