@@ -2,12 +2,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Show do
   use VoileWeb, :live_view_dashboard
 
   alias Voile.Catalog
+  alias Voile.Schema.Master
+  alias Voile.Schema.Metadata
 
   @impl true
   def mount(_params, _session, socket) do
+    collection_type = Metadata.list_resource_class()
+    collection_properties = Metadata.list_metadata_properties()
+    creator = Master.list_mst_creator()
+
     socket =
       socket
       |> assign(:step, 1)
+      |> assign(:collection_type, collection_type)
+      |> assign(:collection_properties, collection_properties)
+      |> assign(:creator, creator)
       |> assign(:show_add_collection_field, true)
 
     {:ok, socket}

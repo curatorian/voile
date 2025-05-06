@@ -43,8 +43,8 @@ defmodule Voile.Catalog.Collection do
       :unit_id
     ])
     |> cast_assoc(:collection_fields, with: &CollectionField.changeset/2, required: false)
-    |> validate_required([:title, :description, :thumbnail, :status, :access_level],
-      message: "Field ini tidak boleh kosong"
+    |> validate_required([:title, :description, :thumbnail, :status, :access_level, :creator_id],
+      message: "This field is required"
     )
     |> unique_constraint(:title)
     |> validate_inclusion(:status, @statuses, message: "Status tidak valid")

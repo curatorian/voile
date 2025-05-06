@@ -11,14 +11,16 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
   def mount(_params, _session, socket) do
     collections = Catalog.list_collections()
     collection_type = Metadata.list_resource_class()
+    collection_properties = Metadata.list_metadata_properties_by_vocabulary()
     creator = Master.list_mst_creator()
 
     socket =
       socket
       |> stream(:collections, collections)
       |> assign(:collection_type, collection_type)
+      |> assign(:collection_properties, collection_properties)
       |> assign(:creator, creator)
-      |> assign(:step, 1)
+      |> assign(:step, 2)
       |> assign(:show_add_collection_field, true)
 
     {:ok, socket}

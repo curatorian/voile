@@ -7,7 +7,7 @@ defmodule VoileWeb.UserRegistrationLive do
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
-      <.header class="text-center">
+      <.header class="text-center mt-10">
         Register for an account
         <:subtitle>
           Already registered?

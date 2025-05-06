@@ -204,7 +204,7 @@ defmodule VoileWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10">
+      <div class="mt-4">
         {render_slot(@inner_block, f)}
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           {render_slot(action, f)}
@@ -274,6 +274,7 @@ defmodule VoileWeb.CoreComponents do
   attr :name, :any
   attr :label, :string, default: nil
   attr :value, :any
+  attr :required_value, :boolean, default: false
 
   attr :type, :string,
     default: "text",
@@ -311,7 +312,7 @@ defmodule VoileWeb.CoreComponents do
       end)
 
     ~H"""
-    <div class="my-8">
+    <div class="my-4">
       <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
         <input type="hidden" name={@name} value="false" disabled={@rest[:disabled]} />
         <input
@@ -332,8 +333,10 @@ defmodule VoileWeb.CoreComponents do
 
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div class="my-8">
-      <.label for={@id}>{@label}</.label>
+    <div class="my-4">
+      <.label for={@id}>
+        {@label} <span :if={@required_value} class="text-red-500">*</span> :
+      </.label>
       
       <select
         id={@id}
@@ -353,8 +356,8 @@ defmodule VoileWeb.CoreComponents do
 
   def input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div class="my-8">
-      <.label for={@id}>{@label}</.label>
+    <div class="my-4">
+      <.label for={@id}>{@label} <span :if={@required_value} class="text-red-500">*</span> :</.label>
        <textarea
         id={@id}
         name={@name}
@@ -373,8 +376,10 @@ defmodule VoileWeb.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div class="my-8">
-      <.label for={@id}>{@label}</.label>
+    <div class="my-4">
+      <.label for={@id}>
+        {@label} <span :if={@required_value} class="text-red-500 text-xs">*</span> :
+      </.label>
       
       <input
         type={@type}

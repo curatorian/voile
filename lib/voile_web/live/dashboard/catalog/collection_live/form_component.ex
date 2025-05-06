@@ -2,8 +2,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   use VoileWeb, :live_component
 
   alias Voile.Catalog
-  alias Voile.Catalog.CollectionField
   alias Voile.Schema.Master
+  alias Voile.Schema.Metadata
 
   alias Ecto.Changeset
 
@@ -11,6 +11,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
+      <%= if msg = @flash["error"] do %>
+        <.flash kind={:error} class="mb-4">{msg}</.flash>
+      <% end %>
+      
+      <%= if msg = @flash["info"] do %>
+        <.flash kind={:info} class="mb-4">{msg}</.flash>
+      <% end %>
+      
       <.header>
         {@title}
         <:subtitle>Use this form to manage collection records in your database.</:subtitle>
@@ -25,10 +33,19 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         phx-submit="save"
       >
         <%= if @step == 1 do %>
-          <.input field={@form[:title]} type="text" label="Title" />
-          <.input type="text" name="creator" value={@creator_input} label="Creator" />
+          <.input field={@form[:title]} type="text" label="Title" required_value={true} />
+          <.input
+            type="text"
+            name="creator"
+            value={
+              (@collection.mst_creator && @collection.mst_creator.creator_name) || @creator_input
+            }
+            label="Creator"
+            disabled={@creator_input != "" and @collection.creator_id !== nil}
+            required_value={true}
+          />
           <%= if @creator_input != "" and @creator_suggestions != [] and @form[:creator_id] != nil and @collection.creator_id == nil do %>
-            <ul class="absolute z-10 bg-white border -mt-6 rounded shadow h-full max-h-64 overflow-y-auto max-w-full">
+            <ul class="absolute z-10 bg-white border -mt-4 rounded shadow max-h-64 overflow-y-auto max-w-full">
               <%= for creator <- @creator_suggestions do %>
                 <li
                   phx-click="select_creator"
@@ -51,6 +68,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             >
               Create {@creator_input}
             </.button>
+            
+            <%= for {_msg, _opts} <- Keyword.get_values(@form.errors, :creator_id) do %>
+              <p class="text-red-500 text-sm mt-2">Please choose Creator or click Create!</p>
+            <% end %>
           <% end %>
           
           <%= if @collection.creator_id != nil do %>
@@ -58,7 +79,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               Delete Author
             </.button>
           <% end %>
-           <.input field={@form[:description]} type="textarea" label="Description" />
+          
+          <.input
+            field={@form[:description]}
+            type="textarea"
+            label="Description"
+            required_value={true}
+          />
           <.input
             field={@form[:status]}
             type="select"
@@ -69,6 +96,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               {"Published", "published"},
               {"Archived", "archived"}
             ]}
+            required_value={true}
           />
           <.input
             field={@form[:access_level]}
@@ -79,9 +107,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               {"Private", "private"},
               {"Restricted", "restricted"}
             ]}
-          /> <.input field={@form[:thumbnail]} type="text" label="Thumbnail" disabled="true" />
+            required_value={true}
+          />
+          <.input
+            field={@form[:thumbnail]}
+            type="text"
+            label="Thumbnail"
+            disabled="true"
+            required_value={true}
+          />
           <%= if @form[:thumbnail].value === nil or @form[:thumbnail].value == "" do %>
             <.live_file_input upload={@uploads.thumbnail} />
+          <% end %>
+          
+          <%= for {_msg, _opts} <- Keyword.get_values(@form.errors, :thumbnail) do %>
+            <p class="text-red-500 text-sm mt-2">Thumbnail is mandatory! Please upload thumbnail.</p>
           <% end %>
           
           <%= for entry <- @uploads.thumbnail.entries do %>
@@ -91,63 +131,117 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           <% end %>
           
           <%= if @form[:thumbnail].value != nil and @form[:thumbnail].value != "" do %>
-            <img src={@form[:thumbnail].value} class="h-32 mt-2" />
-            <.button
-              type="button"
-              phx-click="delete_thumbnail"
-              phx-target={@myself}
-              class="btn bg-red-500 text-white"
-              phx-disable-with="Deleting..."
-            >
-              Delete Thumbnail
-            </.button>
+            <div class="flex items-center gap-5">
+              <img src={@form[:thumbnail].value} class="h-32 mt-2" />
+              <.button
+                type="button"
+                phx-click="delete_thumbnail"
+                phx-target={@myself}
+                class="btn bg-red-500 text-white"
+                phx-disable-with="Deleting..."
+              >
+                Delete Thumbnail
+              </.button>
+            </div>
           <% end %>
         <% end %>
         
         <%= if @step == 2 do %>
-          <.inputs_for :let={col_field} field={@form[:collection_fields]}>
-            <div class="grid grid-cols-4 gap-2">
-              <.input field={col_field[:label]} type="text" label="Label" />
-              <.input field={col_field[:name]} type="text" label="Name" />
-              <.input field={col_field[:value]} type="text" label="Value" />
-              <.input field={col_field[:value_lang]} type="text" label="Language" />
-              <.input
-                field={col_field[:sort_order]}
-                value={col_field[:sort_order].value || col_field.index + 1}
-                type="number"
-                label="Order Sort"
-              />
+          <div class="flex items-start gap-5">
+            <div class="sticky top-0">
+              <p>Collection Properties</p>
+              
+              <div class="h-full max-h-[400px] overflow-y-auto overflow-x-hidden rounded p-2">
+                <%= for {id, props} <- @collection_properties do %>
+                  <div>
+                    <h5>{id}</h5>
+                    
+                    <div class="flex flex-col gap-3">
+                      <%= for prop <- props do %>
+                        <button
+                          type="button"
+                          phx-click="select_props"
+                          phx-value-id={prop.id}
+                          phx-target={@myself}
+                          class="btn text-left bg-violet-100 border border-violet-100 text-violet-600 hover:bg-violet-500 hover:text-white transition-all duration-500"
+                        >
+                          {prop.label}
+                        </button>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
             </div>
             
-            <.button
-              type="button"
-              phx-click="delete_unsaved_field"
-              phx-target={@myself}
-              phx-value-index={col_field.index}
-            >
-              Remove Field {col_field.index}
-            </.button>
-          </.inputs_for>
-          
-          <%= if @show_add_collection_field do %>
-            <.button type="button" phx-click="add_collection_field" phx-target={@myself}>
-              Add Field
-            </.button>
-          <% end %>
+            <div class="w-full">
+              <%= if @form[:collection_fields] == nil or Enum.empty?(@form[:collection_fields].value || []) do %>
+                <p class="text-red-500 text-sm mt-2">No collection fields added yet.</p>
+              <% else %>
+                <div>
+                  <.inputs_for :let={col_field} field={@form[:collection_fields]}>
+                    <div class="flex flex-col w-full bg-gray-100 p-4 rounded-xl mb-4">
+                      <p>{col_field[:label].value}</p>
+                      
+                      <input
+                        type="hidden"
+                        name={col_field[:label].name}
+                        value={col_field[:label].value}
+                      />
+                      <input
+                        field={col_field[:sort_order].name}
+                        value={col_field[:sort_order].value || col_field.index + 1}
+                        type="hidden"
+                      />
+                      <div class="grid grid-cols-5 items-center gap-2">
+                        <.input
+                          field={col_field[:value_lang]}
+                          type="select"
+                          label="Language"
+                          options={[
+                            {"Indonesia", "id"},
+                            {"English", "en"}
+                          ]}
+                        />
+                        <div class="col-span-4">
+                          <.input field={col_field[:value]} type="text" label="Value" />
+                        </div>
+                      </div>
+                      
+                      <.button
+                        type="button"
+                        phx-click="delete_unsaved_field"
+                        phx-target={@myself}
+                        phx-value-index={col_field.index}
+                      >
+                        Remove Field {col_field.index}
+                      </.button>
+                    </div>
+                  </.inputs_for>
+                </div>
+              <% end %>
+            </div>
+          </div>
         <% end %>
         
         <:actions>
-          <%= if @step > 1 do %>
-            <.button type="button" phx-click="prev_step" phx-target={@myself}>Back</.button>
-          <% end %>
-          
-          <%= if @step == 2 do %>
-            <.button type="submit" phx-disable-with="Saving...">
-              Save
-            </.button>
-          <% else %>
-            <.button type="button" phx-click="next_step" phx-target={@myself}>Next</.button>
-          <% end %>
+          <div class="mt-12 w-full flex justify-between items-center gap-5">
+            <%= if @step > 1 do %>
+              <.button type="button" phx-click="prev_step" phx-target={@myself} class="w-full">
+                &leftarrow; Back
+              </.button>
+            <% end %>
+            
+            <%= if @step == 2 do %>
+              <.button type="submit" phx-disable-with="Saving..." class="success-btn w-full">
+                Save
+              </.button>
+            <% else %>
+              <.button type="button" phx-click="next_step" phx-target={@myself} class="w-full">
+                Next &rightarrow;
+              </.button>
+            <% end %>
+          </div>
         </:actions>
       </.simple_form>
     </div>
@@ -192,8 +286,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
 
-    dbg(changeset)
-
     socket =
       socket
       |> assign(:creator_input, creator_input)
@@ -203,7 +295,16 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("validate", _params, socket) do
+  def handle_event("validate", %{"collection" => collection_params}, socket) do
+    changeset =
+      socket.assigns.collection
+      |> Catalog.change_collection(collection_params)
+      |> Map.put(:action, :validate)
+
+    socket =
+      socket
+      |> assign(:form, to_form(changeset, action: :validate))
+
     {:noreply, socket}
   end
 
@@ -294,60 +395,106 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, socket}
   end
 
-  def handle_event("add_collection_field", _params, socket) do
-    collection_params = socket.assigns.form.params
-    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
+  def handle_event("select_props", %{"id" => prop_id}, socket) do
+    # Retrieve the current form parameters from the socket assigns or initialize an empty map if nil
+    params = socket.assigns.form.params || %{}
 
-    updated_collection = Changeset.apply_changes(changeset)
+    # Output: params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}}
 
-    updated_collection = %{
-      updated_collection
-      | collection_fields:
-          updated_collection.collection_fields ++ [%CollectionField{id: Ecto.UUID.generate()}]
+    # Extract the "collection_fields" map from the parameters, defaulting to an empty map if not present
+    raw_fields = Map.get(params, "collection_fields", %{})
+
+    # Output: raw_fields = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}
+
+    # Convert the map of fields into a list of entries
+    existing = Map.values(raw_fields)
+
+    # Output: existing = [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}]
+
+    new_field = %{
+      "id" => Ecto.UUID.generate(),
+      "label" => Metadata.get_property!(prop_id).label,
+      "value_lang" => nil,
+      "value" => nil,
+      "sort_order" => length(existing) + 1
     }
 
-    new_changeset = Catalog.change_collection(updated_collection)
+    # Append the new field to the existing list of fields
+    updated_list = existing ++ [new_field]
+
+    # Output: updated_list = [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}, %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}]
+
+    # Convert the updated list back into a map with sequential keys
+    updated_map =
+      updated_list
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
+
+    # Output: updated_map = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}, "2" => %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}}
+
+    # Update the form parameters with the modified "collection_fields" map
+    new_params = Map.put(params, "collection_fields", updated_map)
+
+    # Output: new_params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}, "2" => %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}}}
+
+    # Create a new changeset for the collection using the updated parameters
+    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+
+    # Output: changeset = #Ecto.Changeset<action: :validate, changes: %{collection_fields: [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}, %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}]}, ...>
 
     socket =
       socket
-      |> assign(collection: updated_collection)
-      |> assign(form: to_form(new_changeset))
+      |> assign(form: to_form(changeset, action: :validate))
 
     {:noreply, socket}
   end
 
-  def handle_event("delete_unsaved_field", %{"index" => index_str}, socket) do
-    index = String.to_integer(index_str)
+  def handle_event("delete_unsaved_field", %{"index" => idx_str}, socket) do
+    # Retrieve the current form parameters from the socket assigns or initialize an empty map if nil
+    params = socket.assigns.form.params || %{}
 
-    # 1. Get current user-typed form values
-    collection_params = socket.assigns.form.params
+    # Output: params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}}
 
-    # 2. Start with the changeset using current user input
-    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
+    # Extract the "collection_fields" map from the parameters, defaulting to an empty map if not present
+    raw_fields = Map.get(params, "collection_fields", %{})
 
-    # 3. Apply the changes so we can work with up-to-date data
-    updated_collection = Ecto.Changeset.apply_changes(changeset)
+    # Output: raw_fields = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}
 
-    # 4. Remove the field at index
-    updated_collection_fields =
-      List.delete_at(updated_collection.collection_fields, index)
+    # Convert the map of fields into a list of entries
+    entries = Map.values(raw_fields)
 
-    # 5. Replace fields in struct
-    updated_collection = %{updated_collection | collection_fields: updated_collection_fields}
+    # Output: entries = [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}]
 
-    # 6. Rebuild the changeset and reapply the old form params to preserve user input
-    new_changeset =
-      updated_collection
-      |> Catalog.change_collection()
-      |> Map.put(:params, collection_params)
+    # Convert the index string from the event parameters to an integer
+    idx = String.to_integer(idx_str)
+    # Output: idx = 1
 
-    # 7. Assign everything back
-    socket =
-      socket
-      |> assign(collection: updated_collection)
-      |> assign(form: to_form(new_changeset))
+    # Remove the field at the specified index from the list of entries
+    new_list = List.delete_at(entries, idx)
+    # Output: new_list = [%{"id" => "uuid1", "label" => "Field 1"}]
 
-    {:noreply, socket}
+    # Convert the updated list back into a map with sequential keys
+    new_map =
+      new_list
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {entry, i} -> {to_string(i), entry} end)
+
+    # Output: new_map = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}}
+
+    # Update the form parameters with the modified "collection_fields" map
+    new_params = Map.put(params, "collection_fields", new_map)
+
+    # Output: new_params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}}}
+
+    # Create a new changeset for the collection using the updated parameters
+    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+
+    # Output: changeset = #Ecto.Changeset<action: :validate, changes: %{collection_fields: [%{"id" => "uuid1", "label" => "Field 1"}]}, ...>
+
+    # Update the socket assigns with the new form changeset for validation
+    {:noreply,
+     socket
+     |> assign(form: to_form(changeset, action: :validate))}
   end
 
   def handle_event("save", params, socket) do
@@ -436,8 +583,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :new, collection_params) do
-    dbg(collection_params)
-
     case Catalog.create_collection(collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
@@ -448,7 +593,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        dbg(changeset)
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end

@@ -119,6 +119,27 @@ defmodule Voile.Schema.Metadata do
     Repo.all(Property)
   end
 
+  def list_metadata_properties_by_vocabulary do
+    props =
+      Property
+      |> Repo.all()
+      |> Repo.preload([:vocabulary])
+
+    props
+    |> Enum.group_by(fn prop -> prop.vocabulary.label end)
+    |> Enum.sort_by(fn {_label, props} ->
+      props |> List.first() |> Map.get(:vocabulary) |> Map.get(:id)
+    end)
+  end
+
+  def list_metadata_properties_by_vocabulary(vocabulary_id) do
+    from(p in Property,
+      where: p.vocabulary_id == ^vocabulary_id,
+      order_by: [asc: p.label]
+    )
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single property.
 

@@ -120,11 +120,11 @@ defmodule VoileWeb.Router do
           resources "/resource_template", ResourceTemplateController
           resources "/resource_templ_property", ResourceTemplatePropertyController
         end
-      end
 
-      scope "/users" do
-        live "/settings", UserSettingsLive, :edit
-        live "/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+        scope "/settings" do
+          live "/", UserSettingsLive, :edit
+          live "/confirm_email/:token", UserSettingsLive, :confirm_email
+        end
       end
     end
   end

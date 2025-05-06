@@ -4,7 +4,7 @@ defmodule VoileWeb.UserLoginLive do
   def render(assigns) do
     ~H"""
     <div class="max-w-7xl mx-auto flex flex-col items-center">
-      <.header class="text-center">
+      <.header class="text-center mt-10">
         Log in to account
         <:subtitle>
           Don't have an account?
