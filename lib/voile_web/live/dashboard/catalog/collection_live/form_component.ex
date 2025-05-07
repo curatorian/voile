@@ -19,6 +19,56 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         <.flash kind={:info} class="mb-4">{msg}</.flash>
       <% end %>
       
+      <.modal id="col_field_delete_confirmation">
+        <div class="text-center">
+          <h5>
+            Are you sure want to delete {(@chosen_collection_field && @chosen_collection_field.label) ||
+              ""} ?
+          </h5>
+          
+          <p class="text-sm text-gray-500">
+            This action cannot be undone. Please confirm your action.
+          </p>
+          
+          <p class="text-sm italic font-semibold text-red-500">
+            You will delete this property :
+          </p>
+          
+          <div class="my-4">
+            <h6 class="text-brand">
+              {(@chosen_collection_field && @chosen_collection_field.label) || ""}
+            </h6>
+            
+            <p class="text-xs">with value :</p>
+            
+            <h6 class="font-bold text-gray-500">
+              {(@chosen_collection_field && @chosen_collection_field.value) || ""}
+            </h6>
+          </div>
+          
+          <div class="flex items-center w-full my-5 gap-5">
+            <.button
+              class="w-full warning-btn"
+              phx-click={
+                JS.push("delete_existed_field") |> hide_modal("col_field_delete_confirmation")
+              }
+              phx-value-id={@delete_confirmation_id}
+              phx-target={@myself}
+            >
+              Delete
+            </.button>
+            
+            <.button
+              class="w-full"
+              phx-click={hide_modal("col_field_delete_confirmation")}
+              phx-target={@myself}
+            >
+              Cancel
+            </.button>
+          </div>
+        </div>
+      </.modal>
+      
       <.header>
         {@title}
         <:subtitle>Use this form to manage collection records in your database.</:subtitle>
@@ -116,6 +166,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             disabled="true"
             required_value={true}
           />
+          <input
+            name={@form[:creator_id].name}
+            value={@form[:creator_id].value || @current_user.id}
+            type="hidden"
+            disabled
+          /> {@current_user.id}
           <%= if @form[:thumbnail].value === nil or @form[:thumbnail].value == "" do %>
             <.live_file_input upload={@uploads.thumbnail} />
           <% end %>
@@ -131,43 +187,65 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           <% end %>
           
           <%= if @form[:thumbnail].value != nil and @form[:thumbnail].value != "" do %>
-            <div class="flex items-center gap-5">
-              <img src={@form[:thumbnail].value} class="h-32 mt-2" />
-              <.button
-                type="button"
-                phx-click="delete_thumbnail"
-                phx-target={@myself}
-                class="btn bg-red-500 text-white"
-                phx-disable-with="Deleting..."
-              >
-                Delete Thumbnail
-              </.button>
-            </div>
+            <img
+              src={@form[:thumbnail].value}
+              class="h-32 my-4 border border-1 border-gray-300 rounded-xl p-1"
+            />
+            <.button
+              type="button"
+              phx-click="delete_thumbnail"
+              phx-target={@myself}
+              class="warning-btn"
+              phx-disable-with="Deleting..."
+            >
+              Delete Thumbnail
+            </.button>
           <% end %>
         <% end %>
         
         <%= if @step == 2 do %>
           <div class="flex items-start gap-5">
-            <div class="sticky top-0">
-              <p>Collection Properties</p>
+            <div class="sticky top-0 w-full max-w-72">
+              <h5>Collection Properties</h5>
               
-              <div class="h-full max-h-[400px] overflow-y-auto overflow-x-hidden rounded p-2">
+              <div class="h-full w-full h-[400px] border border-1 border-violet-100 overflow-y-auto overflow-x-hidden rounded-xl mt-2 p-4">
+                <p class="text-xs italic mb-4 max-w-48">
+                  You can click each category below and pick any necessary property for your collection.
+                </p>
+                
                 <%= for {id, props} <- @collection_properties do %>
                   <div>
-                    <h5>{id}</h5>
+                    <h6
+                      class="mb-4 border border-1 border-violet-100 rounded-xl p-2 hover:text-brand cursor-pointer transition-all duration-1000"
+                      phx-click={
+                        JS.toggle(
+                          to: "##{id |> String.downcase() |> String.replace(" ", "-")}",
+                          in: "block scale-y-100 transition transform duration-300 ease-out",
+                          out: "hidden scale-y-0 transition transform duration-300 ease-in",
+                          display: "block"
+                        )
+                      }
+                    >
+                      {id}
+                    </h6>
                     
-                    <div class="flex flex-col gap-3">
-                      <%= for prop <- props do %>
-                        <button
-                          type="button"
-                          phx-click="select_props"
-                          phx-value-id={prop.id}
-                          phx-target={@myself}
-                          class="btn text-left bg-violet-100 border border-violet-100 text-violet-600 hover:bg-violet-500 hover:text-white transition-all duration-500"
-                        >
-                          {prop.label}
-                        </button>
-                      <% end %>
+                    <div
+                      id={id |> String.downcase() |> String.replace(" ", "-")}
+                      class="hidden scale-y-0 origin-top overflow-hidden transition-transform duration-300"
+                    >
+                      <div class="flex flex-col gap-3">
+                        <%= for prop <- props do %>
+                          <button
+                            type="button"
+                            phx-click="select_props"
+                            phx-value-id={prop.id}
+                            phx-target={@myself}
+                            class="btn text-left hover-btn ml-3"
+                          >
+                            {prop.label}
+                          </button>
+                        <% end %>
+                      </div>
                     </div>
                   </div>
                 <% end %>
@@ -180,20 +258,27 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               <% else %>
                 <div>
                   <.inputs_for :let={col_field} field={@form[:collection_fields]}>
-                    <div class="flex flex-col w-full bg-gray-100 p-4 rounded-xl mb-4">
-                      <p>{col_field[:label].value}</p>
-                      
+                    <h6 class="bg-violet-200 px-4 py-1 rounded-t-xl text-brand">
+                      {col_field[:label].value}
+                    </h6>
+                    
+                    <div class="flex flex-col w-full bg-gray-100 p-4 rounded-b-xl mb-4">
                       <input
                         type="hidden"
                         name={col_field[:label].name}
                         value={col_field[:label].value}
                       />
                       <input
-                        field={col_field[:sort_order].name}
-                        value={col_field[:sort_order].value || col_field.index + 1}
                         type="hidden"
+                        name={col_field[:name].name}
+                        value={col_field[:name].value}
                       />
-                      <div class="grid grid-cols-5 items-center gap-2">
+                      <input
+                        type="hidden"
+                        name={col_field[:sort_order].name}
+                        value={col_field[:sort_order].value || col_field.index + 1}
+                      />
+                      <div class="grid grid-cols-5 items-center gap-2 -mt-6">
                         <.input
                           field={col_field[:value_lang]}
                           type="select"
@@ -208,14 +293,32 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                         </div>
                       </div>
                       
-                      <.button
-                        type="button"
-                        phx-click="delete_unsaved_field"
-                        phx-target={@myself}
-                        phx-value-index={col_field.index}
-                      >
-                        Remove Field {col_field.index}
-                      </.button>
+                      <div class="w-full flex items-center gap-3 mt-2">
+                        <%= if col_field[:id].value != nil do %>
+                          <.button
+                            type="button"
+                            phx-click={
+                              JS.push("delete_confirmation")
+                              |> show_modal("col_field_delete_confirmation")
+                            }
+                            phx-target={@myself}
+                            phx-value-id={col_field[:id].value}
+                            class="warning-btn w-full"
+                          >
+                            <.icon name="hero-trash-solid" class="w-4 h-4" /> Delete Property
+                          </.button>
+                        <% else %>
+                          <.button
+                            type="button"
+                            phx-click="delete_unsaved_field"
+                            phx-target={@myself}
+                            phx-value-index={col_field.index}
+                            class="warning-btn w-full"
+                          >
+                            <.icon name="hero-x-circle-solid" class="w-4 h-4" /> Remove Field
+                          </.button>
+                        <% end %>
+                      </div>
                     </div>
                   </.inputs_for>
                 </div>
@@ -254,6 +357,30 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       assigns.collection_type
       |> Enum.map(fn type -> {type.label, type.id} end)
 
+    changeset =
+      case assigns.action do
+        :edit ->
+          coll = Catalog.get_collection!(collection.id) |> Voile.Repo.preload(:collection_fields)
+          Catalog.change_collection(coll)
+
+        :new ->
+          Catalog.change_collection(%Catalog.Collection{})
+      end
+
+    seed_params =
+      collection.collection_fields
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {field, idx} ->
+        {to_string(idx),
+         %{
+           "id" => field.id,
+           "label" => field.label,
+           "value_lang" => field.value_lang,
+           "value" => field.value,
+           "sort_order" => field.sort_order
+         }}
+      end)
+
     {:ok,
      socket
      |> assign(assigns)
@@ -262,6 +389,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign(:creator_suggestions, [])
      |> assign(:type_options, type_options)
      |> assign(:uploaded_files, [])
+     |> assign(:delete_confirmation_id, nil)
+     |> assign(:chosen_collection_field, nil)
      |> allow_upload(:thumbnail,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
@@ -269,8 +398,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
        progress: &handle_progress/3
      )
      |> assign_new(:form, fn ->
-       to_form(Catalog.change_collection(collection))
-     end)}
+       to_form(changeset)
+     end)
+     |> assign(:form_params, %{"collection_fields" => seed_params})}
   end
 
   @impl true
@@ -397,23 +527,28 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   def handle_event("select_props", %{"id" => prop_id}, socket) do
     # Retrieve the current form parameters from the socket assigns or initialize an empty map if nil
-    params = socket.assigns.form.params || %{}
+    params =
+      case socket.assigns.form.params do
+        nil ->
+          socket.assigns.form_params
 
-    # Output: params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}}
+        _ ->
+          Map.update(socket.assigns.form_params, "collection_fields", %{}, fn existing_fields ->
+            Map.merge(existing_fields, socket.assigns.form.params["collection_fields"] || %{})
+          end)
+      end
 
     # Extract the "collection_fields" map from the parameters, defaulting to an empty map if not present
     raw_fields = Map.get(params, "collection_fields", %{})
 
-    # Output: raw_fields = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}
-
     # Convert the map of fields into a list of entries
     existing = Map.values(raw_fields)
 
-    # Output: existing = [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}]
+    label = Metadata.get_property!(prop_id).label
 
     new_field = %{
-      "id" => Ecto.UUID.generate(),
-      "label" => Metadata.get_property!(prop_id).label,
+      "label" => label,
+      "name" => String.split(label, " ") |> Enum.join(""),
       "value_lang" => nil,
       "value" => nil,
       "sort_order" => length(existing) + 1
@@ -422,25 +557,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     # Append the new field to the existing list of fields
     updated_list = existing ++ [new_field]
 
-    # Output: updated_list = [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}, %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}]
-
     # Convert the updated list back into a map with sequential keys
     updated_map =
       updated_list
       |> Enum.with_index()
       |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
 
-    # Output: updated_map = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}, "2" => %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}}
-
     # Update the form parameters with the modified "collection_fields" map
     new_params = Map.put(params, "collection_fields", updated_map)
 
-    # Output: new_params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}, "2" => %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}}}
-
     # Create a new changeset for the collection using the updated parameters
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
-
-    # Output: changeset = #Ecto.Changeset<action: :validate, changes: %{collection_fields: [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}, %{"id" => "new-uuid", "label" => "New Field Label", "value_lang" => nil, "value" => nil, "sort_order" => 3}]}, ...>
 
     socket =
       socket
@@ -451,27 +578,28 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   def handle_event("delete_unsaved_field", %{"index" => idx_str}, socket) do
     # Retrieve the current form parameters from the socket assigns or initialize an empty map if nil
-    params = socket.assigns.form.params || %{}
+    params =
+      case socket.assigns.form.params do
+        nil ->
+          socket.assigns.form_params
 
-    # Output: params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}}
+        _ ->
+          Map.update(socket.assigns.form_params, "collection_fields", %{}, fn existing_fields ->
+            Map.merge(existing_fields, socket.assigns.form.params["collection_fields"] || %{})
+          end)
+      end
 
     # Extract the "collection_fields" map from the parameters, defaulting to an empty map if not present
     raw_fields = Map.get(params, "collection_fields", %{})
 
-    # Output: raw_fields = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}, "1" => %{"id" => "uuid2", "label" => "Field 2"}}
-
     # Convert the map of fields into a list of entries
     entries = Map.values(raw_fields)
 
-    # Output: entries = [%{"id" => "uuid1", "label" => "Field 1"}, %{"id" => "uuid2", "label" => "Field 2"}]
-
     # Convert the index string from the event parameters to an integer
     idx = String.to_integer(idx_str)
-    # Output: idx = 1
 
     # Remove the field at the specified index from the list of entries
     new_list = List.delete_at(entries, idx)
-    # Output: new_list = [%{"id" => "uuid1", "label" => "Field 1"}]
 
     # Convert the updated list back into a map with sequential keys
     new_map =
@@ -479,22 +607,79 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       |> Enum.with_index()
       |> Enum.into(%{}, fn {entry, i} -> {to_string(i), entry} end)
 
-    # Output: new_map = %{"0" => %{"id" => "uuid1", "label" => "Field 1"}}
-
     # Update the form parameters with the modified "collection_fields" map
     new_params = Map.put(params, "collection_fields", new_map)
 
-    # Output: new_params = %{"collection_fields" => %{"0" => %{"id" => "uuid1", "label" => "Field 1"}}}
-
     # Create a new changeset for the collection using the updated parameters
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
-
-    # Output: changeset = #Ecto.Changeset<action: :validate, changes: %{collection_fields: [%{"id" => "uuid1", "label" => "Field 1"}]}, ...>
 
     # Update the socket assigns with the new form changeset for validation
     {:noreply,
      socket
      |> assign(form: to_form(changeset, action: :validate))}
+  end
+
+  def handle_event("delete_existed_field", %{"id" => id}, socket) do
+    # Attempt to fetch and delete the collection field
+    case Catalog.get_collection_field!(id) do
+      nil ->
+        :ok
+
+      collection_field ->
+        Catalog.delete_collection_field(collection_field)
+    end
+
+    # Refresh the collection fields from the database
+    updated_collection =
+      Catalog.get_collection!(socket.assigns.collection.id)
+      |> Voile.Repo.preload(:collection_fields)
+
+    # Update the form parameters with the refreshed collection fields
+    updated_fields =
+      updated_collection.collection_fields
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {field, idx} ->
+        {to_string(idx),
+         %{
+           "id" => field.id,
+           "label" => field.label,
+           "value_lang" => field.value_lang,
+           "value" => field.value,
+           "sort_order" => field.sort_order
+         }}
+      end)
+
+    new_params =
+      Map.put(socket.assigns.form.params || %{}, "collection_fields", updated_fields)
+
+    # Create a new changeset with the updated parameters
+    changeset = Catalog.change_collection(updated_collection, new_params)
+
+    # Update the socket assigns with the new form, collection, and form_params
+    socket =
+      socket
+      |> assign(:collection, updated_collection)
+      |> assign(:form, to_form(changeset, action: :validate))
+      |> assign(:form_params, new_params)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("delete_confirmation", %{"id" => id}, socket) do
+    # Handle the delete confirmation logic here
+    # You can use the id to identify which item to delete
+    # For example, you can send a message to the parent LiveView or perform an action directly
+
+    # Notify the parent LiveView about the deletion
+    chosen_collection_field =
+      Catalog.get_collection_field!(id)
+
+    socket =
+      socket
+      |> assign(:delete_confirmation_id, id)
+      |> assign(:chosen_collection_field, chosen_collection_field)
+
+    {:noreply, socket}
   end
 
   def handle_event("save", params, socket) do
@@ -578,6 +763,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        dbg(changeset)
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
@@ -593,6 +779,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        dbg(changeset)
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end

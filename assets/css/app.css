@@ -130,7 +130,7 @@ h6 {
   @apply bg-gray-200 hover:bg-gray-300 text-gray-500 py-2 px-4 rounded-lg cursor-not-allowed;
 }
 
-.cancel-btn {
+.warning-btn {
   @apply bg-red-500 text-white py-2 px-4 rounded-lg transition ease-in-out duration-300 hover:bg-red-600;
 }
 
@@ -138,8 +138,12 @@ h6 {
   @apply bg-green-500 text-white py-2 px-4 rounded-lg transition ease-in-out duration-300 hover:bg-green-600;
 }
 
-.warning-btn {
-  @apply bg-yellow-500 text-white py-2 px-4 rounded-lg transition ease-in-out duration-300 hover:bg-yellow-600;
+.cancel-btn {
+  @apply bg-yellow-500 text-zinc-900 py-2 px-4 rounded-lg transition ease-in-out duration-300 hover:bg-yellow-600;
+}
+
+.hover-btn {
+  @apply bg-violet-100 border border-violet-100 text-violet-600 hover:bg-violet-500 hover:text-white transition-all duration-500;
 }
 
 .dashboard-menu-btn {

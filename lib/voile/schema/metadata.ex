@@ -122,6 +122,7 @@ defmodule Voile.Schema.Metadata do
   def list_metadata_properties_by_vocabulary do
     props =
       Property
+      |> order_by([p], asc: p.label)
       |> Repo.all()
       |> Repo.preload([:vocabulary])
 

@@ -16,7 +16,10 @@
     </.header>
     
     <div class="flex gap-4">
-      <img src={@collection.thumbnail} />
+      <div class="flex items-center justify-center w-64">
+        <img src={@collection.thumbnail} class="object-cover" />
+      </div>
+      
       <.list>
         <:item title="Title">{@collection.title}</:item>
         
@@ -49,6 +52,7 @@
         creator_list={@creator}
         collection_type={@collection_type}
         collection_properties={@collection_properties}
+        current_user={@current_user}
         patch={~p"/manage/catalog/collections/#{@collection}"}
       />
     </.collection_modal>

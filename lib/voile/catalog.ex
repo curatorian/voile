@@ -116,7 +116,15 @@ defmodule Voile.Catalog do
 
   """
   def change_collection(%Collection{} = collection, attrs \\ %{}) do
-    Collection.changeset(collection, attrs)
+    collection
+    |> Repo.preload([
+      :resource_class,
+      :resource_template,
+      :mst_creator,
+      :node,
+      :collection_fields
+    ])
+    |> Collection.changeset(attrs)
   end
 
   alias Voile.Catalog.Item
