@@ -509,4 +509,95 @@ defmodule Voile.Schema.Metadata do
       ) do
     ResourceTemplateProperty.changeset(resource_template_property, attrs)
   end
+
+  @doc """
+  Returns a list of data pagination dynamically based on each metadata context.
+
+  ## Examples
+
+      iex> list_metadata_data(:vocabulary)
+      [%Vocabulary{}, ...]
+
+      iex> list_metadata_data(:property)
+      [%Property{}, ...]
+  """
+  def list_metadata_page(:vocabulary, page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(v in Vocabulary,
+        order_by: [asc: v.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    vocabulary_data = Repo.all(query)
+    total_count = Repo.aggregate(Vocabulary, :count, :id)
+
+    {vocabulary_data, total_count}
+  end
+
+  def list_metadata_page(:property, page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(p in Property,
+        order_by: [asc: p.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    property_data = Repo.all(query)
+    total_count = Repo.aggregate(Property, :count, :id)
+
+    {property_data, total_count}
+  end
+
+  def list_metadata_page(:resource_class, page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(rc in ResourceClass,
+        order_by: [asc: rc.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    resource_class_data = Repo.all(query)
+    total_count = Repo.aggregate(ResourceClass, :count, :id)
+
+    {resource_class_data, total_count}
+  end
+
+  def list_metadata_page(:resource_template, page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(rt in ResourceTemplate,
+        order_by: [asc: rt.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    resource_template_data = Repo.all(query)
+    total_count = Repo.aggregate(ResourceTemplate, :count, :id)
+
+    {resource_template_data, total_count}
+  end
+
+  def list_metadata_page(:resource_template_property, page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(rtp in ResourceTemplateProperty,
+        order_by: [asc: rtp.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    resource_template_property_data = Repo.all(query)
+    total_count = Repo.aggregate(ResourceTemplateProperty, :count, :id)
+
+    {resource_template_property_data, total_count}
+  end
 end

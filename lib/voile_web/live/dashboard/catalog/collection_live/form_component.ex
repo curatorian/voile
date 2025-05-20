@@ -208,46 +208,72 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             <div class="sticky top-0 w-full max-w-72">
               <h5>Collection Properties</h5>
               
-              <div class="h-full w-full h-[400px] border border-1 border-violet-100 overflow-y-auto overflow-x-hidden rounded-xl mt-2 p-4">
+              <div class="w-full h-[512px] border border-1 border-violet-100 overflow-y-auto overflow-x-hidden rounded-xl mt-2 p-4">
                 <p class="text-xs italic mb-4 max-w-48">
                   You can click each category below and pick any necessary property for your collection.
                 </p>
                 
-                <%= for {id, props} <- @collection_properties do %>
-                  <div>
-                    <h6
-                      class="mb-4 border border-1 border-violet-100 rounded-xl p-2 hover:text-brand cursor-pointer transition-all duration-1000"
-                      phx-click={
-                        JS.toggle(
-                          to: "##{id |> String.downcase() |> String.replace(" ", "-")}",
-                          in: "block scale-y-100 transition transform duration-300 ease-out",
-                          out: "hidden scale-y-0 transition transform duration-300 ease-in",
-                          display: "block"
-                        )
-                      }
-                    >
-                      {id}
-                    </h6>
-                    
-                    <div
-                      id={id |> String.downcase() |> String.replace(" ", "-")}
-                      class="hidden scale-y-0 origin-top overflow-hidden transition-transform duration-300"
-                    >
-                      <div class="flex flex-col gap-3">
-                        <%= for prop <- props do %>
-                          <button
-                            type="button"
-                            phx-click="select_props"
-                            phx-value-id={prop.id}
-                            phx-target={@myself}
-                            class="btn text-left hover-btn ml-3"
-                          >
-                            {prop.label}
-                          </button>
+                <div>
+                  <.input
+                    type="text"
+                    name="property_search"
+                    label="Search Property"
+                    value={@property_search}
+                    placeholder="Search property..."
+                    phx-keyup="search_properties"
+                    phx-target={@myself}
+                    phx-debounce="300"
+                  />
+                </div>
+                
+                <%= if Enum.empty?(@filtered_properties) do %>
+                  <p class="text-red-500 text-sm mt-2">No property found.</p>
+                <% else %>
+                  <%= for {id, props} <- @filtered_properties do %>
+                    <div>
+                      <h6
+                        class="mb-4 border border-1 border-violet-100 rounded-xl p-2 hover:text-brand cursor-pointer transition-all duration-1000"
+                        phx-click={
+                          JS.toggle(
+                            to: "##{id |> String.downcase() |> String.replace(" ", "-")}",
+                            in: "block scale-y-100 transition transform duration-300 ease-out",
+                            out: "hidden scale-y-0 transition transform duration-300 ease-in",
+                            display: "block"
+                          )
+                        }
+                      >
+                        {id}
+                        <%= if length(props) > 0 do %>
+                          (<span class="text-brand">{length(props)}</span>)
                         <% end %>
+                      </h6>
+                      
+                      <div
+                        id={id |> String.downcase() |> String.replace(" ", "-")}
+                        class={
+                          if @property_search != "",
+                            do:
+                              "block scale-y-100 origin-top overflow-hidden transition-transform duration-300",
+                            else:
+                              "hidden scale-y-0 origin-top overflow-hidden transition-transform duration-300"
+                        }
+                      >
+                        <div class="flex flex-col gap-3">
+                          <%= for prop <- props do %>
+                            <button
+                              type="button"
+                              phx-click="select_props"
+                              phx-value-id={prop.id}
+                              phx-target={@myself}
+                              class="btn text-left hover-btn ml-3"
+                            >
+                              {prop.label}
+                            </button>
+                          <% end %>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  <% end %>
                 <% end %>
               </div>
             </div>
@@ -391,6 +417,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign(:uploaded_files, [])
      |> assign(:delete_confirmation_id, nil)
      |> assign(:chosen_collection_field, nil)
+     |> assign(:property_search, "")
+     |> assign(:filtered_properties, assigns.collection_properties)
      |> allow_upload(:thumbnail,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
@@ -682,6 +710,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, socket}
   end
 
+  def handle_event("search_properties", %{"value" => query}, socket) do
+    filtered = filter_properties(socket.assigns.collection_properties, query)
+
+    socket =
+      socket
+      |> assign(:property_search, query)
+      |> assign(:filtered_properties, filtered)
+
+    {:noreply, socket}
+  end
+
   def handle_event("save", params, socket) do
     collection = socket.assigns.collection
 
@@ -783,6 +822,23 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
+
+  defp filter_properties(properties, query) when is_binary(query) and query != "" do
+    query = String.downcase(query)
+
+    properties
+    |> Enum.map(fn {category, props} ->
+      filtered_props =
+        Enum.filter(props, fn prop ->
+          String.contains?(String.downcase(prop.label), query)
+        end)
+
+      {category, filtered_props}
+    end)
+    |> Enum.filter(fn {_category, props} -> length(props) > 0 end)
+  end
+
+  defp filter_properties(properties, _query), do: properties
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
   # defp error_to_string(:too_large), do: "Too large"

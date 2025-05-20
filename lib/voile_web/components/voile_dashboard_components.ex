@@ -225,29 +225,43 @@ defmodule VoileWeb.VoileDashboardComponents do
   attr :page, :integer, required: true
   attr :total_pages, :integer, required: true
   attr :event, :string, default: "paginate"
+  attr :path, :string, default: nil
 
   def pagination(assigns) do
     ~H"""
     <nav class="pagination">
       <%= if @page > 1 do %>
-        <.button phx-click={@event} phx-value-page={@page - 1}>Prev</.button>
+        <%= if @path do %>
+          <.link patch={@path <> "?page=#{@page - 1}"} class="pagination-btn">Prev</.link>
+        <% else %>
+          <.button phx-click={@event} phx-value-page={@page - 1}>Prev</.button>
+        <% end %>
       <% else %>
         <.button class="disabled-btn" disabled>Prev</.button>
       <% end %>
       
       <%= for p <- pagination_range(@page, @total_pages) do %>
-        <button
-          class={if p == @page, do: "active-pagination", else: ""}
-          phx-click={if is_integer(p) and p != @page, do: @event}
-          phx-value-page={if is_integer(p) and p != @page, do: p}
-          disabled={p == @page or not is_integer(p)}
-        >
-          {if is_integer(p), do: p, else: "..."}
-        </button>
+        <%= if is_integer(p) do %>
+          <%= if p == @page do %>
+            <button class="active-pagination" disabled>{p}</button>
+          <% else %>
+            <%= if @path do %>
+              <.link patch={@path <> "?page=#{p}"} class="pagination-btn">{p}</.link>
+            <% else %>
+              <button phx-click={@event} phx-value-page={p} class="pagination-btn">{p}</button>
+            <% end %>
+          <% end %>
+        <% else %>
+          <button class="disabled-btn" disabled>{p}</button>
+        <% end %>
       <% end %>
       
       <%= if @page < @total_pages do %>
-        <.button phx-click={@event} phx-value-page={@page + 1}>Next</.button>
+        <%= if @path do %>
+          <.link patch={@path <> "?page=#{@page + 1}"} class="pagination-btn">Next</.link>
+        <% else %>
+          <.button phx-click={@event} phx-value-page={@page + 1}>Next</.button>
+        <% end %>
       <% else %>
         <.button class="disabled-btn" disabled>Next</.button>
       <% end %>
