@@ -29,7 +29,7 @@ defmodule VoileWeb.VoileDashboardComponents do
       },
       %{
         name: "Pengaturan",
-        url: "/users/settings"
+        url: "/manage/settings"
       }
     ]
 
@@ -232,7 +232,7 @@ defmodule VoileWeb.VoileDashboardComponents do
     <nav class="pagination">
       <%= if @page > 1 do %>
         <%= if @path do %>
-          <.link patch={@path <> "?page=#{@page - 1}"} class="pagination-btn">Prev</.link>
+          <.link patch={@path <> "?page=#{@page - 1}"} class="primary-btn">Prev</.link>
         <% else %>
           <.button phx-click={@event} phx-value-page={@page - 1}>Prev</.button>
         <% end %>
@@ -258,7 +258,7 @@ defmodule VoileWeb.VoileDashboardComponents do
       
       <%= if @page < @total_pages do %>
         <%= if @path do %>
-          <.link patch={@path <> "?page=#{@page + 1}"} class="pagination-btn">Next</.link>
+          <.link patch={@path <> "?page=#{@page + 1}"} class="primary-btn">Next</.link>
         <% else %>
           <.button phx-click={@event} phx-value-page={@page + 1}>Next</.button>
         <% end %>

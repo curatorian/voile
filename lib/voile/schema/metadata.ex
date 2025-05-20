@@ -142,6 +142,30 @@ defmodule Voile.Schema.Metadata do
   end
 
   @doc """
+  Return the list of metadata properties with pagination.
+  """
+  def list_metadata_properties_paginated(page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(p in Property,
+        order_by: [asc: p.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    properties =
+      query
+      |> Repo.all()
+      |> Repo.preload([:vocabulary])
+
+    total_count = Repo.aggregate(Property, :count, :id)
+    total_pages = div(total_count + per_page - 1, per_page)
+
+    {properties, total_pages}
+  end
+
+  @doc """
   Gets a single property.
 
   Raises `Ecto.NoResultsError` if the Property does not exist.

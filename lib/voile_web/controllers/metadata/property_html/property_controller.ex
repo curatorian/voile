@@ -4,9 +4,18 @@ defmodule VoileWeb.PropertyController do
   alias Voile.Schema.Metadata
   alias Voile.Schema.Metadata.Property
 
-  def index(conn, _params) do
-    metadata_properties = Metadata.list_metadata_properties()
-    render(conn, :index, metadata_properties: metadata_properties)
+  def index(conn, params) do
+    page = Map.get(params, "page", "1") |> String.to_integer()
+    per_page = 10
+
+    {metadata_properties, total_pages} =
+      Metadata.list_metadata_properties_paginated(page, per_page)
+
+    conn
+    |> assign(:metadata_properties, metadata_properties)
+    |> assign(:page, page)
+    |> assign(:total_pages, total_pages)
+    |> render(:index)
   end
 
   def new(conn, _params) do
@@ -28,17 +37,29 @@ defmodule VoileWeb.PropertyController do
 
   def show(conn, %{"id" => id}) do
     property = Metadata.get_property!(id)
-    render(conn, :show, property: property)
+    vocabulary_list = Metadata.list_metadata_vocabularies()
+
+    conn
+    |> assign(:vocabulary_list, vocabulary_list)
+    |> assign(:property, property)
+    |> render(:show)
   end
 
   def edit(conn, %{"id" => id}) do
     property = Metadata.get_property!(id)
+    vocabulary_list = Metadata.list_metadata_vocabularies()
     changeset = Metadata.change_property(property)
-    render(conn, :edit, property: property, changeset: changeset)
+
+    conn
+    |> assign(:vocabulary_list, vocabulary_list)
+    |> assign(:property, property)
+    |> assign(:changeset, changeset)
+    |> render(:edit)
   end
 
   def update(conn, %{"id" => id, "property" => property_params}) do
     property = Metadata.get_property!(id)
+    vocabulary_list = Metadata.list_metadata_vocabularies()
 
     case Metadata.update_property(property, property_params) do
       {:ok, property} ->
@@ -47,7 +68,11 @@ defmodule VoileWeb.PropertyController do
         |> redirect(to: ~p"/manage/metaresource/metadata_properties/#{property}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, property: property, changeset: changeset)
+        conn
+        |> assign(:vocabulary_list, vocabulary_list)
+        |> assign(:property, property)
+        |> assign(:changeset, changeset)
+        |> render(:edit)
     end
   end
 

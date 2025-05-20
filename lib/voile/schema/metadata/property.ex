@@ -18,7 +18,7 @@ defmodule Voile.Schema.Metadata.Property do
   @doc false
   def changeset(property, attrs) do
     property
-    |> cast(attrs, [:label, :local_name, :information])
-    |> validate_required([:label, :local_name, :information])
+    |> cast(attrs, [:label, :local_name, :information, :vocabulary_id, :owner_id])
+    |> validate_required([:label, :local_name, :vocabulary_id])
   end
 end
