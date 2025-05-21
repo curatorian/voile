@@ -9,6 +9,24 @@ defmodule Voile.Schema.Metadata.Property do
     field :label, :string
     field :local_name, :string
     field :information, :string
+
+    field :type_value, Ecto.Enum,
+      values: [
+        :text,
+        :number,
+        :email,
+        :date,
+        :datetime_local,
+        :month,
+        :tel,
+        :time,
+        :url,
+        :week,
+        :color,
+        :range,
+        :textarea
+      ]
+
     belongs_to :owner, User
     belongs_to :vocabulary, Vocabulary
 
@@ -18,7 +36,7 @@ defmodule Voile.Schema.Metadata.Property do
   @doc false
   def changeset(property, attrs) do
     property
-    |> cast(attrs, [:label, :local_name, :information, :vocabulary_id, :owner_id])
-    |> validate_required([:label, :local_name, :vocabulary_id])
+    |> cast(attrs, [:label, :local_name, :information, :type_value, :vocabulary_id, :owner_id])
+    |> validate_required([:label, :local_name, :type_value, :vocabulary_id, :owner_id])
   end
 end

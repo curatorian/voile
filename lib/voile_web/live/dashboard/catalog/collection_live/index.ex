@@ -20,7 +20,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
       |> assign(:collection_type, collection_type)
       |> assign(:collection_properties, collection_properties)
       |> assign(:creator, creator)
-      |> assign(:step, 1)
+      |> assign(:step, 2)
       |> assign(:show_add_collection_field, true)
 
     {:ok, socket}

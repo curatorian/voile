@@ -377,7 +377,7 @@ defmodule VoileWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div class="my-4">
-      <.label for={@id}>
+      <.label :if={@type != "hidden"} for={@id}>
         {@label} <span :if={@required_value} class="text-red-500 text-xs">*</span> :
       </.label>
       

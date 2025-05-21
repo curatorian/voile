@@ -2,9 +2,29 @@
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
-   <.input field={f[:label]} type="text" label="Label" />
+   <.input field={f[:owner_id]} type="hidden" value={@current_user.id} />
+  <.input field={f[:label]} type="text" label="Label" />
   <.input field={f[:local_name]} type="text" label="Local name" />
-  <.input field={f[:information]} type="text" label="Information" />
+  <.input
+    field={f[:type_value]}
+    type="select"
+    label="Value Type"
+    options={[
+      {"Text", "text"},
+      {"Number", "number"},
+      {"Email", "email"},
+      {"Date", "date"},
+      {"Date Time Local", "datetime_local"},
+      {"Month", "month"},
+      {"Telephone", "tel"},
+      {"Time", "time"},
+      {"URL", "url"},
+      {"Week", "week"},
+      {"Color", "color"},
+      {"Range", "range"},
+      {"Textarea", "textarea"}
+    ]}
+  /> <.input field={f[:information]} type="text" label="Information" />
   <.input
     field={f[:vocabulary_id]}
     type="select"

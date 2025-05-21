@@ -6,6 +6,7 @@ defmodule Voile.Repo.Migrations.CreateMetadataProperties do
       add :label, :string
       add :local_name, :string
       add :information, :text
+      add :type_value, :string
       add :owner_id, references(:users, type: :uuid, on_delete: :nothing)
       add :vocabulary_id, references(:metadata_vocabularies, on_delete: :nothing)
 

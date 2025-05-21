@@ -8,6 +8,7 @@ defmodule Voile.Repo.Migrations.CreateCollectionFields do
       add :label, :string
       add :value, :string
       add :value_lang, :string
+      add :type_value, :string
       add :sort_order, :integer
       add :collection_id, references(:collections, on_delete: :nilify_all, type: :uuid)
 

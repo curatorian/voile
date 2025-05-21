@@ -573,9 +573,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     existing = Map.values(raw_fields)
 
     label = Metadata.get_property!(prop_id).label
+    type_value = Metadata.get_property!(prop_id).type_value
+
+    dbg(Metadata.get_property!(prop_id))
 
     new_field = %{
       "label" => label,
+      "type_value" => type_value,
       "name" => String.split(label, " ") |> Enum.join(""),
       "value_lang" => nil,
       "value" => nil,
@@ -596,6 +600,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     # Create a new changeset for the collection using the updated parameters
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+
+    dbg(changeset)
 
     socket =
       socket

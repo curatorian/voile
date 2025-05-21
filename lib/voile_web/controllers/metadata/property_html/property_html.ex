@@ -9,6 +9,7 @@ defmodule VoileWeb.PropertyHTML do
   attr :changeset, Ecto.Changeset, required: true
   attr :vocabulary_list, :list
   attr :action, :string, required: true
+  attr :current_user, :map
 
   def property_form(assigns)
 end

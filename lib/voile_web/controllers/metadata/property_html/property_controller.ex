@@ -19,8 +19,13 @@ defmodule VoileWeb.PropertyController do
   end
 
   def new(conn, _params) do
+    vocabulary_list = Metadata.list_metadata_vocabularies()
     changeset = Metadata.change_property(%Property{})
-    render(conn, :new, changeset: changeset)
+
+    conn
+    |> assign(:vocabulary_list, vocabulary_list)
+    |> assign(:changeset, changeset)
+    |> render(:new)
   end
 
   def create(conn, %{"property" => property_params}) do

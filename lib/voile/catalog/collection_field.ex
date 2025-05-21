@@ -10,6 +10,7 @@ defmodule Voile.Catalog.CollectionField do
     field :name, :string
     field :value, :string
     field :value_lang, :string
+    field :type_value, :string
     field :sort_order, :integer
     field :col_field_values, :string, virtual: true
     belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
@@ -26,6 +27,7 @@ defmodule Voile.Catalog.CollectionField do
       :value,
       :value_lang,
       :sort_order,
+      :type_value,
       :collection_id
     ])
     |> validate_required([:name, :label, :value, :value_lang, :sort_order])

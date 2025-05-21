@@ -18,6 +18,8 @@
   
   <:col :let={property} label="Information">{property.information}</:col>
   
+  <:col :let={property} label="Vocabulary">{property.vocabulary.label}</:col>
+  
   <:action :let={property}>
     <div class="sr-only">
       <.link navigate={~p"/manage/metaresource/metadata_properties/#{property}"}>Show</.link>
