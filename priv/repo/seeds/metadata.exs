@@ -852,7 +852,7 @@ properties_list = [
     local_name: "type",
     label: "Type",
     comment: "The nature or genre of the resource.",
-    type_value: "select"
+    type_value: "text"
   },
   %{
     owner_id: nil,
@@ -884,7 +884,7 @@ properties_list = [
     local_name: "language",
     label: "Language",
     comment: "A language of the resource.",
-    type_value: "select"
+    type_value: "text"
   },
   %{
     owner_id: nil,
@@ -1462,7 +1462,7 @@ properties_list = [
     local_name: "status",
     label: "status",
     comment: "The publication status of (typically academic) content.",
-    type_value: "select"
+    type_value: "text"
   },
   %{
     owner_id: nil,
@@ -1823,7 +1823,7 @@ properties_list = [
     local_name: "gender",
     label: "gender",
     comment: "The gender of this Agent (typically but not necessarily 'male' or 'female').",
-    type_value: "select"
+    type_value: "text"
   },
   %{
     owner_id: nil,
@@ -1863,7 +1863,7 @@ properties_list = [
     local_name: "title",
     label: "title",
     comment: "Title (Mr, Mrs, Ms, Dr. etc)",
-    type_value: "select"
+    type_value: "text"
   },
   %{
     owner_id: nil,
@@ -2318,7 +2318,8 @@ for property <- properties_list do
       end,
     local_name: property[:local_name],
     label: property[:label],
-    information: property[:c]
+    information: property[:comment],
+    type_value: property[:type_value]
   }
   |> Repo.insert!()
 end

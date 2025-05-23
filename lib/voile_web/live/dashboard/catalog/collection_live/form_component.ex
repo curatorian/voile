@@ -289,6 +289,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                     </h6>
                     
                     <div class="flex flex-col w-full bg-gray-100 p-4 rounded-b-xl mb-4">
+                      <p class="text-gray-500 italic mb-4">{col_field[:information].value}</p>
+                      
                       <input
                         type="hidden"
                         name={col_field[:label].name}
@@ -304,7 +306,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                         name={col_field[:sort_order].name}
                         value={col_field[:sort_order].value || col_field.index + 1}
                       />
-                      <div class="grid grid-cols-5 items-center gap-2 -mt-6">
+                      <input
+                        type="hidden"
+                        name={col_field[:type_value].name}
+                        value={col_field[:type_value].value}
+                      />
+                      <div class="grid grid-cols-5 items-start gap-2 -mt-6">
                         <.input
                           field={col_field[:value_lang]}
                           type="select"
@@ -315,7 +322,11 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                           ]}
                         />
                         <div class="col-span-4">
-                          <.input field={col_field[:value]} type="text" label="Value" />
+                          <.input
+                            field={col_field[:value]}
+                            type={col_field[:type_value].value}
+                            label="Value"
+                          />
                         </div>
                       </div>
                       
@@ -401,6 +412,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          %{
            "id" => field.id,
            "label" => field.label,
+           "information" => field.information,
+           "type_value" => field.type_value,
            "value_lang" => field.value_lang,
            "value" => field.value,
            "sort_order" => field.sort_order
@@ -454,6 +467,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("validate", %{"collection" => collection_params}, socket) do
+    IO.inspect(collection_params, label: "Collection params in validate")
+
     changeset =
       socket.assigns.collection
       |> Catalog.change_collection(collection_params)
@@ -463,6 +478,11 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       socket
       |> assign(:form, to_form(changeset, action: :validate))
 
+    {:noreply, socket}
+  end
+
+  def handle_event("validate", %{"property_search" => _value}, socket) do
+    # Update assigns or do something with `value`
     {:noreply, socket}
   end
 
@@ -478,8 +498,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         socket.assigns.collection
         | creator_id: selected.id
       })
-
-    dbg(socket.assigns.collection.creator_id)
 
     {:noreply, socket}
   end
@@ -573,13 +591,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     existing = Map.values(raw_fields)
 
     label = Metadata.get_property!(prop_id).label
-    type_value = Metadata.get_property!(prop_id).type_value
-
-    dbg(Metadata.get_property!(prop_id))
+    property = Metadata.get_property!(prop_id)
 
     new_field = %{
       "label" => label,
-      "type_value" => type_value,
+      "type_value" => property.type_value,
+      "information" => property.information,
       "name" => String.split(label, " ") |> Enum.join(""),
       "value_lang" => nil,
       "value" => nil,
@@ -600,8 +617,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     # Create a new changeset for the collection using the updated parameters
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
-
-    dbg(changeset)
 
     socket =
       socket
@@ -808,7 +823,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        dbg(changeset)
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
@@ -824,7 +838,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        dbg(changeset)
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
