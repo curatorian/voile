@@ -3,17 +3,19 @@ defmodule Voile.Catalog.CollectionField do
   import Ecto.Changeset
 
   alias Voile.Catalog.Collection
+  alias Voile.Schema.Metadata.Property
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "collection_fields" do
-    field :label, :string
     field :name, :string
+    field :label, :string
     field :value, :string
     field :value_lang, :string
     field :type_value, :string
     field :sort_order, :integer
     field :col_field_values, :string, virtual: true
     belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
+    belongs_to :metadata_properties, Property, on_replace: :nilify, foreign_key: :property_id
 
     timestamps(type: :utc_datetime)
   end
@@ -28,7 +30,8 @@ defmodule Voile.Catalog.CollectionField do
       :value_lang,
       :sort_order,
       :type_value,
-      :collection_id
+      :collection_id,
+      :property_id
     ])
     |> validate_required([:name, :label, :value, :value_lang, :sort_order])
   end

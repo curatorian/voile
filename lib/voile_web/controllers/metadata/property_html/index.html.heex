@@ -16,7 +16,7 @@
   
   <:col :let={property} label="Local name">{property.local_name}</:col>
   
-  <:col :let={property} label="Information">{property.information}</:col>
+  <:col :let={property} label="Information">{trim_information(property.information, 30)}</:col>
   
   <:col :let={property} label="Vocabulary">{property.vocabulary.label}</:col>
   

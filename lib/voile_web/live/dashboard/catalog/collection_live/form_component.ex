@@ -298,6 +298,11 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                       />
                       <input
                         type="hidden"
+                        name={col_field[:property_id].name}
+                        value={col_field[:property_id].value}
+                      /> {col_field[:property_id].value}
+                      <input
+                        type="hidden"
                         name={col_field[:name].name}
                         value={col_field[:name].value}
                       />
@@ -412,7 +417,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          %{
            "id" => field.id,
            "label" => field.label,
-           "information" => field.information,
+           "information" => nil,
            "type_value" => field.type_value,
            "value_lang" => field.value_lang,
            "value" => field.value,
@@ -467,8 +472,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("validate", %{"collection" => collection_params}, socket) do
-    IO.inspect(collection_params, label: "Collection params in validate")
-
     changeset =
       socket.assigns.collection
       |> Catalog.change_collection(collection_params)
@@ -590,14 +593,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     # Convert the map of fields into a list of entries
     existing = Map.values(raw_fields)
 
-    label = Metadata.get_property!(prop_id).label
     property = Metadata.get_property!(prop_id)
 
     new_field = %{
-      "label" => label,
+      "label" => property.label,
       "type_value" => property.type_value,
       "information" => property.information,
-      "name" => String.split(label, " ") |> Enum.join(""),
+      "property_id" => property.id,
+      "name" => String.split(property.label, " ") |> Enum.join(""),
       "value_lang" => nil,
       "value" => nil,
       "sort_order" => length(existing) + 1
@@ -605,6 +608,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     # Append the new field to the existing list of fields
     updated_list = existing ++ [new_field]
+
+    dbg(updated_list)
 
     # Convert the updated list back into a map with sequential keys
     updated_map =
@@ -745,6 +750,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   def handle_event("save", params, socket) do
     collection = socket.assigns.collection
 
+    dbg(params)
+
     collection_params =
       collection
       |> Map.from_struct()
@@ -813,6 +820,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :edit, collection_params) do
+    dbg(collection_params)
+
     case Catalog.update_collection(socket.assigns.collection, collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
@@ -828,6 +837,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :new, collection_params) do
+    dbg(collection_params)
+
     case Catalog.create_collection(collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})

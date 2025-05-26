@@ -259,6 +259,27 @@ defmodule Voile.Schema.Metadata do
     Repo.all(ResourceClass)
   end
 
+  def list_resource_classes_paginated(page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(rc in ResourceClass,
+        order_by: [asc: rc.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    resource_class_collection =
+      query
+      |> Repo.all()
+      |> Repo.preload([:vocabulary])
+
+    total_count = Repo.aggregate(ResourceClass, :count, :id)
+    total_pages = div(total_count + per_page - 1, per_page)
+
+    {resource_class_collection, total_pages}
+  end
+
   @doc """
   Gets a single resource_class.
 
@@ -351,6 +372,27 @@ defmodule Voile.Schema.Metadata do
   """
   def list_resource_template do
     Repo.all(ResourceTemplate)
+  end
+
+  def list_resource_templates_paginated(page, per_page) do
+    offset = (page - 1) * per_page
+
+    query =
+      from(rt in ResourceTemplate,
+        order_by: [asc: rt.label],
+        limit: ^per_page,
+        offset: ^offset
+      )
+
+    resource_template_collection =
+      query
+      |> Repo.all()
+      |> Repo.preload([:resource_class])
+
+    total_count = Repo.aggregate(ResourceTemplate, :count, :id)
+    total_pages = div(total_count + per_page - 1, per_page)
+
+    {resource_template_collection, total_pages}
   end
 
   @doc """

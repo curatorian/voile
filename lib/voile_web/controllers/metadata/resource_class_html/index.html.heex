@@ -13,14 +13,20 @@
   row_click={&JS.navigate(~p"/manage/metaresource/resource_class/#{&1}")}
 >
   <:col :let={resource_class} label="Label">{resource_class.label}</:col>
+  
   <:col :let={resource_class} label="Local name">{resource_class.local_name}</:col>
-  <:col :let={resource_class} label="Information">{resource_class.information}</:col>
+  
+  <:col :let={resource_class} label="Information">
+    {trim_information(resource_class.information, 30)}
+  </:col>
+  
   <:action :let={resource_class}>
     <div class="sr-only">
       <.link navigate={~p"/manage/metaresource/resource_class/#{resource_class}"}>Show</.link>
     </div>
-    <.link navigate={~p"/manage/metaresource/resource_class/#{resource_class}/edit"}>Edit</.link>
+     <.link navigate={~p"/manage/metaresource/resource_class/#{resource_class}/edit"}>Edit</.link>
   </:action>
+  
   <:action :let={resource_class}>
     <.link
       href={~p"/manage/metaresource/resource_class/#{resource_class}"}
@@ -31,3 +37,9 @@
     </.link>
   </:action>
 </.table>
+
+<.pagination
+  page={@page}
+  total_pages={@total_pages}
+  path={~p"/manage/metaresource/resource_class"}
+/>

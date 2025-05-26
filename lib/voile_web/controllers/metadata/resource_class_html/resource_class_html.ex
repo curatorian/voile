@@ -10,4 +10,17 @@ defmodule VoileWeb.ResourceClassHTML do
   attr :action, :string, required: true
 
   def resource_class_form(assigns)
+
+  def trim_information(information, number) do
+    cond do
+      is_nil(information) ->
+        nil
+
+      String.length(information) <= number ->
+        information
+
+      true ->
+        String.slice(information, 0, number) <> "..."
+    end
+  end
 end

@@ -5,13 +5,27 @@ defmodule VoileWeb.ResourceTemplateController do
   alias Voile.Schema.Metadata.ResourceTemplate
 
   def index(conn, _params) do
-    resource_template = Metadata.list_resource_template()
-    render(conn, :index, resource_template_collection: resource_template)
+    page = Map.get(conn.params, "page", "1") |> String.to_integer()
+    per_page = 10
+
+    {resource_template_collection, total_pages} =
+      Metadata.list_resource_templates_paginated(page, per_page)
+
+    conn
+    |> assign(:resource_template_collection, resource_template_collection)
+    |> assign(:page, page)
+    |> assign(:total_pages, total_pages)
+    |> render(:index)
   end
 
   def new(conn, _params) do
+    resource_class = Metadata.list_resource_class()
     changeset = Metadata.change_resource_template(%ResourceTemplate{})
-    render(conn, :new, changeset: changeset)
+
+    conn
+    |> assign(:resource_class, resource_class)
+    |> assign(:changeset, changeset)
+    |> render(:new)
   end
 
   def create(conn, %{"resource_template" => resource_template_params}) do
@@ -27,17 +41,29 @@ defmodule VoileWeb.ResourceTemplateController do
   end
 
   def show(conn, %{"id" => id}) do
+    resource_class = Metadata.list_resource_class()
     resource_template = Metadata.get_resource_template!(id)
-    render(conn, :show, resource_template: resource_template)
+
+    conn
+    |> assign(:resource_class, resource_class)
+    |> assign(:resource_template, resource_template)
+    |> render(:show)
   end
 
   def edit(conn, %{"id" => id}) do
+    resource_class = Metadata.list_resource_class()
     resource_template = Metadata.get_resource_template!(id)
     changeset = Metadata.change_resource_template(resource_template)
-    render(conn, :edit, resource_template: resource_template, changeset: changeset)
+
+    conn
+    |> assign(:resource_class, resource_class)
+    |> assign(:resource_template, resource_template)
+    |> assign(:changeset, changeset)
+    |> render(:edit)
   end
 
   def update(conn, %{"id" => id, "resource_template" => resource_template_params}) do
+    resource_class = Metadata.list_resource_class()
     resource_template = Metadata.get_resource_template!(id)
 
     case Metadata.update_resource_template(resource_template, resource_template_params) do
@@ -47,7 +73,11 @@ defmodule VoileWeb.ResourceTemplateController do
         |> redirect(to: ~p"/manage/metaresource/resource_template/#{resource_template}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, resource_template: resource_template, changeset: changeset)
+        conn
+        |> assign(:resource_class, resource_class)
+        |> assign(:resource_template, resource_template)
+        |> assign(:changeset, changeset)
+        |> render(:edit)
     end
   end
 

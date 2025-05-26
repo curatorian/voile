@@ -5,13 +5,27 @@ defmodule VoileWeb.ResourceClassController do
   alias Voile.Schema.Metadata.ResourceClass
 
   def index(conn, _params) do
-    resource_class = Metadata.list_resource_class()
-    render(conn, :index, resource_class_collection: resource_class)
+    page = Map.get(conn.params, "page", "1") |> String.to_integer()
+    per_page = 10
+
+    {resource_class_collection, total_pages} =
+      Metadata.list_resource_classes_paginated(page, per_page)
+
+    conn
+    |> assign(:resource_class_collection, resource_class_collection)
+    |> assign(:page, page)
+    |> assign(:total_pages, total_pages)
+    |> render(:index)
   end
 
   def new(conn, _params) do
+    vocabulary_list = Metadata.list_metadata_vocabularies()
     changeset = Metadata.change_resource_class(%ResourceClass{})
-    render(conn, :new, changeset: changeset)
+
+    conn
+    |> assign(:vocabulary_list, vocabulary_list)
+    |> assign(:changeset, changeset)
+    |> render(:new)
   end
 
   def create(conn, %{"resource_class" => resource_class_params}) do
@@ -28,17 +42,29 @@ defmodule VoileWeb.ResourceClassController do
 
   def show(conn, %{"id" => id}) do
     resource_class = Metadata.get_resource_class!(id)
-    render(conn, :show, resource_class: resource_class)
+    vocabulary_list = Metadata.list_metadata_vocabularies()
+
+    conn
+    |> assign(:vocabulary_list, vocabulary_list)
+    |> assign(:resource_class, resource_class)
+    |> render(:show)
   end
 
   def edit(conn, %{"id" => id}) do
     resource_class = Metadata.get_resource_class!(id)
+    vocabulary_list = Metadata.list_metadata_vocabularies()
     changeset = Metadata.change_resource_class(resource_class)
-    render(conn, :edit, resource_class: resource_class, changeset: changeset)
+
+    conn
+    |> assign(:vocabulary_list, vocabulary_list)
+    |> assign(:resource_class, resource_class)
+    |> assign(:changeset, changeset)
+    |> render(:edit)
   end
 
   def update(conn, %{"id" => id, "resource_class" => resource_class_params}) do
     resource_class = Metadata.get_resource_class!(id)
+    vocabulary_list = Metadata.list_metadata_vocabularies()
 
     case Metadata.update_resource_class(resource_class, resource_class_params) do
       {:ok, resource_class} ->
@@ -47,7 +73,11 @@ defmodule VoileWeb.ResourceClassController do
         |> redirect(to: ~p"/manage/metaresource/resource_class/#{resource_class}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, resource_class: resource_class, changeset: changeset)
+        conn
+        |> assign(:vocabulary_list, vocabulary_list)
+        |> assign(:resource_class, resource_class)
+        |> assign(:changeset, changeset)
+        |> render(:edit)
     end
   end
 

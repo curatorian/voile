@@ -78,7 +78,8 @@ defmodule Voile.MixProject do
         "ecto.create",
         "ecto.migrate",
         "run priv/repo/seeds/seeds.exs",
-        "run priv/repo/seeds/metadata.exs",
+        "run priv/repo/seeds/metadata_resource_class.exs",
+        "run priv/repo/seeds/metadata_properties.exs",
         "run priv/repo/seeds/master.exs"
       ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
