@@ -172,21 +172,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             type="hidden"
             disabled
           /> {@current_user.id}
-          <%= if @form[:thumbnail].value === nil or @form[:thumbnail].value == "" do %>
-            <.live_file_input upload={@uploads.thumbnail} />
-          <% end %>
-          
-          <%= for {_msg, _opts} <- Keyword.get_values(@form.errors, :thumbnail) do %>
-            <p class="text-red-500 text-sm mt-2">Thumbnail is mandatory! Please upload thumbnail.</p>
-          <% end %>
-          
-          <%= for entry <- @uploads.thumbnail.entries do %>
-            <p class="text-sm text-gray-500 mt-2">
-              Uploading {entry.client_name}... {entry.progress}%
-            </p>
-          <% end %>
-          
-          <%= if @form[:thumbnail].value != nil and @form[:thumbnail].value != "" do %>
+          <%= if @collection.thumbnail do %>
             <img
               src={@form[:thumbnail].value}
               class="h-32 my-4 border border-1 border-gray-300 rounded-xl p-1"
@@ -200,6 +186,41 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             >
               Delete Thumbnail
             </.button>
+          <% else %>
+            <!-- This is a file upload field for the thumbnail image -->
+            <.live_file_input upload={@uploads.thumbnail} />
+            <div phx-drop-target={@uploads.thumbnail.ref}>
+              <%!-- render each thumbnail entry --%>
+              <article :for={entry <- @uploads.thumbnail.entries} class="upload-entry">
+                <figure>
+                  <.live_img_preview
+                    entry={entry}
+                    class="h-32 my-4 border border-1 border-gray-300 rounded-xl p-1"
+                  />
+                  <figcaption>{entry.client_name}</figcaption>
+                </figure>
+                 <%!-- entry.progress will update automatically for in-flight entries --%>
+                <progress value={entry.progress} max="100">{entry.progress}%</progress>
+                <%!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 --%>
+                <button
+                  type="button"
+                  phx-click="cancel-upload"
+                  phx-value-ref={entry.ref}
+                  aria-label="cancel"
+                  phx-target={@myself}
+                >
+                  &times;
+                </button>
+                 <%!-- Phoenix.Component.upload_errors/2 returns a list of error atoms --%>
+                <p :for={err <- upload_errors(@uploads.thumbnail, entry)} class="alert alert-danger">
+                  {error_to_string(err)}
+                </p>
+              </article>
+               <%!-- Phoenix.Component.upload_errors/1 returns a list of error atoms --%>
+              <p :for={err <- upload_errors(@uploads.thumbnail)} class="alert alert-danger">
+                {error_to_string(err)}
+              </p>
+            </div>
           <% end %>
         <% end %>
         
@@ -300,7 +321,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                         type="hidden"
                         name={col_field[:property_id].name}
                         value={col_field[:property_id].value}
-                      /> {col_field[:property_id].value}
+                      />
                       <input
                         type="hidden"
                         name={col_field[:name].name}
@@ -441,7 +462,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
        auto_upload: true,
-       progress: &handle_progress/3
+       # 5 MB
+       max_file_size: 5_000_000
      )
      |> assign_new(:form, fn ->
        to_form(changeset)
@@ -768,14 +790,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     changeset =
       Catalog.change_collection(%{socket.assigns.collection | thumbnail: nil}, form_params)
 
-    file_path =
-      Path.join([
-        :code.priv_dir(:voile),
-        "static",
-        socket.assigns.form.params["thumbnail"]
-      ])
-
-    if File.exists?(file_path), do: File.rm(file_path)
+    Catalog.remove_thumbnail(socket.assigns.collection)
 
     socket =
       socket
@@ -786,43 +801,20 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, socket}
   end
 
-  defp handle_progress(:thumbnail, entry, socket) do
-    if entry.done? do
-      [url] =
-        consume_uploaded_entries(socket, :thumbnail, fn %{path: path}, entry ->
-          ext = Path.extname(entry.client_name)
-          file_name = "#{System.system_time(:second)}-thumbnail-#{Ecto.UUID.generate()}#{ext}"
-
-          dest =
-            Path.join([
-              :code.priv_dir(:voile),
-              "static",
-              "uploads",
-              "thumbnail",
-              file_name
-            ])
-
-          File.cp!(path, dest)
-          {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
-        end)
-
-      # Update the form field with the uploaded URL
-      form_params = Map.put(socket.assigns.form.params || %{}, "thumbnail", url)
-      changeset = Catalog.change_collection(socket.assigns.collection, form_params)
-
-      {:noreply,
-       socket
-       |> assign(:form, to_form(changeset))
-       |> assign(:collection, Changeset.apply_changes(changeset))}
-    else
-      {:noreply, socket}
-    end
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :thumbnail, ref)}
   end
 
   defp save_collection(socket, :edit, collection_params) do
-    dbg(collection_params)
+    thumbnail_url =
+      consume_thumbnail_if_present(socket)
 
-    case Catalog.update_collection(socket.assigns.collection, collection_params) do
+    params_with_thumbnail =
+      if thumbnail_url,
+        do: Map.put(collection_params, "thumbnail", thumbnail_url),
+        else: collection_params
+
+    case Catalog.update_collection(socket.assigns.collection, params_with_thumbnail) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
 
@@ -837,9 +829,15 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :new, collection_params) do
-    dbg(collection_params)
+    thumbnail_url =
+      consume_thumbnail_if_present(socket)
 
-    case Catalog.create_collection(collection_params) do
+    params_with_thumbnail =
+      if thumbnail_url,
+        do: Map.put(collection_params, "thumbnail", thumbnail_url),
+        else: collection_params
+
+    case Catalog.create_collection(params_with_thumbnail) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
 
@@ -850,6 +848,37 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  defp consume_thumbnail_if_present(socket) do
+    case uploaded_entries(socket, :thumbnail) do
+      [] ->
+        nil
+
+      _entries ->
+        results =
+          consume_uploaded_entries(socket, :thumbnail, fn meta, entry ->
+            # Here you can process each uploaded file
+            # For example, move it to a permanent location
+            ext = Path.extname(entry.client_name)
+            file_name = "#{System.system_time(:second)}-thumbnail-#{Ecto.UUID.generate()}#{ext}"
+
+            dest =
+              Path.join([
+                :code.priv_dir(:voile),
+                "static",
+                "uploads",
+                "thumbnail",
+                file_name
+              ])
+
+            File.cp!(meta.path, dest)
+
+            {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
+          end)
+
+        List.first(results)
     end
   end
 
@@ -871,7 +900,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   defp filter_properties(properties, _query), do: properties
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-  # defp error_to_string(:too_large), do: "Too large"
-  # defp error_to_string(:too_many_files), do: "You have selected too many files"
-  # defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+  defp error_to_string(:too_large), do: "Too large"
+  defp error_to_string(:too_many_files), do: "You have selected too many files"
+  defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
 end

@@ -50,4 +50,9 @@ defmodule Voile.Catalog.Collection do
     |> validate_inclusion(:status, @statuses, message: "Status tidak valid")
     |> validate_inclusion(:access_level, @access_levels, message: "Access level tidak valid")
   end
+
+  def remove_thumbnail_changeset(collection) do
+    collection
+    |> cast(%{thumbnail: nil}, [:thumbnail])
+  end
 end

@@ -127,6 +127,30 @@ defmodule Voile.Catalog do
     |> Collection.changeset(attrs)
   end
 
+  @doc """
+  Remove and nilify the thumbnail of an existing collection.
+  """
+
+  def remove_thumbnail(%Collection{id: nil} = collection) do
+    dbg(collection)
+    {:error, :not_persisted}
+  end
+
+  def remove_thumbnail(%Collection{} = collection) do
+    # Optional: delete file if needed
+    file_path =
+      case collection.thumbnail do
+        nil -> nil
+        path -> Path.join([:code.priv_dir(:voile), "static", path])
+      end
+
+    if file_path && File.exists?(file_path), do: File.rm(file_path)
+
+    collection
+    |> Collection.remove_thumbnail_changeset()
+    |> Repo.update()
+  end
+
   alias Voile.Catalog.Item
 
   @doc """
