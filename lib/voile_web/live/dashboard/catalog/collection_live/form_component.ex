@@ -83,7 +83,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         phx-submit="save"
       >
         <%= if @step == 1 do %>
-          <.input field={@form[:title]} type="text" label="Title" required_value={true} />
+          <.input
+            field={@form[:type_id]}
+            type="select"
+            label="Collection Type"
+            options={
+              [
+                {"Select Collection Type", nil}
+              ] ++ Enum.map(@collection_type, fn type -> {type.label, type.id} end)
+            }
+            required_value={true}
+          /> <.input field={@form[:title]} type="text" label="Title" required_value={true} />
           <.input
             type="text"
             name="creator"
