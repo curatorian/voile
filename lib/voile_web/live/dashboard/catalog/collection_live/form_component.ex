@@ -782,8 +782,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   def handle_event("save", params, socket) do
     collection = socket.assigns.collection
 
-    dbg(params)
-
     collection_params =
       collection
       |> Map.from_struct()
@@ -827,6 +825,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     case Catalog.update_collection(socket.assigns.collection, params_with_thumbnail) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
+        dbg(collection)
 
         {:noreply,
          socket
