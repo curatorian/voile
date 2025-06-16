@@ -473,12 +473,27 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
        max_entries: 1,
        auto_upload: true,
        # 5 MB
-       max_file_size: 5_000_000
+       max_file_size: 5_000_000,
+       progress: &handle_progress/3,
+       done: &handle_done/3
      )
      |> assign_new(:form, fn ->
        to_form(changeset)
      end)
      |> assign(:form_params, %{"collection_fields" => seed_params})}
+  end
+
+  def handle_event("finish_upload", %{"ref" => _ref, "entries" => [%{"ref" => _}]}, socket) do
+    # Set thumbnail field to temporary "uploading" value
+    form_params =
+      socket.assigns.form.params
+      |> Map.put("thumbnail", "uploading")
+
+    changeset =
+      socket.assigns.collection
+      |> Catalog.change_collection(form_params)
+
+    {:noreply, assign(socket, form: to_form(changeset))}
   end
 
   @impl true
@@ -487,12 +502,22 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         %{"collection" => collection_params, "creator" => creator_input},
         socket
       ) do
+    has_uploads = !Enum.empty?(socket.assigns.uploads.thumbnail.entries)
+
+    # Set thumbnail to "uploading" if files are present
+    updated_params =
+      if has_uploads && !collection_params["thumbnail"] do
+        Map.put(collection_params, "thumbnail", "uploading")
+      else
+        collection_params
+      end
+
     suggestions =
       Enum.filter(socket.assigns.creator_list, fn creator ->
         String.contains?(String.downcase(creator.creator_name), String.downcase(creator_input))
       end)
 
-    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
+    changeset = Catalog.change_collection(socket.assigns.collection, updated_params)
 
     socket =
       socket
@@ -907,6 +932,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp filter_properties(properties, _query), do: properties
+
+  defp handle_progress(:thumbnail, _entry, socket) do
+    # Not needed for this solution but required by LiveView
+    {:noreply, socket}
+  end
+
+  defp handle_done(:thumbnail, entry, socket) do
+    # Push event to the client when upload completes
+    push_event(socket, "finish_upload", %{
+      ref: entry.ref,
+      entries: [%{ref: entry.ref}]
+    })
+
+    {:noreply, socket}
+  end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
   defp error_to_string(:too_large), do: "Too large"
