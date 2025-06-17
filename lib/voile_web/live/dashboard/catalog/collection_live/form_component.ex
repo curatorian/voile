@@ -83,17 +83,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         phx-submit="save"
       >
         <%= if @step == 1 do %>
-          <.input
-            field={@form[:type_id]}
-            type="select"
-            label="Collection Type"
-            options={
-              [
-                {"Select Collection Type", nil}
-              ] ++ Enum.map(@collection_type, fn type -> {type.label, type.id} end)
-            }
-            required_value={true}
-          /> <.input field={@form[:title]} type="text" label="Title" required_value={true} />
+          <.input field={@form[:title]} type="text" label="Title" required_value={true} />
           <.input
             type="text"
             name="creator"
@@ -182,56 +172,152 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             type="hidden"
             disabled
           /> {@current_user.id}
-          <%= if @collection.thumbnail do %>
-            <img
-              src={@form[:thumbnail].value}
-              class="h-32 my-4 border border-1 border-gray-300 rounded-xl p-1"
-            />
-            <.button
-              type="button"
-              phx-click="delete_thumbnail"
-              phx-target={@myself}
-              class="warning-btn"
-              phx-disable-with="Deleting..."
-            >
-              Delete Thumbnail
-            </.button>
-          <% else %>
-            <!-- This is a file upload field for the thumbnail image -->
-            <.live_file_input upload={@uploads.thumbnail} />
-            <div phx-drop-target={@uploads.thumbnail.ref}>
-              <%!-- render each thumbnail entry --%>
-              <article :for={entry <- @uploads.thumbnail.entries} class="upload-entry">
-                <figure>
-                  <.live_img_preview
-                    entry={entry}
-                    class="h-32 my-4 border border-1 border-gray-300 rounded-xl p-1"
+          <div class="p-6">
+            <%= if @form[:thumbnail].value == nil or @form[:thumbnail].value == "" do %>
+              <!-- Upload Area (when no thumbnail) -->
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer group">
+                <div class="space-y-4">
+                  <div class="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                    <svg
+                      class="w-8 h-8 text-blue-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      >
+                      </path>
+                    </svg>
+                  </div>
+                  
+                  <div>
+                    <p class="text-gray-700 font-medium">Click to upload or drag and drop</p>
+                    
+                    <p class="text-gray-500 text-sm mt-1">PNG, JPG, GIF up to 10MB</p>
+                  </div>
+                  
+    <!-- File Input -->
+                  <div class="mt-4">
+                    <.live_file_input upload={@uploads.thumbnail} class="hidden" />
+                    <label
+                      for={@uploads.thumbnail.ref}
+                      class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        >
+                        </path>
+                      </svg>
+                      Choose File
+                    </label>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            
+    <!-- Upload Progress -->
+            <%= for entry <- @uploads.thumbnail.entries do %>
+              <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg
+                      class="w-6 h-6 text-blue-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      >
+                      </path>
+                    </svg>
+                  </div>
+                  
+                  <div class="flex-1">
+                    <p class="text-gray-700 font-medium text-sm">{entry.client_name}</p>
+                    
+                    <div class="mt-2 bg-gray-200 rounded-full h-2">
+                      <div
+                        class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                        style={"width: #{entry.progress}%"}
+                      >
+                      </div>
+                    </div>
+                    
+                    <p class="text-gray-500 text-xs mt-1">Uploading... {entry.progress}%</p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            
+    <!-- Preview (when thumbnail exists) -->
+            <%= if @form[:thumbnail].value != nil and @form[:thumbnail].value != "" do %>
+              <div class="space-y-4">
+                <div class="relative group">
+                  <img
+                    src={@form[:thumbnail].value}
+                    alt="Collection thumbnail"
+                    class="w-full h-full object-cover rounded-xl shadow-md"
                   />
-                  <figcaption>{entry.client_name}</figcaption>
-                </figure>
-                 <%!-- entry.progress will update automatically for in-flight entries --%>
-                <progress value={entry.progress} max="100">{entry.progress}%</progress>
-                <%!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 --%>
-                <button
-                  type="button"
-                  phx-click="cancel-upload"
-                  phx-value-ref={entry.ref}
-                  aria-label="cancel"
-                  phx-target={@myself}
-                >
-                  &times;
-                </button>
-                 <%!-- Phoenix.Component.upload_errors/2 returns a list of error atoms --%>
-                <p :for={err <- upload_errors(@uploads.thumbnail, entry)} class="alert alert-danger">
-                  {error_to_string(err)}
-                </p>
-              </article>
-               <%!-- Phoenix.Component.upload_errors/1 returns a list of error atoms --%>
-              <p :for={err <- upload_errors(@uploads.thumbnail)} class="alert alert-danger">
-                {error_to_string(err)}
-              </p>
-            </div>
-          <% end %>
+                  
+    <!-- Overlay on hover -->
+                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-xl transition-all duration-300 flex items-center justify-center">
+                  </div>
+                </div>
+                
+    <!-- Actions -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-2 text-green-600">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                      >
+                      </path>
+                    </svg>
+                     <span class="text-sm font-medium">Thumbnail uploaded</span>
+                  </div>
+                  
+                  <.button
+                    type="button"
+                    phx-click="delete_thumbnail"
+                    phx-value-thumbnail={@form[:thumbnail].value}
+                    phx-target={@myself}
+                    class="warning-btn"
+                    phx-disable-with="Removing..."
+                  >
+                    <svg
+                      class="w-4 h-4 inline mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      >
+                      </path>
+                    </svg>
+                    Remove
+                  </.button>
+                </div>
+              </div>
+            <% end %>
+          </div>
         <% end %>
         
         <%= if @step == 2 do %>
@@ -331,7 +417,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                         type="hidden"
                         name={col_field[:property_id].name}
                         value={col_field[:property_id].value}
-                      />
+                      /> {col_field[:property_id].value}
                       <input
                         type="hidden"
                         name={col_field[:name].name}
@@ -472,28 +558,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
        auto_upload: true,
-       # 5 MB
-       max_file_size: 5_000_000,
-       progress: &handle_progress/3,
-       done: &handle_done/3
+       progress: &handle_progress/3
      )
      |> assign_new(:form, fn ->
        to_form(changeset)
      end)
      |> assign(:form_params, %{"collection_fields" => seed_params})}
-  end
-
-  def handle_event("finish_upload", %{"ref" => _ref, "entries" => [%{"ref" => _}]}, socket) do
-    # Set thumbnail field to temporary "uploading" value
-    form_params =
-      socket.assigns.form.params
-      |> Map.put("thumbnail", "uploading")
-
-    changeset =
-      socket.assigns.collection
-      |> Catalog.change_collection(form_params)
-
-    {:noreply, assign(socket, form: to_form(changeset))}
   end
 
   @impl true
@@ -502,22 +572,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         %{"collection" => collection_params, "creator" => creator_input},
         socket
       ) do
-    has_uploads = !Enum.empty?(socket.assigns.uploads.thumbnail.entries)
-
-    # Set thumbnail to "uploading" if files are present
-    updated_params =
-      if has_uploads && !collection_params["thumbnail"] do
-        Map.put(collection_params, "thumbnail", "uploading")
-      else
-        collection_params
-      end
-
     suggestions =
       Enum.filter(socket.assigns.creator_list, fn creator ->
         String.contains?(String.downcase(creator.creator_name), String.downcase(creator_input))
       end)
 
-    changeset = Catalog.change_collection(socket.assigns.collection, updated_params)
+    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
 
     socket =
       socket
@@ -816,41 +876,108 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     save_collection(socket, socket.assigns.action, collection_params)
   end
 
-  def handle_event("delete_thumbnail", _params, socket) do
-    # Update the form field to remove the thumbnail URL
-    form_params = Map.put(socket.assigns.form.params, "thumbnail", "")
+  def handle_event("delete_thumbnail", %{"thumbnail" => thumbnail_path}, socket) do
+    action = socket.assigns.action
 
-    changeset =
-      Catalog.change_collection(%{socket.assigns.collection | thumbnail: nil}, form_params)
+    case action do
+      :new ->
+        handle_delete_thumbnail_new(thumbnail_path, socket)
 
-    Catalog.remove_thumbnail(socket.assigns.collection)
+      :edit ->
+        handle_delete_thumbnail_edit(thumbnail_path, socket)
 
+      _ ->
+        # Fallback for any other action
+        handle_delete_thumbnail_new(thumbnail_path, socket)
+    end
+  end
+
+  # Handle thumbnail deletion for new collection (not yet saved to DB)
+  defp handle_delete_thumbnail_new(thumbnail_path, socket) do
+    # Create fresh changeset without thumbnail
+    collection_attrs = Map.put(socket.assigns.form.params, "thumbnail", nil)
+    changeset = Catalog.change_collection(%Catalog.Collection{}, collection_attrs)
+
+    # Delete the uploaded file
+    delete_thumbnail_file(thumbnail_path)
+
+    # Update socket - no database operation needed
     socket =
       socket
       |> assign(:form, to_form(changeset))
-      |> assign(:collection, Changeset.apply_changes(changeset))
-      |> put_flash(:info, "Thumbnail deleted successfully")
+      |> put_flash(:info, "Thumbnail removed")
 
     {:noreply, socket}
   end
 
-  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
-    {:noreply, cancel_upload(socket, :thumbnail, ref)}
+  # Handle thumbnail deletion for existing collection (update DB)
+  defp handle_delete_thumbnail_edit(thumbnail_path, socket) do
+    collection = socket.assigns.collection
+
+    case Catalog.update_collection(collection, %{thumbnail: nil}) do
+      {:ok, updated_collection} ->
+        # Delete the physical file after successful DB update
+        delete_thumbnail_file(thumbnail_path)
+
+        # Update socket with fresh data
+        socket =
+          socket
+          |> assign(:collection, updated_collection)
+          |> assign(:form, to_form(Catalog.change_collection(updated_collection, %{})))
+          |> put_flash(:info, "Thumbnail deleted successfully")
+
+        {:noreply, socket}
+
+      {:error, changeset} ->
+        # Handle database update error
+        socket =
+          socket
+          |> assign(:form, to_form(changeset))
+          |> put_flash(:error, "Failed to delete thumbnail")
+
+        {:noreply, socket}
+    end
+  end
+
+  defp handle_progress(:thumbnail, entry, socket) do
+    if entry.done? do
+      [url] =
+        consume_uploaded_entries(socket, :thumbnail, fn %{path: path}, entry ->
+          ext = Path.extname(entry.client_name)
+          file_name = "#{System.system_time(:second)}-thumbnail-#{Ecto.UUID.generate()}#{ext}"
+
+          dest =
+            Path.join([
+              :code.priv_dir(:voile),
+              "static",
+              "uploads",
+              "thumbnail",
+              file_name
+            ])
+
+          File.cp!(path, dest)
+          {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
+        end)
+
+      # Update the form field with the uploaded URL
+      form_params = Map.put(socket.assigns.form.params || %{}, "thumbnail", url)
+      changeset = Catalog.change_collection(socket.assigns.collection, form_params)
+
+      {:noreply,
+       socket
+       |> assign(:form, to_form(changeset))
+       |> assign(:collection, Changeset.apply_changes(changeset))}
+    else
+      {:noreply, socket}
+    end
   end
 
   defp save_collection(socket, :edit, collection_params) do
-    thumbnail_url =
-      consume_thumbnail_if_present(socket)
+    dbg(collection_params)
 
-    params_with_thumbnail =
-      if thumbnail_url,
-        do: Map.put(collection_params, "thumbnail", thumbnail_url),
-        else: collection_params
-
-    case Catalog.update_collection(socket.assigns.collection, params_with_thumbnail) do
+    case Catalog.update_collection(socket.assigns.collection, collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
-        dbg(collection)
 
         {:noreply,
          socket
@@ -863,15 +990,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :new, collection_params) do
-    thumbnail_url =
-      consume_thumbnail_if_present(socket)
+    dbg(collection_params)
 
-    params_with_thumbnail =
-      if thumbnail_url,
-        do: Map.put(collection_params, "thumbnail", thumbnail_url),
-        else: collection_params
-
-    case Catalog.create_collection(params_with_thumbnail) do
+    case Catalog.create_collection(collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
 
@@ -882,37 +1003,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
-
-  defp consume_thumbnail_if_present(socket) do
-    case uploaded_entries(socket, :thumbnail) do
-      [] ->
-        nil
-
-      _entries ->
-        results =
-          consume_uploaded_entries(socket, :thumbnail, fn meta, entry ->
-            # Here you can process each uploaded file
-            # For example, move it to a permanent location
-            ext = Path.extname(entry.client_name)
-            file_name = "#{System.system_time(:second)}-thumbnail-#{Ecto.UUID.generate()}#{ext}"
-
-            dest =
-              Path.join([
-                :code.priv_dir(:voile),
-                "static",
-                "uploads",
-                "thumbnail",
-                file_name
-              ])
-
-            File.cp!(meta.path, dest)
-
-            {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
-          end)
-
-        List.first(results)
     end
   end
 
@@ -933,23 +1023,32 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   defp filter_properties(properties, _query), do: properties
 
-  defp handle_progress(:thumbnail, _entry, socket) do
-    # Not needed for this solution but required by LiveView
-    {:noreply, socket}
-  end
+  defp delete_thumbnail_file(nil), do: :ok
+  defp delete_thumbnail_file(""), do: :ok
 
-  defp handle_done(:thumbnail, entry, socket) do
-    # Push event to the client when upload completes
-    push_event(socket, "finish_upload", %{
-      ref: entry.ref,
-      entries: [%{ref: entry.ref}]
-    })
+  defp delete_thumbnail_file(thumbnail_path) do
+    file_path =
+      Path.join([
+        :code.priv_dir(:voile),
+        "static",
+        thumbnail_path
+      ])
 
-    {:noreply, socket}
+    if File.exists?(file_path) do
+      case File.rm(file_path) do
+        :ok ->
+          :ok
+
+        {:error, reason} ->
+          dbg("Failed to delete thumbnail file: #{reason}")
+      end
+    else
+      :ok
+    end
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-  defp error_to_string(:too_large), do: "Too large"
-  defp error_to_string(:too_many_files), do: "You have selected too many files"
-  defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+  # defp error_to_string(:too_large), do: "Too large"
+  # defp error_to_string(:too_many_files), do: "You have selected too many files"
+  # defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
 end
