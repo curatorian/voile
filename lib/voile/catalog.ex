@@ -29,6 +29,37 @@ defmodule Voile.Catalog do
   end
 
   @doc """
+  Return the list of collections for pagination.
+  ## Examples
+
+      iex> list_collections_paginated(page, per_page)
+      {[%Collection{}, ...], total_pages}
+  """
+  def list_collections_paginated(page \\ 1, per_page \\ 10) do
+    offset = (page - 1) * per_page
+
+    query =
+      from c in Collection,
+        preload: [
+          :resource_class,
+          :resource_template,
+          :mst_creator,
+          :node,
+          :collection_fields
+        ],
+        order_by: [desc: c.inserted_at],
+        limit: ^per_page,
+        offset: ^offset
+
+    collections = Repo.all(query)
+
+    total_count = Repo.aggregate(Collection, :count, :id)
+    total_pages = div(total_count + per_page - 1, per_page)
+
+    {collections, total_pages}
+  end
+
+  @doc """
   Gets a single collection.
 
   Raises `Ecto.NoResultsError` if the Collection does not exist.

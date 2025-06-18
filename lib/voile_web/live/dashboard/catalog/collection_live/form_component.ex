@@ -171,11 +171,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             value={@form[:creator_id].value || @current_user.id}
             type="hidden"
             disabled
-          /> {@current_user.id}
+          />
           <div class="p-6">
             <%= if @form[:thumbnail].value == nil or @form[:thumbnail].value == "" do %>
               <!-- Upload Area (when no thumbnail) -->
-              <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer group">
+              <div
+                class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer group"
+                phx-drop-target={@uploads.thumbnail.ref}
+              >
                 <div class="space-y-4">
                   <div class="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                     <svg
@@ -264,20 +267,20 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     <!-- Preview (when thumbnail exists) -->
             <%= if @form[:thumbnail].value != nil and @form[:thumbnail].value != "" do %>
               <div class="space-y-4">
-                <div class="relative group">
+                <div class="relative group w-full max-w-96">
                   <img
                     src={@form[:thumbnail].value}
                     alt="Collection thumbnail"
-                    class="w-full h-full object-cover rounded-xl shadow-md"
+                    class="w-96 object-cover rounded-xl shadow-md"
                   />
                   
     <!-- Overlay on hover -->
-                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-xl transition-all duration-300 flex items-center justify-center">
+                  <div class="absolute w-96 inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-xl transition-all duration-300 flex items-center justify-center">
                   </div>
                 </div>
                 
     <!-- Actions -->
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between w-full max-w-96">
                   <div class="flex items-center space-x-2 text-green-600">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path
@@ -548,6 +551,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign(:creator_input, nil)
      |> assign(:creator_list, assigns.creator_list)
      |> assign(:creator_suggestions, [])
+     |> assign(:step1_params, nil)
      |> assign(:type_options, type_options)
      |> assign(:uploaded_files, [])
      |> assign(:delete_confirmation_id, nil)
@@ -671,6 +675,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         |> assign(:step, socket.assigns.step + 1)
         |> assign(:collection, Changeset.apply_changes(changeset))
         |> assign(:changeset, changeset)
+        |> assign(:step1_params, params)
 
       {:noreply, socket}
     else
@@ -725,8 +730,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
     # Append the new field to the existing list of fields
     updated_list = existing ++ [new_field]
-
-    dbg(updated_list)
 
     # Convert the updated list back into a map with sequential keys
     updated_map =
@@ -871,7 +874,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       collection
       |> Map.from_struct()
       |> Map.put(:collection_fields, params["collection"]["collection_fields"])
-      |> Map.drop([:__meta__, :__struct__, :id, :inserted_at, :updated_at])
 
     save_collection(socket, socket.assigns.action, collection_params)
   end
@@ -973,8 +975,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :edit, collection_params) do
-    dbg(collection_params)
-
     case Catalog.update_collection(socket.assigns.collection, collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
@@ -990,8 +990,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :new, collection_params) do
-    dbg(collection_params)
-
     case Catalog.create_collection(collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})

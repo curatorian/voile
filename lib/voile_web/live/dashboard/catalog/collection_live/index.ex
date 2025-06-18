@@ -9,7 +9,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    collections = Catalog.list_collections()
+    page = 1
+    per_page = 10
+    {collections, total_pages} = Catalog.list_collections_paginated(page, per_page)
     collection_type = Metadata.list_resource_class()
     collection_properties = Metadata.list_metadata_properties_by_vocabulary()
     creator = Master.list_mst_creator()
@@ -20,6 +22,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
       |> assign(:collection_type, collection_type)
       |> assign(:collection_properties, collection_properties)
       |> assign(:creator, creator)
+      |> assign(:page, page)
+      |> assign(:total_pages, total_pages)
       |> assign(:step, 1)
       |> assign(:show_add_collection_field, true)
 
@@ -75,5 +79,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
     {:ok, _} = Catalog.delete_collection(collection)
 
     {:noreply, stream_delete(socket, :collections, collection)}
+  end
+
+  @impl true
+  def handle_event("paginate", %{"page" => page}, socket) do
+    page = String.to_integer(page)
+    per_page = 10
+
+    {collections, total_pages} = Catalog.list_collections_paginated(page, per_page)
+
+    socket =
+      socket
+      |> stream(:collections, collections, reset: true)
+      |> assign(:page, page)
+      |> assign(:total_pages, total_pages)
+
+    {:noreply, socket}
   end
 end
