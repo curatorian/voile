@@ -203,7 +203,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                     <p class="text-gray-500 text-sm mt-1">PNG, JPG, GIF up to 10MB</p>
                   </div>
                   
-    <!-- File Input -->
                   <div class="mt-4">
                     <.live_file_input upload={@uploads.thumbnail} class="hidden" />
                     <label
@@ -226,7 +225,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               </div>
             <% end %>
             
-    <!-- Upload Progress -->
             <%= for entry <- @uploads.thumbnail.entries do %>
               <div class="space-y-4">
                 <div class="flex items-center space-x-3">
@@ -264,7 +262,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               </div>
             <% end %>
             
-    <!-- Preview (when thumbnail exists) -->
             <%= if @form[:thumbnail].value != nil and @form[:thumbnail].value != "" do %>
               <div class="space-y-4">
                 <div class="relative group w-full max-w-96">
@@ -273,13 +270,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                     alt="Collection thumbnail"
                     class="w-96 object-cover rounded-xl shadow-md"
                   />
-                  
-    <!-- Overlay on hover -->
                   <div class="absolute w-96 inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-xl transition-all duration-300 flex items-center justify-center">
                   </div>
                 </div>
                 
-    <!-- Actions -->
                 <div class="flex items-center justify-between w-full max-w-96">
                   <div class="flex items-center space-x-2 text-green-600">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -519,18 +513,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       assigns.collection_type
       |> Enum.map(fn type -> {type.label, type.id} end)
 
-    changeset =
+    {original_collection, changeset} =
       case assigns.action do
         :edit ->
+          # Fetch fresh collection with preloads
           coll = Catalog.get_collection!(collection.id) |> Voile.Repo.preload(:collection_fields)
-          Catalog.change_collection(coll)
+          {coll, Catalog.change_collection(coll)}
 
         :new ->
-          Catalog.change_collection(%Catalog.Collection{})
+          {nil, Catalog.change_collection(%Catalog.Collection{})}
       end
 
+    seed_source = if assigns.action == :edit, do: original_collection, else: collection
+
     seed_params =
-      collection.collection_fields
+      (seed_source.collection_fields || [])
       |> Enum.with_index()
       |> Enum.into(%{}, fn {field, idx} ->
         {to_string(idx),
@@ -548,6 +545,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:original_collection, original_collection)
      |> assign(:creator_input, nil)
      |> assign(:creator_list, assigns.creator_list)
      |> assign(:creator_suggestions, [])
@@ -881,6 +879,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   def handle_event("delete_thumbnail", %{"thumbnail" => thumbnail_path}, socket) do
     action = socket.assigns.action
 
+    uploads = socket.assigns.uploads
+
+    for entry <- uploads.thumbnail.entries do
+      cancel_upload(socket, :thumbnail, entry.ref)
+    end
+
     case action do
       :new ->
         handle_delete_thumbnail_new(thumbnail_path, socket)
@@ -891,6 +895,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       _ ->
         # Fallback for any other action
         handle_delete_thumbnail_new(thumbnail_path, socket)
+        dbg("fall here")
     end
   end
 
@@ -942,7 +947,18 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp handle_progress(:thumbnail, entry, socket) do
+    dbg(socket.assigns.form.params)
+
     if entry.done? do
+      if socket.assigns.form.params["thumbnail"] do
+        old_file = Path.basename(socket.assigns.form.params["thumbnail"])
+        old_path = Path.join([:code.priv_dir(:voile), "static", "uploads", "thumbnail", old_file])
+
+        if File.exists?(old_path) do
+          File.rm!(old_path)
+        end
+      end
+
       [url] =
         consume_uploaded_entries(socket, :thumbnail, fn %{path: path}, entry ->
           ext = Path.extname(entry.client_name)
@@ -975,7 +991,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   defp save_collection(socket, :edit, collection_params) do
-    case Catalog.update_collection(socket.assigns.collection, collection_params) do
+    case Catalog.update_collection(socket.assigns.original_collection, collection_params) do
       {:ok, collection} ->
         notify_parent({:saved, collection})
 
