@@ -23,7 +23,7 @@ defmodule Voile.Schema.Accounts.User do
     field :last_login, :utc_datetime
     field :last_login_ip, :string
 
-    belongs_to :user_roles, UserRole
+    belongs_to :user_role, UserRole
 
     field :twitter, :string, virtual: true
     field :facebook, :string, virtual: true
@@ -42,7 +42,7 @@ defmodule Voile.Schema.Accounts.User do
       :email,
       :fullname,
       :user_type,
-      :user_role,
+      :user_role_id,
       :password,
       :confirmed_at,
       :user_type,

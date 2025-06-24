@@ -6,7 +6,7 @@ defmodule Voile.Schema.Accounts do
   import Ecto.Query, warn: false
   alias Voile.Repo
 
-  alias Voile.Schema.Accounts.{User, UserToken, UserNotifier}
+  alias Voile.Schema.Accounts.{User, UserRole, UserToken, UserNotifier}
 
   ## Database getters
 
@@ -365,5 +365,33 @@ defmodule Voile.Schema.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def list_user_roles do
+    Repo.all(UserRole)
+  end
+
+  def get_user_role!(id) do
+    Repo.get!(UserRole, id)
+  end
+
+  def create_user_role(attrs \\ %{}) do
+    %UserRole{}
+    |> UserRole.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_user_role(%UserRole{} = user_role, attrs) do
+    user_role
+    |> UserRole.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_user_role(%UserRole{} = user_role) do
+    Repo.delete(user_role)
+  end
+
+  def change_user_role(%UserRole{} = user_role, attrs \\ %{}) do
+    UserRole.changeset(user_role, attrs)
   end
 end

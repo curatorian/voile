@@ -73,7 +73,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         {@title}
         <:subtitle>Use this form to manage collection records in your database.</:subtitle>
       </.header>
-       {@step}
+      
       <.simple_form
         for={@form}
         id="collection-form-1"
@@ -83,7 +83,22 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         phx-submit="save"
       >
         <%= if @step == 1 do %>
-          <.input field={@form[:title]} type="text" label="Title" required_value={true} />
+          <.input
+            field={@form[:type_id]}
+            label="Collection Type"
+            type="select"
+            options={Enum.map(@collection_type, fn ct -> {ct.label, ct.id} end)}
+            prompt="Select Collection Type"
+            required_value={true}
+          />
+          <.input
+            field={@form[:unit_id]}
+            label="Collection Location"
+            type="select"
+            options={Enum.map(@node_list, fn node -> {node.name, node.id} end)}
+            prompt="Select Collection Location"
+            required_value={true}
+          /> <.input field={@form[:title]} type="text" label="Title" required_value={true} />
           <.input
             type="text"
             name="creator"

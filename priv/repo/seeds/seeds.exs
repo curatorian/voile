@@ -178,3 +178,32 @@ node_list = [
 for node <- node_list do
   Voile.Schema.System.create_node(node)
 end
+
+# Populate the User Roles
+user_roles = [
+  %{
+    name: "system_administrator",
+    description: "Full system control and configuration",
+    access_level: 100,
+    permissions: %{}
+  },
+  %{
+    name: "head_librarian",
+    description: "Manage collections and user accounts",
+    access_level: 90,
+    permissions: %{}
+  },
+  %{
+    name: "librarian",
+    description: "Manage collections and assist users",
+    access_level: 80,
+    permissions: %{}
+  },
+  %{
+    name: "curators"
+  }
+]
+
+for role <- user_roles do
+  Voile.Schema.Accounts.create_user_role(role)
+end

@@ -1,8 +1,10 @@
 <section class="flex flex-col gap-4">
   <.dashboard_menu_bar active_menu={@current_uri} />
   <div class="bg-white p-4 rounded-xl shadow-md">
+    <.back navigate={~p"/manage/catalog/collections"}>Back to collections</.back>
+    
     <.header>
-      Collection {@collection.id}
+      Koleksi <span class="text-orange-600 font-bold">{@collection.title}</span>
       <:subtitle>This is a collection record from your database.</:subtitle>
       
       <:actions>
@@ -15,7 +17,7 @@
       </:actions>
     </.header>
     
-    <div class="flex gap-4">
+    <div class="flex gap-4 w-full">
       <div class="flex items-center justify-center w-64">
         <img src={@collection.thumbnail} class="object-cover" />
       </div>
@@ -98,6 +100,7 @@
         creator_list={@creator}
         collection_type={@collection_type}
         collection_properties={@collection_properties}
+        node_list={@node_location}
         current_user={@current_user}
         patch={~p"/manage/catalog/collections/#{@collection}"}
       />

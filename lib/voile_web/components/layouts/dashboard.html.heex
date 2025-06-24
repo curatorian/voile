@@ -26,7 +26,7 @@
           navigate="/manage/master"
           class={[
             "default-voile-menu",
-            @current_uri == "/manage/master" && "default-voile-menu-active"
+            @current_uri |> String.starts_with?("/manage/master") && "default-voile-menu-active"
           ]}
         >
           Master
@@ -36,7 +36,8 @@
           navigate="/manage/metaresource"
           class={[
             "default-voile-menu",
-            @current_uri == "/manage/metaresource" && "default-voile-menu-active"
+            @current_uri |> String.starts_with?("/manage/metaresource") &&
+              "default-voile-menu-active"
           ]}
         >
           Metadata

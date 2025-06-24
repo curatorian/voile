@@ -269,6 +269,8 @@ defmodule VoileWeb.VoileDashboardComponents do
     """
   end
 
+  defp pagination_range(_current_page, total_pages) when total_pages <= 0, do: []
+
   defp pagination_range(current_page, total_pages) do
     range = 1..total_pages
 
