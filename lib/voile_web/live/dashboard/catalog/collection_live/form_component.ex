@@ -2,10 +2,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   use VoileWeb, :live_component
 
   alias Voile.Catalog
-  alias Voile.Schema.Master
-  alias Voile.Schema.Metadata
-
   alias Ecto.Changeset
+
+  import VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper
 
   @impl true
   def render(assigns) do
@@ -173,14 +172,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               {"Restricted", "restricted"}
             ]}
             required_value={true}
-          />
-          <.input
-            field={@form[:thumbnail]}
-            type="text"
-            label="Thumbnail"
-            disabled="true"
-            required_value={true}
-          />
+          /> <.input field={@form[:thumbnail]} type="text" label="Thumbnail" disabled="true" />
           <input
             name={@form[:creator_id].name}
             value={@form[:creator_id].value || @current_user.id}
@@ -413,7 +405,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               <% else %>
                 <div>
                   <.inputs_for :let={col_field} field={@form[:collection_fields]}>
-                    <h6 class="bg-violet-200 px-4 py-1 rounded-t-xl text-brand">
+                    <h6 class="bg-brand px-4 py-1 rounded-t-xl text-white">
                       {col_field[:label].value}
                     </h6>
                     
@@ -429,11 +421,16 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                         type="hidden"
                         name={col_field[:property_id].name}
                         value={col_field[:property_id].value}
-                      /> {col_field[:property_id].value}
+                      />
                       <input
                         type="hidden"
                         name={col_field[:name].name}
                         value={col_field[:name].value}
+                      />
+                      <input
+                        type="hidden"
+                        name={col_field[:information].name}
+                        value={col_field[:information].value}
                       />
                       <input
                         type="hidden"
@@ -498,6 +495,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           </div>
         <% end %>
         
+        <%= if @step == 3 do %>
+          <div>
+            <h5>The Items Data</h5>
+          </div>
+        <% end %>
+        
         <:actions>
           <div class="mt-12 w-full flex justify-between items-center gap-5">
             <%= if @step > 1 do %>
@@ -506,7 +509,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               </.button>
             <% end %>
             
-            <%= if @step == 2 do %>
+            <%= if @step == 3 do %>
               <.button type="submit" phx-disable-with="Saving..." class="success-btn w-full">
                 Save
               </.button>
@@ -532,7 +535,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       case assigns.action do
         :edit ->
           # Fetch fresh collection with preloads
-          coll = Catalog.get_collection!(collection.id) |> Voile.Repo.preload(:collection_fields)
+          coll =
+            Catalog.get_collection!(collection.id)
+            |> Voile.Repo.preload(collection_fields: [:metadata_properties])
+
           {coll, Catalog.change_collection(coll)}
 
         :new ->
@@ -549,7 +555,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          %{
            "id" => field.id,
            "label" => field.label,
-           "information" => nil,
+           "information" => field.metadata_properties.information,
            "type_value" => field.type_value,
            "value_lang" => field.value_lang,
            "value" => field.value,
@@ -624,56 +630,18 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("select_creator", %{"id" => id}, socket) do
-    selected =
-      Enum.find(socket.assigns.creator_list, fn c -> to_string(c.id) == id end)
-
-    socket =
-      socket
-      |> assign(:creator_input, selected.creator_name)
-      |> assign(:creator_suggestions, [])
-      |> assign(:collection, %{
-        socket.assigns.collection
-        | creator_id: selected.id
-      })
-
-    {:noreply, socket}
+    {:noreply, assign_selected_creator(id, socket)}
   end
 
   def handle_event("create_new_creator", %{"creator" => creator}, socket) do
-    case Master.get_or_create_creator(%{creator_name: creator}) do
-      {:ok, new_creator} ->
-        updated_creator_list = [new_creator | socket.assigns.creator_list]
-
-        socket =
-          socket
-          |> assign(:creator_input, new_creator.creator_name)
-          |> assign(:creator_suggestions, [])
-          |> assign(:creator_list, updated_creator_list)
-          |> assign(:collection, %{
-            socket.assigns.collection
-            | creator_id: new_creator.id
-          })
-
-        {:noreply, socket}
-
-      {:error, _} ->
-        socket =
-          socket
-          |> put_flash(:error, "Failed to create new creator.")
-          |> assign(:creator_suggestions, [])
-          |> assign(:collection, socket.assigns.collection)
-
-        {:noreply, socket}
+    case create_or_select_creator(creator, socket) do
+      {:ok, socket} -> {:noreply, socket}
+      {:error, socket} -> {:noreply, socket}
     end
   end
 
   def handle_event("delete_creator", _params, socket) do
-    socket =
-      socket
-      |> assign(:creator_input, nil)
-      |> assign(:collection, %{socket.assigns.collection | creator_id: nil})
-
-    {:noreply, socket}
+    {:noreply, clear_selected_creator(socket)}
   end
 
   def handle_event("next_step", _params, socket) do
@@ -710,174 +678,23 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("select_props", %{"id" => prop_id}, socket) do
-    # Retrieve the current form parameters from the socket assigns or initialize an empty map if nil
-    params =
-      case socket.assigns.form.params do
-        nil ->
-          socket.assigns.form_params
-
-        _ ->
-          Map.update(socket.assigns.form_params, "collection_fields", %{}, fn existing_fields ->
-            Map.merge(existing_fields, socket.assigns.form.params["collection_fields"] || %{})
-          end)
-      end
-
-    # Extract the "collection_fields" map from the parameters, defaulting to an empty map if not present
-    raw_fields = Map.get(params, "collection_fields", %{})
-
-    # Convert the map of fields into a list of entries
-    existing = Map.values(raw_fields)
-
-    property = Metadata.get_property!(prop_id)
-
-    new_field = %{
-      "label" => property.label,
-      "type_value" => property.type_value,
-      "information" => property.information,
-      "property_id" => property.id,
-      "name" => String.split(property.label, " ") |> Enum.join(""),
-      "value_lang" => nil,
-      "value" => nil,
-      "sort_order" => length(existing) + 1
-    }
-
-    # Append the new field to the existing list of fields
-    updated_list = existing ++ [new_field]
-
-    # Convert the updated list back into a map with sequential keys
-    updated_map =
-      updated_list
-      |> Enum.with_index()
-      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
-
-    # Update the form parameters with the modified "collection_fields" map
-    new_params = Map.put(params, "collection_fields", updated_map)
-
-    # Create a new changeset for the collection using the updated parameters
-    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
-
-    socket =
-      socket
-      |> assign(form: to_form(changeset, action: :validate))
-
-    {:noreply, socket}
+    {:noreply, add_property_to_form(prop_id, socket)}
   end
 
   def handle_event("delete_unsaved_field", %{"index" => idx_str}, socket) do
-    # Retrieve the current form parameters from the socket assigns or initialize an empty map if nil
-    params =
-      case socket.assigns.form.params do
-        nil ->
-          socket.assigns.form_params
-
-        _ ->
-          Map.update(socket.assigns.form_params, "collection_fields", %{}, fn existing_fields ->
-            Map.merge(existing_fields, socket.assigns.form.params["collection_fields"] || %{})
-          end)
-      end
-
-    # Extract the "collection_fields" map from the parameters, defaulting to an empty map if not present
-    raw_fields = Map.get(params, "collection_fields", %{})
-
-    # Convert the map of fields into a list of entries
-    entries = Map.values(raw_fields)
-
-    # Convert the index string from the event parameters to an integer
-    idx = String.to_integer(idx_str)
-
-    # Remove the field at the specified index from the list of entries
-    new_list = List.delete_at(entries, idx)
-
-    # Convert the updated list back into a map with sequential keys
-    new_map =
-      new_list
-      |> Enum.with_index()
-      |> Enum.into(%{}, fn {entry, i} -> {to_string(i), entry} end)
-
-    # Update the form parameters with the modified "collection_fields" map
-    new_params = Map.put(params, "collection_fields", new_map)
-
-    # Create a new changeset for the collection using the updated parameters
-    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
-
-    # Update the socket assigns with the new form changeset for validation
-    {:noreply,
-     socket
-     |> assign(form: to_form(changeset, action: :validate))}
+    {:noreply, delete_unsaved_field_at(idx_str, socket)}
   end
 
   def handle_event("delete_existed_field", %{"id" => id}, socket) do
-    # Attempt to fetch and delete the collection field
-    case Catalog.get_collection_field!(id) do
-      nil ->
-        :ok
-
-      collection_field ->
-        Catalog.delete_collection_field(collection_field)
-    end
-
-    # Refresh the collection fields from the database
-    updated_collection =
-      Catalog.get_collection!(socket.assigns.collection.id)
-      |> Voile.Repo.preload(:collection_fields)
-
-    # Update the form parameters with the refreshed collection fields
-    updated_fields =
-      updated_collection.collection_fields
-      |> Enum.with_index()
-      |> Enum.into(%{}, fn {field, idx} ->
-        {to_string(idx),
-         %{
-           "id" => field.id,
-           "label" => field.label,
-           "value_lang" => field.value_lang,
-           "value" => field.value,
-           "sort_order" => field.sort_order
-         }}
-      end)
-
-    new_params =
-      Map.put(socket.assigns.form.params || %{}, "collection_fields", updated_fields)
-
-    # Create a new changeset with the updated parameters
-    changeset = Catalog.change_collection(updated_collection, new_params)
-
-    # Update the socket assigns with the new form, collection, and form_params
-    socket =
-      socket
-      |> assign(:collection, updated_collection)
-      |> assign(:form, to_form(changeset, action: :validate))
-      |> assign(:form_params, new_params)
-
-    {:noreply, socket}
+    {:noreply, delete_existing_field(id, socket)}
   end
 
   def handle_event("delete_confirmation", %{"id" => id}, socket) do
-    # Handle the delete confirmation logic here
-    # You can use the id to identify which item to delete
-    # For example, you can send a message to the parent LiveView or perform an action directly
-
-    # Notify the parent LiveView about the deletion
-    chosen_collection_field =
-      Catalog.get_collection_field!(id)
-
-    socket =
-      socket
-      |> assign(:delete_confirmation_id, id)
-      |> assign(:chosen_collection_field, chosen_collection_field)
-
-    {:noreply, socket}
+    {:noreply, confirm_field_deletion(id, socket)}
   end
 
   def handle_event("search_properties", %{"value" => query}, socket) do
-    filtered = filter_properties(socket.assigns.collection_properties, query)
-
-    socket =
-      socket
-      |> assign(:property_search, query)
-      |> assign(:filtered_properties, filtered)
-
-    {:noreply, socket}
+    {:noreply, search_properties(query, socket)}
   end
 
   def handle_event("save", params, socket) do
@@ -892,191 +709,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("delete_thumbnail", %{"thumbnail" => thumbnail_path}, socket) do
-    action = socket.assigns.action
-
-    uploads = socket.assigns.uploads
-
-    for entry <- uploads.thumbnail.entries do
-      cancel_upload(socket, :thumbnail, entry.ref)
-    end
-
-    case action do
-      :new ->
-        handle_delete_thumbnail_new(thumbnail_path, socket)
-
-      :edit ->
-        handle_delete_thumbnail_edit(thumbnail_path, socket)
-
-      _ ->
-        # Fallback for any other action
-        handle_delete_thumbnail_new(thumbnail_path, socket)
-        dbg("fall here")
-    end
+    handle_delete_thumbnail(%{"thumbnail" => thumbnail_path}, socket)
   end
 
-  # Handle thumbnail deletion for new collection (not yet saved to DB)
-  defp handle_delete_thumbnail_new(thumbnail_path, socket) do
-    # Create fresh changeset without thumbnail
-    collection_attrs = Map.put(socket.assigns.form.params, "thumbnail", nil)
-    changeset = Catalog.change_collection(%Catalog.Collection{}, collection_attrs)
-
-    # Delete the uploaded file
-    delete_thumbnail_file(thumbnail_path)
-
-    # Update socket - no database operation needed
-    socket =
-      socket
-      |> assign(:form, to_form(changeset))
-      |> put_flash(:info, "Thumbnail removed")
-
+  def handle_event("progress", %{"upload_config" => "thumbnail"}, socket) do
     {:noreply, socket}
   end
 
-  # Handle thumbnail deletion for existing collection (update DB)
-  defp handle_delete_thumbnail_edit(thumbnail_path, socket) do
-    collection = socket.assigns.collection
-
-    case Catalog.update_collection(collection, %{thumbnail: nil}) do
-      {:ok, updated_collection} ->
-        # Delete the physical file after successful DB update
-        delete_thumbnail_file(thumbnail_path)
-
-        # Update socket with fresh data
-        socket =
-          socket
-          |> assign(:collection, updated_collection)
-          |> assign(:form, to_form(Catalog.change_collection(updated_collection, %{})))
-          |> put_flash(:info, "Thumbnail deleted successfully")
-
-        {:noreply, socket}
-
-      {:error, changeset} ->
-        # Handle database update error
-        socket =
-          socket
-          |> assign(:form, to_form(changeset))
-          |> put_flash(:error, "Failed to delete thumbnail")
-
-        {:noreply, socket}
-    end
-  end
-
   defp handle_progress(:thumbnail, entry, socket) do
-    dbg(socket.assigns.form.params)
-
-    if entry.done? do
-      if socket.assigns.form.params["thumbnail"] do
-        old_file = Path.basename(socket.assigns.form.params["thumbnail"])
-        old_path = Path.join([:code.priv_dir(:voile), "static", "uploads", "thumbnail", old_file])
-
-        if File.exists?(old_path) do
-          File.rm!(old_path)
-        end
-      end
-
-      [url] =
-        consume_uploaded_entries(socket, :thumbnail, fn %{path: path}, entry ->
-          ext = Path.extname(entry.client_name)
-          file_name = "#{System.system_time(:second)}-thumbnail-#{Ecto.UUID.generate()}#{ext}"
-
-          dest =
-            Path.join([
-              :code.priv_dir(:voile),
-              "static",
-              "uploads",
-              "thumbnail",
-              file_name
-            ])
-
-          File.cp!(path, dest)
-          {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
-        end)
-
-      # Update the form field with the uploaded URL
-      form_params = Map.put(socket.assigns.form.params || %{}, "thumbnail", url)
-      changeset = Catalog.change_collection(socket.assigns.collection, form_params)
-
-      {:noreply,
-       socket
-       |> assign(:form, to_form(changeset))
-       |> assign(:collection, Changeset.apply_changes(changeset))}
-    else
-      {:noreply, socket}
-    end
+    handle_thumbnail_progress(:thumbnail, entry, socket)
   end
 
-  defp save_collection(socket, :edit, collection_params) do
-    case Catalog.update_collection(socket.assigns.original_collection, collection_params) do
-      {:ok, collection} ->
-        notify_parent({:saved, collection})
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "Collection updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
-
-  defp save_collection(socket, :new, collection_params) do
-    case Catalog.create_collection(collection_params) do
-      {:ok, collection} ->
-        notify_parent({:saved, collection})
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "Collection created successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
-
-  defp filter_properties(properties, query) when is_binary(query) and query != "" do
-    query = String.downcase(query)
-
-    properties
-    |> Enum.map(fn {category, props} ->
-      filtered_props =
-        Enum.filter(props, fn prop ->
-          String.contains?(String.downcase(prop.label), query)
-        end)
-
-      {category, filtered_props}
-    end)
-    |> Enum.filter(fn {_category, props} -> length(props) > 0 end)
-  end
-
-  defp filter_properties(properties, _query), do: properties
-
-  defp delete_thumbnail_file(nil), do: :ok
-  defp delete_thumbnail_file(""), do: :ok
-
-  defp delete_thumbnail_file(thumbnail_path) do
-    file_path =
-      Path.join([
-        :code.priv_dir(:voile),
-        "static",
-        thumbnail_path
-      ])
-
-    if File.exists?(file_path) do
-      case File.rm(file_path) do
-        :ok ->
-          :ok
-
-        {:error, reason} ->
-          dbg("Failed to delete thumbnail file: #{reason}")
-      end
-    else
-      :ok
-    end
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
   # defp error_to_string(:too_large), do: "Too large"
   # defp error_to_string(:too_many_files), do: "You have selected too many files"
   # defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"

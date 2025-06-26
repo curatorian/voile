@@ -43,7 +43,7 @@ defmodule Voile.Catalog.Collection do
       :unit_id
     ])
     |> cast_assoc(:collection_fields, with: &CollectionField.changeset/2, required: false)
-    |> validate_required([:title, :description, :thumbnail, :status, :access_level, :creator_id],
+    |> validate_required([:title, :description, :status, :access_level, :creator_id],
       message: "This field is required"
     )
     |> unique_constraint(:title)
