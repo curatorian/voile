@@ -498,7 +498,19 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         <%= if @step == 3 do %>
           <div>
             <h5>The Items Data</h5>
+            
+            <.input
+              field={@form[:collection_has_more_than_one_item]}
+              type="checkbox"
+              label="Does this collection have more than one item?"
+            />
+            <%= if @form[:collection_has_more_than_one_item].value === "true" do %>
+              <p class="text-green-500 mt-2">Yes</p>
+            <% else %>
+              <p class="text-gray-500 mt-2">No</p>
+            <% end %>
           </div>
+           {@form[:collection_has_more_than_one_item].value}
         <% end %>
         
         <:actions>
@@ -656,7 +668,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         |> assign(:step, socket.assigns.step + 1)
         |> assign(:collection, Changeset.apply_changes(changeset))
         |> assign(:changeset, changeset)
-        |> assign(:step1_params, params)
+        |> assign(:step1_params, params["collection_fields"])
 
       {:noreply, socket}
     else
@@ -699,11 +711,16 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   def handle_event("save", params, socket) do
     collection = socket.assigns.collection
+    collection_fields = socket.assigns.step1_params
+    items_data = params["collection"]
 
     collection_params =
       collection
       |> Map.from_struct()
-      |> Map.put(:collection_fields, params["collection"]["collection_fields"])
+      |> Map.put(:collection_fields, %{})
+
+    dbg(collection_params)
+    dbg(items_data)
 
     save_collection(socket, socket.assigns.action, collection_params)
   end
