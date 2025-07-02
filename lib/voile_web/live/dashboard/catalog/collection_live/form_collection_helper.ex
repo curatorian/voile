@@ -49,6 +49,44 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
     assign(socket, form: to_form(changeset, action: :validate))
   end
 
+  def add_item_to_form(socket) do
+    params =
+      case socket.assigns.form.params do
+        nil ->
+          socket.assigns.form_params
+
+        _ ->
+          Map.update(socket.assigns.form_params, "items", %{}, fn existing_items ->
+            Map.merge(existing_items, socket.assigns.form.params["items"] || %{})
+          end)
+      end
+
+    raw_items = Map.get(params, "items", %{})
+    existing = Map.values(raw_items)
+
+    new_item = %{
+      "item_code" => nil,
+      "barcode" => nil,
+      "location" => nil,
+      "status" => nil,
+      "condition" => nil,
+      "availability" => nil
+    }
+
+    updated_list = existing ++ [new_item]
+
+    updated_map =
+      updated_list
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
+
+    new_params = Map.put(params, "items", updated_map)
+
+    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+
+    assign(socket, form: to_form(changeset, action: :validate))
+  end
+
   def assign_selected_creator(id, socket) do
     case Enum.find(socket.assigns.creator_list, fn c -> to_string(c.id) == id end) do
       nil ->

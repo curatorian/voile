@@ -7,6 +7,7 @@ defmodule Voile.Catalog.Collection do
   alias Voile.Schema.Master.Creator
   alias Voile.Schema.System.Node
   alias Voile.Catalog.CollectionField
+  alias Voile.Catalog.Item
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "collections" do
@@ -43,6 +44,7 @@ defmodule Voile.Catalog.Collection do
       :unit_id
     ])
     |> cast_assoc(:collection_fields, with: &CollectionField.changeset/2, required: false)
+    |> cast_assoc(:items, with: &Item.changeset/2, required: false)
     |> validate_required([:title, :description, :status, :access_level, :creator_id],
       message: "This field is required"
     )

@@ -24,7 +24,8 @@ defmodule Voile.Catalog do
       :resource_template,
       :mst_creator,
       :node,
-      :collection_fields
+      :collection_fields,
+      :items
     ])
   end
 
@@ -45,7 +46,8 @@ defmodule Voile.Catalog do
           :resource_template,
           :mst_creator,
           :node,
-          :collection_fields
+          :collection_fields,
+          :items
         ],
         order_by: [desc: c.inserted_at],
         limit: ^per_page,
@@ -81,7 +83,8 @@ defmodule Voile.Catalog do
       :resource_template,
       :mst_creator,
       :node,
-      :collection_fields
+      :collection_fields,
+      :items
     ])
   end
 
@@ -153,7 +156,8 @@ defmodule Voile.Catalog do
       :resource_template,
       :mst_creator,
       :node,
-      :collection_fields
+      :collection_fields,
+      :items
     ])
     |> Collection.changeset(attrs)
   end

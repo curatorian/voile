@@ -405,7 +405,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               <% else %>
                 <div>
                   <.inputs_for :let={col_field} field={@form[:collection_fields]}>
-                    <h6 class="bg-brand px-4 py-1 rounded-t-xl text-white">
+                    <h6 class="bg-brand-5 px-4 py-1 rounded-t-xl text-white">
                       {col_field[:label].value}
                     </h6>
                     
@@ -499,18 +499,92 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           <div>
             <h5>The Items Data</h5>
             
-            <.input
-              field={@form[:collection_has_more_than_one_item]}
-              type="checkbox"
-              label="Does this collection have more than one item?"
-            />
-            <%= if @form[:collection_has_more_than_one_item].value === "true" do %>
-              <p class="text-green-500 mt-2">Yes</p>
-            <% else %>
-              <p class="text-gray-500 mt-2">No</p>
-            <% end %>
+            <div class="flex items-center gap-5">
+              <.input
+                field={@form[:collection_has_more_than_one_item]}
+                type="checkbox"
+                label="Does this collection have more than one item?"
+              />
+              <%= if @form[:collection_has_more_than_one_item].value == "true" do %>
+                <.button
+                  type="button"
+                  phx-click="add_item_data"
+                  phx-target={@myself}
+                  class="primary-btn"
+                >
+                  <.icon name="hero-plus-circle-solid" class="w-4 h-4" /> Add Item Data
+                </.button>
+              <% end %>
+            </div>
           </div>
-           {@form[:collection_has_more_than_one_item].value}
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-10">
+            <.inputs_for :let={item_field} field={@form[:items]}>
+              <div class="bg-brand-2 rounded-lg p-5">
+                <.input
+                  field={item_field[:item_code]}
+                  type="text"
+                  label="Item Code"
+                  required_value={true}
+                />
+                <.input
+                  field={item_field[:inventory_code]}
+                  type="text"
+                  label="Inventory Code"
+                  required_value={true}
+                />
+                <.input
+                  field={item_field[:barcode]}
+                  type="text"
+                  label="Barcode"
+                  required_value={true}
+                />
+                <.input
+                  field={item_field[:location]}
+                  type="select"
+                  label="Location"
+                  required_value={true}
+                  options={Enum.map(@node_list, fn node -> {node.name, node.id} end)}
+                />
+                <.input
+                  field={item_field[:status]}
+                  type="select"
+                  label="Status"
+                  required_value={true}
+                  options={[
+                    {"Active", "active"},
+                    {"Inactive", "inactive"},
+                    {"Lost", "lost"},
+                    {"Damaged", "damaged"}
+                  ]}
+                />
+                <.input
+                  field={item_field[:condition]}
+                  type="select"
+                  label="Condition"
+                  required_value={true}
+                  options={[
+                    {"New", "new"},
+                    {"Good", "good"},
+                    {"Fair", "fair"},
+                    {"Poor", "poor"}
+                  ]}
+                />
+                <.input
+                  field={item_field[:availability]}
+                  type="select"
+                  label="Availability"
+                  required_value={true}
+                  options={[
+                    {"Available", "available"},
+                    {"Checked Out", "checked_out"},
+                    {"Reserved", "reserved"},
+                    {"Maintenance", "maintenance"}
+                  ]}
+                />
+              </div>
+            </.inputs_for>
+          </div>
         <% end %>
         
         <:actions>
@@ -554,7 +628,22 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           {coll, Catalog.change_collection(coll)}
 
         :new ->
-          {nil, Catalog.change_collection(%Catalog.Collection{})}
+          new_item = %Catalog.Item{
+            item_code: nil,
+            barcode: nil,
+            location: nil,
+            status: nil,
+            condition: nil,
+            availability: nil
+          }
+
+          collection =
+            Catalog.change_collection(%Catalog.Collection{
+              items: [new_item],
+              collection_fields: []
+            })
+
+          {nil, collection}
       end
 
     seed_source = if assigns.action == :edit, do: original_collection, else: collection
@@ -575,6 +664,22 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          }}
       end)
 
+    item_params =
+      (seed_source.items || [])
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {item, idx} ->
+        {to_string(idx),
+         %{
+           "item_code" => item.item_code,
+           "inventory_code" => item.inventory_code,
+           "barcode" => item.barcode,
+           "location" => item.location,
+           "status" => item.status,
+           "condition" => item.condition,
+           "availability" => item.availability
+         }}
+      end)
+
     {:ok,
      socket
      |> assign(assigns)
@@ -589,6 +694,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign(:chosen_collection_field, nil)
      |> assign(:property_search, "")
      |> assign(:filtered_properties, assigns.collection_properties)
+     |> assign(:collection_has_more_than_one_item, false)
      |> allow_upload(:thumbnail,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
@@ -598,7 +704,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign_new(:form, fn ->
        to_form(changeset)
      end)
-     |> assign(:form_params, %{"collection_fields" => seed_params})}
+     |> assign(:form_params, %{"collection_fields" => seed_params, "items" => item_params})}
   end
 
   @impl true
@@ -693,6 +799,10 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, add_property_to_form(prop_id, socket)}
   end
 
+  def handle_event("add_item_data", _params, socket) do
+    {:noreply, add_item_to_form(socket)}
+  end
+
   def handle_event("delete_unsaved_field", %{"index" => idx_str}, socket) do
     {:noreply, delete_unsaved_field_at(idx_str, socket)}
   end
@@ -711,7 +821,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   def handle_event("save", params, socket) do
     collection = socket.assigns.collection
-    collection_fields = socket.assigns.step1_params
+    _collection_fields = socket.assigns.step1_params
     items_data = params["collection"]
 
     collection_params =
@@ -722,7 +832,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     dbg(collection_params)
     dbg(items_data)
 
-    save_collection(socket, socket.assigns.action, collection_params)
+    {:noreply, socket}
+    # save_collection(socket, socket.assigns.action, collection_params)
   end
 
   def handle_event("delete_thumbnail", %{"thumbnail" => thumbnail_path}, socket) do

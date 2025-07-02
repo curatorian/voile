@@ -54,7 +54,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
         :resource_template,
         :mst_creator,
         :node,
-        :collection_fields
+        :collection_fields,
+        :items
       ])
 
     socket
