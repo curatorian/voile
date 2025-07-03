@@ -18,6 +18,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
     creator = Master.list_mst_creator()
     node_location = System.list_nodes()
 
+    time_identifier = DateTime.utc_now() |> DateTime.to_unix(:millisecond)
+
     socket =
       socket
       |> stream(:collections, collections)
@@ -27,8 +29,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
       |> assign(:node_location, node_location)
       |> assign(:page, page)
       |> assign(:total_pages, total_pages)
-      |> assign(:step, 3)
+      |> assign(:step, 1)
       |> assign(:show_add_collection_field, true)
+      |> assign(:time_identifier, time_identifier)
 
     {:ok, socket}
   end

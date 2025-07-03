@@ -4,6 +4,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   alias Voile.Catalog
   alias Ecto.Changeset
 
+  import Voile.Utils.ItemHelper
   import VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper
 
   @impl true
@@ -65,6 +66,45 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
               Cancel
             </.button>
           </div>
+        </div>
+      </.modal>
+      
+      <.modal id="item_delete_confirmation">
+        <div class="text-center">
+          <h5>
+            Are you sure want to delete this item data?
+          </h5>
+          
+          <p class="text-sm text-gray-500">
+            This action cannot be undone. Please confirm your action.
+          </p>
+          
+          <div class="my-4">
+            <p class="text-xs">with value :</p>
+            
+            <h6 class="text-brand">
+              {(@chosen_item_field && @chosen_item_field.item_code) || ""}
+            </h6>
+          </div>
+        </div>
+        
+        <div class="flex items-center w-full my-5 gap-5">
+          <.button
+            class="w-full warning-btn"
+            phx-click={JS.push("delete_existing_item") |> hide_modal("item_delete_confirmation")}
+            phx-value-id={@delete_confirmation_id}
+            phx-target={@myself}
+          >
+            Delete
+          </.button>
+          
+          <.button
+            class="w-full"
+            phx-click={hide_modal("item_delete_confirmation")}
+            phx-target={@myself}
+          >
+            Cancel
+          </.button>
         </div>
       </.modal>
       
@@ -176,6 +216,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           <input
             name={@form[:creator_id].name}
             value={@form[:creator_id].value || @current_user.id}
+            type="hidden"
+            disabled
+          />
+          <input
+            name={@form[:id].name}
+            value={@form[:id].value || Ecto.UUID.generate()}
             type="hidden"
             disabled
           />
@@ -521,6 +567,33 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-10">
             <.inputs_for :let={item_field} field={@form[:items]}>
               <div class="bg-brand-2 rounded-lg p-5">
+                <div class="w-full flex items-center gap-3 mt-2">
+                  <%= if item_field[:id].value != nil do %>
+                    <.button
+                      type="button"
+                      phx-click={
+                        JS.push("delete_confirmation")
+                        |> show_modal("item_delete_confirmation")
+                      }
+                      phx-target={@myself}
+                      phx-value-id={item_field[:id].value}
+                      class="warning-btn w-full"
+                    >
+                      <.icon name="hero-trash-solid" class="w-4 h-4" /> Delete Property
+                    </.button>
+                  <% else %>
+                    <.button
+                      type="button"
+                      phx-click="delete_unsaved_item"
+                      phx-target={@myself}
+                      phx-value-index={item_field.index}
+                      class="warning-btn w-full"
+                    >
+                      <.icon name="hero-x-circle-solid" class="w-4 h-4" /> Remove Field
+                    </.button>
+                  <% end %>
+                </div>
+                 {item_field.index}
                 <.input
                   field={item_field[:item_code]}
                   type="text"
@@ -613,11 +686,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   @impl true
   def update(%{collection: collection} = assigns, socket) do
+    user = assigns.current_user
+
     type_options =
       assigns.collection_type
       |> Enum.map(fn type -> {type.label, type.id} end)
 
-    {original_collection, changeset} =
+    {original_collection, _changeset} =
       case assigns.action do
         :edit ->
           # Fetch fresh collection with preloads
@@ -628,13 +703,17 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           {coll, Catalog.change_collection(coll)}
 
         :new ->
+          params =
+            default_item_params(assigns.time_identifier, user.node_id || 20, "1")
+
           new_item = %Catalog.Item{
-            item_code: nil,
-            barcode: nil,
-            location: nil,
-            status: nil,
-            condition: nil,
-            availability: nil
+            item_code: params["item_code"],
+            inventory_code: params["inventory_code"],
+            barcode: params["barcode"],
+            location: params["location"],
+            status: params["status"],
+            condition: params["condition"],
+            availability: params["availability"]
           }
 
           collection =
@@ -687,11 +766,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign(:creator_input, nil)
      |> assign(:creator_list, assigns.creator_list)
      |> assign(:creator_suggestions, [])
-     |> assign(:step1_params, nil)
+     |> assign(:step2_params, nil)
+     |> assign(:step3_params, nil)
      |> assign(:type_options, type_options)
      |> assign(:uploaded_files, [])
      |> assign(:delete_confirmation_id, nil)
      |> assign(:chosen_collection_field, nil)
+     |> assign(:chosen_item_field, nil)
      |> assign(:property_search, "")
      |> assign(:filtered_properties, assigns.collection_properties)
      |> assign(:collection_has_more_than_one_item, false)
@@ -702,9 +783,24 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
        progress: &handle_progress/3
      )
      |> assign_new(:form, fn ->
-       to_form(changeset)
-     end)
-     |> assign(:form_params, %{"collection_fields" => seed_params, "items" => item_params})}
+       # Build form with all initial params
+       initial_params =
+         Map.merge(
+           %{"collection_fields" => seed_params, "items" => item_params},
+           %{
+             "title" => collection.title || "",
+             "description" => collection.description || "",
+             "status" => collection.status || "draft",
+             "access_level" => collection.access_level || "public",
+             "type_id" => collection.type_id || nil,
+             "unit_id" => collection.unit_id || nil,
+             "creator_id" => collection.creator_id || nil,
+             "thumbnail" => collection.thumbnail || ""
+           }
+         )
+
+       to_form(Catalog.change_collection(collection, initial_params))
+     end)}
   end
 
   @impl true
@@ -725,6 +821,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       |> assign(:creator_input, creator_input)
       |> assign(:creator_suggestions, suggestions)
       |> assign(:form, to_form(changeset, action: :validate))
+
+    dbg(socket.assigns.collection)
 
     {:noreply, socket}
   end
@@ -763,18 +861,26 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("next_step", _params, socket) do
-    params = socket.assigns.form.params
+    current_form_params = socket.assigns.form.params
 
     changeset =
-      Catalog.change_collection(socket.assigns.collection, params) |> Map.put(:action, :validate)
+      socket.assigns.collection
+      |> Catalog.change_collection(current_form_params)
+      |> Map.put(:action, :validate)
+
+    dbg(changeset)
 
     if changeset.valid? do
+      collection = Changeset.apply_changes(changeset)
+
       socket =
         socket
         |> assign(:step, socket.assigns.step + 1)
-        |> assign(:collection, Changeset.apply_changes(changeset))
+        |> assign(:collection, collection)
         |> assign(:changeset, changeset)
-        |> assign(:step1_params, params["collection_fields"])
+        |> assign(:form, to_form(changeset))
+        |> assign(:step2_params, current_form_params["collection_fields"] || %{})
+        |> assign(:step3_params, current_form_params["items"] || %{})
 
       {:noreply, socket}
     else
@@ -791,6 +897,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     socket =
       socket
       |> assign(:step, socket.assigns.step - 1)
+
+    dbg(socket.assigns.form)
 
     {:noreply, socket}
   end
@@ -811,6 +919,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, delete_existing_field(id, socket)}
   end
 
+  def handle_event("delete_unsaved_item", %{"index" => idx_str}, socket) do
+    {:noreply, delete_unsaved_item_at(idx_str, socket)}
+  end
+
+  def handle_event("delete_existing_item", %{"id" => id}, socket) do
+    {:noreply, delete_existing_item(id, socket)}
+  end
+
   def handle_event("delete_confirmation", %{"id" => id}, socket) do
     {:noreply, confirm_field_deletion(id, socket)}
   end
@@ -821,13 +937,15 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   def handle_event("save", params, socket) do
     collection = socket.assigns.collection
-    _collection_fields = socket.assigns.step1_params
+    collection_fields = socket.assigns.step2_params
+    items = socket.assigns.step3_params
     items_data = params["collection"]
 
     collection_params =
       collection
       |> Map.from_struct()
-      |> Map.put(:collection_fields, %{})
+      |> Map.put(:collection_fields, collection_fields)
+      |> Map.put(:items, items)
 
     dbg(collection_params)
     dbg(items_data)

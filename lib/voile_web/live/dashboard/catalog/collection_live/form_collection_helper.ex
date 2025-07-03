@@ -1,90 +1,120 @@
 defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
   use VoileWeb, :live_component
 
+  import Voile.Utils.ItemHelper
+
   alias Voile.Catalog
   alias Voile.Schema.Master
   alias Voile.Schema.Metadata
 
   def add_property_to_form(prop_id, socket) do
-    params =
-      case socket.assigns.form.params do
-        nil ->
-          socket.assigns.form_params
+    # Get current form params
+    current_params = socket.assigns.form.params || %{}
 
-        _ ->
-          Map.update(socket.assigns.form_params, "collection_fields", %{}, fn existing_fields ->
-            Map.merge(existing_fields, socket.assigns.form.params["collection_fields"] || %{})
-          end)
-      end
+    existing_items = current_params["items"] || %{}
 
-    raw_fields = Map.get(params, "collection_fields", %{})
-    existing = Map.values(raw_fields)
+    # Get current collection fields
+    current_fields = current_params["collection_fields"] || %{}
 
+    # Get property data
     property = Metadata.get_property!(prop_id)
 
+    # Determine next index
+    new_index = map_size(current_fields)
+
+    # Create new field
     new_field = %{
       "label" => property.label,
       "type_value" => property.type_value,
       "information" => property.information,
       "property_id" => property.id,
-      "name" => String.split(property.label, " ") |> Enum.join(""),
-      "value_lang" => nil,
+      "name" => String.split(property.label) |> Enum.join(""),
+      "value_lang" => "id",
       "value" => nil,
-      "sort_order" => length(existing) + 1
+      "sort_order" => new_index + 1
     }
 
-    updated_list = existing ++ [new_field]
+    # Add to existing fields
+    updated_fields = Map.put(current_fields, to_string(new_index), new_field)
 
-    dbg(updated_list)
+    # Create updated params with ALL existing data
+    new_params =
+      current_params
+      |> Map.put("collection_fields", updated_fields)
+      |> Map.put("items", existing_items)
 
-    updated_map =
-      updated_list
-      |> Enum.with_index()
-      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
-
-    new_params = Map.put(params, "collection_fields", updated_map)
-
+    # Create changeset and update socket
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
 
-    assign(socket, form: to_form(changeset, action: :validate))
+    dbg(changeset.data)
+
+    socket
+    |> assign(:form, to_form(changeset, action: :validate))
   end
 
   def add_item_to_form(socket) do
-    params =
-      case socket.assigns.form.params do
-        nil ->
-          socket.assigns.form_params
+    # Get current form params
+    current_params = socket.assigns.form.params || %{}
+    existing_fields = current_params["collection_fields"] || %{}
 
-        _ ->
-          Map.update(socket.assigns.form_params, "items", %{}, fn existing_items ->
-            Map.merge(existing_items, socket.assigns.form.params["items"] || %{})
-          end)
-      end
+    # Safely get collection data
+    collection = socket.assigns.collection || %{unit_id: nil, type_id: nil}
 
-    raw_items = Map.get(params, "items", %{})
-    existing = Map.values(raw_items)
+    # Safely get unit and type data
+    unit_data =
+      if collection.unit_id,
+        do: Voile.Schema.System.get_node!(collection.unit_id) || %{abbr: "UNK"},
+        else: %{abbr: "UNK"}
+
+    type_data =
+      if collection.type_id,
+        do: Voile.Schema.Metadata.get_resource_class!(collection.type_id) || %{local_name: "UNK"},
+        else: %{local_name: "UNK"}
+
+    # Get current items
+    current_items = current_params["items"] || %{}
+
+    # Generate new item
+    new_index = map_size(current_items)
 
     new_item = %{
-      "item_code" => nil,
-      "barcode" => nil,
-      "location" => nil,
-      "status" => nil,
-      "condition" => nil,
-      "availability" => nil
+      "item_code" =>
+        generate_item_code(
+          unit_data.abbr,
+          type_data.local_name,
+          socket.assigns.time_identifier,
+          to_string(new_index + 1)
+        ),
+      "inventory_code" =>
+        generate_inventory_code(
+          unit_data.abbr,
+          type_data.local_name,
+          to_string(new_index + 1)
+        ),
+      "barcode" => Ecto.UUID.generate(),
+      "location" => to_string(collection.unit_id),
+      "status" => "active",
+      "condition" => "new",
+      "availability" => "available"
     }
 
-    updated_list = existing ++ [new_item]
+    # Add new item
+    updated_items = Map.put(current_items, to_string(new_index), new_item)
 
-    updated_map =
-      updated_list
-      |> Enum.with_index()
-      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
+    dbg(updated_items)
 
-    new_params = Map.put(params, "items", updated_map)
+    new_params =
+      current_params
+      |> Map.put("items", updated_items)
+      |> Map.put("collection_fields", existing_fields)
+      |> Map.put("collection_has_more_than_one_item", "true")
 
-    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+    changeset = Voile.Catalog.Collection.changeset(socket.assigns.collection, new_params)
 
-    assign(socket, form: to_form(changeset, action: :validate))
+    assign(socket,
+      form: to_form(changeset, action: :validate),
+      collection_has_more_than_one_item: true
+    )
   end
 
   def assign_selected_creator(id, socket) do
@@ -140,70 +170,136 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
   end
 
   def delete_unsaved_field_at(index_str, socket) do
-    params =
-      case socket.assigns.form.params do
-        nil ->
-          socket.assigns.form_params
+    # Always start with current form parameters
+    current_params = socket.assigns.form.params || %{}
 
-        _ ->
-          Map.update(socket.assigns.form_params, "collection_fields", %{}, fn existing_fields ->
-            Map.merge(existing_fields, socket.assigns.form.params["collection_fields"] || %{})
-          end)
-      end
+    # Get current collection fields
+    current_fields = Map.get(current_params, "collection_fields", %{})
 
-    raw_fields = Map.get(params, "collection_fields", %{})
-    entries = Map.values(raw_fields)
+    # Convert to list while preserving order
+    sorted_entries =
+      current_fields
+      |> Enum.sort_by(fn {k, _} -> String.to_integer(k) end)
+      |> Enum.map(fn {_, v} -> v end)
+
+    # Convert index to integer
     index = String.to_integer(index_str)
 
-    new_list = List.delete_at(entries, index)
+    # Delete the entry at the given index
+    new_list = List.delete_at(sorted_entries, index)
 
-    new_map =
+    # Reindex and convert back to map
+    new_fields =
       new_list
       |> Enum.with_index()
-      |> Enum.into(%{}, fn {entry, i} -> {to_string(i), entry} end)
+      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
 
-    new_params = Map.put(params, "collection_fields", new_map)
+    # Create updated params with all existing data
+    new_params = Map.put(current_params, "collection_fields", new_fields)
+
+    # Create changeset with only the parameters (not the form struct)
+    changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+
+    assign(socket, form: to_form(changeset, action: :validate))
+  end
+
+  def delete_unsaved_item_at(index_str, socket) do
+    current_params = socket.assigns.form.params || %{}
+    current_items = Map.get(current_params, "items", %{})
+
+    sorted_entries =
+      current_items
+      |> Enum.sort_by(fn {k, _} -> String.to_integer(k) end)
+      |> Enum.map(fn {_, v} -> v end)
+
+    index = String.to_integer(index_str)
+    new_list = List.delete_at(sorted_entries, index)
+
+    new_items =
+      new_list
+      |> Enum.with_index()
+      |> Enum.into(%{}, fn {entry, idx} -> {to_string(idx), entry} end)
+
+    new_params = Map.put(current_params, "items", new_items)
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
 
     assign(socket, form: to_form(changeset, action: :validate))
   end
 
   def delete_existing_field(id, socket) do
-    # Attempt to fetch and delete the collection field
+    # Try to fetch the collection field
     case Catalog.get_collection_field!(id) do
-      nil -> :ok
-      collection_field -> Catalog.delete_collection_field(collection_field)
+      nil ->
+        # Field not found, return unchanged socket
+        socket
+
+      field ->
+        # Delete the field from database
+        case Catalog.delete_collection_field(field) do
+          {:ok, _} ->
+            # Get current form params
+            current_params = socket.assigns.form.params || %{}
+
+            # Get current collection fields
+            current_fields = Map.get(current_params, "collection_fields", %{})
+
+            # Remove the deleted field from form state
+            updated_fields =
+              current_fields
+              |> Enum.reject(fn {_, field_data} ->
+                field_data["id"] == id || field_data[:id] == id
+              end)
+              |> Enum.with_index()
+              |> Enum.into(%{}, fn {field_data, idx} -> {to_string(idx), field_data} end)
+
+            # Create updated params preserving all other data
+            new_params = Map.put(current_params, "collection_fields", updated_fields)
+
+            # Create changeset with updated params
+            changeset = Catalog.change_collection(socket.assigns.collection, new_params)
+
+            # Update socket without reloading collection
+            socket
+            |> assign(:form, to_form(changeset, action: :validate))
+
+          {:error, _} ->
+            # Deletion failed, show error
+            socket
+            |> put_flash(:error, "Could not delete field")
+        end
     end
+  end
 
-    # Refresh the collection with preloaded collection_fields
-    updated_collection =
-      Catalog.get_collection!(socket.assigns.collection.id)
-      |> Voile.Repo.preload(:collection_fields)
+  def delete_existing_item(id, socket) do
+    case Catalog.get_item!(id) do
+      nil ->
+        socket
 
-    # Reconstruct the collection_fields param map
-    updated_fields =
-      updated_collection.collection_fields
-      |> Enum.with_index()
-      |> Enum.into(%{}, fn {field, idx} ->
-        {to_string(idx),
-         %{
-           "id" => field.id,
-           "label" => field.label,
-           "value_lang" => field.value_lang,
-           "value" => field.value,
-           "sort_order" => field.sort_order
-         }}
-      end)
+      item ->
+        case Catalog.delete_item(item) do
+          {:ok, _} ->
+            current_params = socket.assigns.form.params || %{}
+            current_items = Map.get(current_params, "items", %{})
 
-    new_params =
-      Map.put(socket.assigns.form.params || %{}, "collection_fields", updated_fields)
+            updated_items =
+              current_items
+              |> Enum.reject(fn {_, item_data} ->
+                item_data["id"] == id || item_data[:id] == id
+              end)
+              |> Enum.with_index()
+              |> Enum.into(%{}, fn {item_data, idx} -> {to_string(idx), item_data} end)
 
-    changeset = Catalog.change_collection(updated_collection, new_params)
+            new_params = Map.put(current_params, "items", updated_items)
+            changeset = Catalog.change_collection(socket.assigns.collection, new_params)
 
-    socket
-    |> assign(:collection, updated_collection)
-    |> assign(:form, to_form(changeset, action: :validate))
-    |> assign(:form_params, new_params)
+            socket
+            |> assign(:form, to_form(changeset, action: :validate))
+
+          {:error, _} ->
+            socket
+            |> put_flash(:error, "Could not delete item")
+        end
+    end
   end
 
   def confirm_field_deletion(id, socket) do
@@ -212,6 +308,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
     socket
     |> assign(:delete_confirmation_id, id)
     |> assign(:chosen_collection_field, chosen_collection_field)
+  end
+
+  def confirm_item_deletion(id, socket) do
+    chosen_item = Catalog.get_item!(id)
+
+    socket
+    |> assign(:delete_confirmation_id, id)
+    |> assign(:chosen_item, chosen_item)
   end
 
   def search_properties(query, socket) do

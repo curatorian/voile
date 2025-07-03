@@ -20,8 +20,8 @@ defmodule Voile.Catalog.Collection do
     belongs_to :resource_template, ResourceTemplate, foreign_key: :template_id
     belongs_to :mst_creator, Creator, foreign_key: :creator_id
     belongs_to :node, Node, foreign_key: :unit_id
-    has_many :collection_fields, CollectionField, on_replace: :nilify
-    has_many :items, Voile.Catalog.Item, on_replace: :nilify
+    has_many :collection_fields, CollectionField, on_replace: :delete
+    has_many :items, Voile.Catalog.Item, on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
