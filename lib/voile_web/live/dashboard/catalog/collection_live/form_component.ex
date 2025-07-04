@@ -147,6 +147,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             label="Creator"
             disabled={@creator_input != "" and @collection.creator_id !== nil}
             required_value={true}
+            autocomplete="off"
           />
           <%= if @creator_input != "" and @creator_suggestions != [] and @form[:creator_id] != nil and @collection.creator_id == nil do %>
             <ul class="absolute z-10 bg-white border -mt-4 rounded shadow max-h-64 overflow-y-auto max-w-full">
@@ -868,7 +869,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       |> Catalog.change_collection(current_form_params)
       |> Map.put(:action, :validate)
 
-    dbg(changeset)
+    dbg(socket.assigns.form)
 
     if changeset.valid? do
       collection = Changeset.apply_changes(changeset)

@@ -107,7 +107,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
       current_params
       |> Map.put("items", updated_items)
       |> Map.put("collection_fields", existing_fields)
-      |> Map.put("collection_has_more_than_one_item", "true")
 
     changeset = Voile.Catalog.Collection.changeset(socket.assigns.collection, new_params)
 
