@@ -46,7 +46,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
     # Create changeset and update socket
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
 
-    dbg(changeset.data)
+    dbg(new_params)
 
     socket
     |> assign(:form, to_form(changeset, action: :validate))
@@ -78,6 +78,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
     new_index = map_size(current_items)
 
     new_item = %{
+      "id" => Ecto.UUID.generate(),
       "item_code" =>
         generate_item_code(
           unit_data.abbr,
@@ -124,6 +125,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
         |> assign(:creator_suggestions, [])
 
       selected ->
+        # Get current form params
+        current_params = socket.assigns.form.params || %{}
+        # Update form params with selected creator_id
+        updated_params = Map.put(current_params, "creator_id", selected.id |> to_string())
+        # Create updated changeset
+        changeset = Voile.Catalog.change_collection(socket.assigns.collection, updated_params)
+
         socket
         |> assign(:creator_input, selected.creator_name)
         |> assign(:creator_suggestions, [])
@@ -131,6 +139,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
           socket.assigns.collection
           | creator_id: selected.id
         })
+        |> assign(:form, to_form(changeset, action: :validate))
     end
   end
 

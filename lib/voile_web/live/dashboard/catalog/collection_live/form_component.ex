@@ -547,21 +547,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             <h5>The Items Data</h5>
             
             <div class="flex items-center gap-5">
-              <.input
-                field={@form[:collection_has_more_than_one_item]}
-                type="checkbox"
-                label="Does this collection have more than one item?"
-              />
-              <%= if @form[:collection_has_more_than_one_item].value == "true" do %>
-                <.button
-                  type="button"
-                  phx-click="add_item_data"
-                  phx-target={@myself}
-                  class="primary-btn"
-                >
-                  <.icon name="hero-plus-circle-solid" class="w-4 h-4" /> Add Item Data
-                </.button>
-              <% end %>
+              <.button
+                type="button"
+                phx-click="add_item_data"
+                phx-target={@myself}
+                class="primary-btn"
+              >
+                <.icon name="hero-plus-circle-solid" class="w-4 h-4" /> Add Item Data
+              </.button>
             </div>
           </div>
           
@@ -707,7 +700,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           params =
             default_item_params(assigns.time_identifier, user.node_id || 20, "1")
 
-          new_item = %Catalog.Item{
+          new_item = %{
             item_code: params["item_code"],
             inventory_code: params["inventory_code"],
             barcode: params["barcode"],
@@ -717,13 +710,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             availability: params["availability"]
           }
 
-          collection =
-            Catalog.change_collection(%Catalog.Collection{
-              items: [new_item],
-              collection_fields: []
+          coll =
+            collection
+            |> Catalog.change_collection(%{
+              items: [new_item]
             })
 
-          {nil, collection}
+          {nil, coll}
       end
 
     seed_source = if assigns.action == :edit, do: original_collection, else: collection
@@ -776,7 +769,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
      |> assign(:chosen_item_field, nil)
      |> assign(:property_search, "")
      |> assign(:filtered_properties, assigns.collection_properties)
-     |> assign(:collection_has_more_than_one_item, false)
      |> allow_upload(:thumbnail,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
@@ -823,7 +815,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       |> assign(:creator_suggestions, suggestions)
       |> assign(:form, to_form(changeset, action: :validate))
 
-    dbg(socket.assigns.collection)
+    dbg(changeset.data)
 
     {:noreply, socket}
   end
@@ -868,8 +860,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       socket.assigns.collection
       |> Catalog.change_collection(current_form_params)
       |> Map.put(:action, :validate)
-
-    dbg(socket.assigns.form)
 
     if changeset.valid? do
       collection = Changeset.apply_changes(changeset)
