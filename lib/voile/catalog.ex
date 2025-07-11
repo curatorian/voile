@@ -217,6 +217,31 @@ defmodule Voile.Catalog do
   """
   def get_item!(id), do: Repo.get!(Item, id)
 
+  def list_items_paginated(page \\ 1, per_page \\ 10) do
+    offset = (page - 1) * per_page
+
+    query =
+      from i in Item,
+        preload: [
+          :resource_class,
+          :resource_template,
+          :mst_creator,
+          :node,
+          :collection_fields,
+          :items
+        ],
+        order_by: [desc: i.inserted_at],
+        limit: ^per_page,
+        offset: ^offset
+
+    items = Repo.all(query)
+
+    total_count = Repo.aggregate(Item, :count, :id)
+    total_pages = div(total_count + per_page - 1, per_page)
+
+    {items, total_pages}
+  end
+
   @doc """
   Creates a item.
 

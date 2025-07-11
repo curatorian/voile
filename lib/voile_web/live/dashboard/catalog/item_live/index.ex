@@ -6,7 +6,18 @@ defmodule VoileWeb.Dashboard.Catalog.ItemLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :items, Catalog.list_items())}
+    page = 1
+    per_page = 10
+    {items, total_pages} = Catalog.list_items_paginated(page, per_page)
+
+    socket =
+      socket
+      |> stream(:items, items)
+      |> assign(:page_title, "Listing Items")
+      |> assign(:page, page)
+      |> assign(:total_pages, total_pages)
+
+    {:ok, socket}
   end
 
   @impl true
