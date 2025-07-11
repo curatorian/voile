@@ -46,8 +46,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
     # Create changeset and update socket
     changeset = Catalog.change_collection(socket.assigns.collection, new_params)
 
-    dbg(new_params)
-
     socket
     |> assign(:form, to_form(changeset, action: :validate))
   end
@@ -78,7 +76,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
     new_index = map_size(current_items)
 
     new_item = %{
-      "id" => Ecto.UUID.generate(),
       "item_code" =>
         generate_item_code(
           unit_data.abbr,
@@ -101,8 +98,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
 
     # Add new item
     updated_items = Map.put(current_items, to_string(new_index), new_item)
-
-    dbg(updated_items)
 
     new_params =
       current_params
@@ -148,6 +143,13 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
       {:ok, new_creator} ->
         updated_creator_list = [new_creator | socket.assigns.creator_list]
 
+        # Get current form params
+        current_params = socket.assigns.form.params || %{}
+        # Update form params with selected creator_id
+        updated_params = Map.put(current_params, "creator_id", new_creator.id |> to_string())
+        # Create updated changeset
+        changeset = Catalog.change_collection(socket.assigns.collection, updated_params)
+
         socket =
           socket
           |> assign(:creator_input, new_creator.creator_name)
@@ -157,6 +159,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
             socket.assigns.collection
             | creator_id: new_creator.id
           })
+          |> assign(:form, to_form(changeset, action: :validate))
 
         {:ok, socket}
 
@@ -353,12 +356,21 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
   def handle_thumbnail_progress(:thumbnail, entry, socket) do
     if entry.done? do
       # Delete old thumbnail if exists
+      dbg(socket.assigns.form.params["thumbnail"])
+
       if socket.assigns.form.params["thumbnail"] do
         old_file = Path.basename(socket.assigns.form.params["thumbnail"])
         old_path = Path.join([:code.priv_dir(:voile), "static", "uploads", "thumbnail", old_file])
 
         if File.exists?(old_path) do
-          File.rm!(old_path)
+          case File.rm(old_path) do
+            :ok ->
+              IO.puts("Successfully deleted old thumbnail: #{old_path}")
+
+            {:error, reason} ->
+              IO.puts("Could not delete old thumbnail #{old_path}: #{inspect(reason)}")
+              # Continue execution even if deletion fails
+          end
         end
       end
 
@@ -376,17 +388,31 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
               file_name
             ])
 
-          File.cp!(path, dest)
-          {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
+          case File.cp(path, dest) do
+            :ok ->
+              {:ok, "/uploads/thumbnail/#{Path.basename(dest)}"}
+
+            {:error, reason} ->
+              IO.puts("Failed to copy thumbnail file: #{inspect(reason)}")
+              {:error, "Failed to upload thumbnail"}
+          end
         end)
 
-      form_params = Map.put(socket.assigns.form.params || %{}, "thumbnail", url)
-      changeset = Catalog.change_collection(socket.assigns.collection, form_params)
+      case url do
+        {:error, error_message} ->
+          {:noreply,
+           socket
+           |> put_flash(:error, error_message)}
 
-      {:noreply,
-       socket
-       |> assign(:form, to_form(changeset))
-       |> assign(:collection, Ecto.Changeset.apply_changes(changeset))}
+        url when is_binary(url) ->
+          form_params = Map.put(socket.assigns.form.params || %{}, "thumbnail", url)
+          changeset = Catalog.change_collection(socket.assigns.collection, form_params)
+
+          {:noreply,
+           socket
+           |> assign(:form, to_form(changeset))
+           |> assign(:collection, Ecto.Changeset.apply_changes(changeset))}
+      end
     else
       {:noreply, socket}
     end

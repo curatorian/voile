@@ -77,7 +77,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
         {VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent, {:saved, collection}},
         socket
       ) do
-    {:noreply, stream_insert(socket, :collections, collection)}
+    {:noreply, stream_insert(socket, :collections, collection, at: 0)}
   end
 
   @impl true

@@ -4,7 +4,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   alias Voile.Catalog
   alias Ecto.Changeset
 
-  import Voile.Utils.ItemHelper
   import VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper
 
   @impl true
@@ -180,7 +179,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           <% end %>
           
           <%= if @collection.creator_id != nil do %>
-            <.button phx-click="delete_creator" phx-target={@myself}>
+            <.button type="button" phx-click="delete_creator" phx-target={@myself}>
               Delete Author
             </.button>
           <% end %>
@@ -543,7 +542,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         <% end %>
         
         <%= if @step == 3 do %>
-          <div>
+          <div class="flex items-center justify-between mb-5">
             <h5>The Items Data</h5>
             
             <div class="flex items-center gap-5">
@@ -558,99 +557,107 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
             </div>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-10">
-            <.inputs_for :let={item_field} field={@form[:items]}>
-              <div class="bg-brand-2 rounded-lg p-5">
-                <div class="w-full flex items-center gap-3 mt-2">
-                  <%= if item_field[:id].value != nil do %>
-                    <.button
-                      type="button"
-                      phx-click={
-                        JS.push("delete_confirmation")
-                        |> show_modal("item_delete_confirmation")
-                      }
-                      phx-target={@myself}
-                      phx-value-id={item_field[:id].value}
-                      class="warning-btn w-full"
-                    >
-                      <.icon name="hero-trash-solid" class="w-4 h-4" /> Delete Property
-                    </.button>
-                  <% else %>
-                    <.button
-                      type="button"
-                      phx-click="delete_unsaved_item"
-                      phx-target={@myself}
-                      phx-value-index={item_field.index}
-                      class="warning-btn w-full"
-                    >
-                      <.icon name="hero-x-circle-solid" class="w-4 h-4" /> Remove Field
-                    </.button>
-                  <% end %>
-                </div>
-                 {item_field.index}
-                <.input
-                  field={item_field[:item_code]}
-                  type="text"
-                  label="Item Code"
-                  required_value={true}
-                />
-                <.input
-                  field={item_field[:inventory_code]}
-                  type="text"
-                  label="Inventory Code"
-                  required_value={true}
-                />
-                <.input
-                  field={item_field[:barcode]}
-                  type="text"
-                  label="Barcode"
-                  required_value={true}
-                />
-                <.input
-                  field={item_field[:location]}
-                  type="select"
-                  label="Location"
-                  required_value={true}
-                  options={Enum.map(@node_list, fn node -> {node.name, node.id} end)}
-                />
-                <.input
-                  field={item_field[:status]}
-                  type="select"
-                  label="Status"
-                  required_value={true}
-                  options={[
-                    {"Active", "active"},
-                    {"Inactive", "inactive"},
-                    {"Lost", "lost"},
-                    {"Damaged", "damaged"}
-                  ]}
-                />
-                <.input
-                  field={item_field[:condition]}
-                  type="select"
-                  label="Condition"
-                  required_value={true}
-                  options={[
-                    {"New", "new"},
-                    {"Good", "good"},
-                    {"Fair", "fair"},
-                    {"Poor", "poor"}
-                  ]}
-                />
-                <.input
-                  field={item_field[:availability]}
-                  type="select"
-                  label="Availability"
-                  required_value={true}
-                  options={[
-                    {"Available", "available"},
-                    {"Checked Out", "checked_out"},
-                    {"Reserved", "reserved"},
-                    {"Maintenance", "maintenance"}
-                  ]}
-                />
+          <div class="">
+            <%= if @form[:items] == nil or Enum.empty?(@form[:items].value || []) do %>
+              <p class="text-red-500 text-sm mt-2">
+                No items is added yet. Create at least 1 item for each collection.
+              </p>
+            <% else %>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-10">
+                <.inputs_for :let={item_field} field={@form[:items]}>
+                  <div class="bg-brand-2 rounded-lg p-5">
+                    <div class="w-full flex items-center gap-3 mt-2">
+                      <%= if item_field[:id].value != nil do %>
+                        <.button
+                          type="button"
+                          phx-click={
+                            JS.push("delete_confirmation")
+                            |> show_modal("item_delete_confirmation")
+                          }
+                          phx-target={@myself}
+                          phx-value-id={item_field[:id].value}
+                          class="warning-btn w-full"
+                        >
+                          <.icon name="hero-trash-solid" class="w-4 h-4" /> Delete Property
+                        </.button>
+                      <% else %>
+                        <.button
+                          type="button"
+                          phx-click="delete_unsaved_item"
+                          phx-target={@myself}
+                          phx-value-index={item_field.index}
+                          class="warning-btn w-full"
+                        >
+                          <.icon name="hero-x-circle-solid" class="w-4 h-4" /> Remove Field
+                        </.button>
+                      <% end %>
+                    </div>
+                     {item_field.index}
+                    <.input
+                      field={item_field[:item_code]}
+                      type="text"
+                      label="Item Code"
+                      required_value={true}
+                    />
+                    <.input
+                      field={item_field[:inventory_code]}
+                      type="text"
+                      label="Inventory Code"
+                      required_value={true}
+                    />
+                    <.input
+                      field={item_field[:barcode]}
+                      type="text"
+                      label="Barcode"
+                      required_value={true}
+                    />
+                    <.input
+                      field={item_field[:location]}
+                      type="select"
+                      label="Location"
+                      required_value={true}
+                      options={Enum.map(@node_list, fn node -> {node.name, node.id} end)}
+                    />
+                    <.input
+                      field={item_field[:status]}
+                      type="select"
+                      label="Status"
+                      required_value={true}
+                      options={[
+                        {"Active", "active"},
+                        {"Inactive", "inactive"},
+                        {"Lost", "lost"},
+                        {"Damaged", "damaged"}
+                      ]}
+                    />
+                    <.input
+                      field={item_field[:condition]}
+                      type="select"
+                      label="Condition"
+                      required_value={true}
+                      options={[
+                        {"New", "new"},
+                        {"Good", "good"},
+                        {"Fair", "fair"},
+                        {"Poor", "poor"}
+                      ]}
+                    />
+                    <.input
+                      field={item_field[:availability]}
+                      type="select"
+                      label="Availability"
+                      required_value={true}
+                      options={[
+                        {"Available", "available"},
+                        {"Checked Out", "checked_out"},
+                        {"Reserved", "reserved"},
+                        {"Maintenance", "maintenance"}
+                      ]}
+                    />
+                  </div>
+                </.inputs_for>
               </div>
-            </.inputs_for>
+            <% end %>
           </div>
         <% end %>
         
@@ -680,8 +687,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
 
   @impl true
   def update(%{collection: collection} = assigns, socket) do
-    user = assigns.current_user
-
     type_options =
       assigns.collection_type
       |> Enum.map(fn type -> {type.label, type.id} end)
@@ -697,24 +702,9 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
           {coll, Catalog.change_collection(coll)}
 
         :new ->
-          params =
-            default_item_params(assigns.time_identifier, user.node_id || 20, "1")
-
-          new_item = %{
-            item_code: params["item_code"],
-            inventory_code: params["inventory_code"],
-            barcode: params["barcode"],
-            location: params["location"],
-            status: params["status"],
-            condition: params["condition"],
-            availability: params["availability"]
-          }
-
           coll =
             collection
-            |> Catalog.change_collection(%{
-              items: [new_item]
-            })
+            |> Catalog.change_collection(%{})
 
           {nil, coll}
       end
@@ -807,7 +797,11 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         String.contains?(String.downcase(creator.creator_name), String.downcase(creator_input))
       end)
 
-    changeset = Catalog.change_collection(socket.assigns.collection, collection_params)
+    current_params = socket.assigns.form.params || %{}
+    updated_params = Map.merge(current_params, collection_params)
+
+    changeset =
+      Catalog.change_collection(socket.assigns.collection, updated_params)
 
     socket =
       socket
@@ -815,16 +809,15 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
       |> assign(:creator_suggestions, suggestions)
       |> assign(:form, to_form(changeset, action: :validate))
 
-    dbg(changeset.data)
-
     {:noreply, socket}
   end
 
   def handle_event("validate", %{"collection" => collection_params}, socket) do
+    current_params = socket.assigns.form.params || %{}
+    updated_params = Map.merge(current_params, collection_params)
+
     changeset =
-      socket.assigns.collection
-      |> Catalog.change_collection(collection_params)
-      |> Map.put(:action, :validate)
+      Catalog.change_collection(socket.assigns.collection, updated_params)
 
     socket =
       socket
@@ -854,11 +847,11 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
   end
 
   def handle_event("next_step", _params, socket) do
-    current_form_params = socket.assigns.form.params
+    current_params = socket.assigns.form.params
 
     changeset =
       socket.assigns.collection
-      |> Catalog.change_collection(current_form_params)
+      |> Catalog.change_collection(current_params)
       |> Map.put(:action, :validate)
 
     if changeset.valid? do
@@ -870,8 +863,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         |> assign(:collection, collection)
         |> assign(:changeset, changeset)
         |> assign(:form, to_form(changeset))
-        |> assign(:step2_params, current_form_params["collection_fields"] || %{})
-        |> assign(:step3_params, current_form_params["items"] || %{})
 
       {:noreply, socket}
     else
@@ -888,8 +879,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     socket =
       socket
       |> assign(:step, socket.assigns.step - 1)
-
-    dbg(socket.assigns.form)
 
     {:noreply, socket}
   end
@@ -926,23 +915,36 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
     {:noreply, search_properties(query, socket)}
   end
 
-  def handle_event("save", params, socket) do
-    collection = socket.assigns.collection
-    collection_fields = socket.assigns.step2_params
-    items = socket.assigns.step3_params
-    items_data = params["collection"]
+  def handle_event("save", _params, socket) do
+    collection_params = socket.assigns.form.params
 
-    collection_params =
-      collection
-      |> Map.from_struct()
-      |> Map.put(:collection_fields, collection_fields)
-      |> Map.put(:items, items)
+    cond do
+      # Check if collection fields are empty
+      is_nil(collection_params["collection_fields"]) ||
+        collection_params["collection_fields"] == %{} ||
+          Enum.empty?(collection_params["collection_fields"]) ->
+        {:noreply,
+         socket
+         |> clear_flash(:error)
+         |> assign(:step, 2)
+         |> put_flash(:error, "Please add at least one collection property.")
+         |> assign(:form, to_form(socket.assigns.form, action: :validate))}
 
-    dbg(collection_params)
-    dbg(items_data)
+      # Check if items are empty
+      is_nil(collection_params["items"]) ||
+        collection_params["items"] == %{} ||
+          Enum.empty?(collection_params["items"]) ->
+        {:noreply,
+         socket
+         |> clear_flash(:error)
+         |> assign(:step, 3)
+         |> put_flash(:error, "Please add at least one item to the collection.")
+         |> assign(:form, to_form(socket.assigns.form, action: :validate))}
 
-    {:noreply, socket}
-    # save_collection(socket, socket.assigns.action, collection_params)
+      # Proceed with save if all checks pass
+      true ->
+        save_collection(socket, socket.assigns.action, collection_params)
+    end
   end
 
   def handle_event("delete_thumbnail", %{"thumbnail" => thumbnail_path}, socket) do
