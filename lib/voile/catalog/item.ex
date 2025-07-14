@@ -2,6 +2,7 @@ defmodule Voile.Catalog.Item do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Voile.Schema.System.Node
   alias Voile.Catalog.Collection
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -14,6 +15,7 @@ defmodule Voile.Catalog.Item do
     field :condition, :string
     field :availability, :string
     belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
+    belongs_to :unit, Node, on_replace: :nilify
 
     timestamps(type: :utc_datetime)
   end
@@ -33,7 +35,8 @@ defmodule Voile.Catalog.Item do
       :status,
       :condition,
       :availability,
-      :collection_id
+      :collection_id,
+      :unit_id
     ])
     |> validate_required([
       :item_code,

@@ -215,7 +215,11 @@ defmodule Voile.Catalog do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id)
+  def get_item!(id) do
+    Item
+    |> Repo.get!(id)
+    |> Repo.preload([:collection, :node])
+  end
 
   def list_items_paginated(page \\ 1, per_page \\ 10) do
     offset = (page - 1) * per_page
@@ -223,12 +227,8 @@ defmodule Voile.Catalog do
     query =
       from i in Item,
         preload: [
-          :resource_class,
-          :resource_template,
-          :mst_creator,
-          :node,
-          :collection_fields,
-          :items
+          :collection,
+          :node
         ],
         order_by: [desc: i.inserted_at],
         limit: ^per_page,
