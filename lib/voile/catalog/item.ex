@@ -11,11 +11,10 @@ defmodule Voile.Catalog.Item do
     field :location, :string
     field :item_code, :string
     field :inventory_code, :string
-    field :barcode, :string
     field :condition, :string
     field :availability, :string
     belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
-    belongs_to :unit, Node, on_replace: :nilify
+    belongs_to :node, Node, foreign_key: :unit_id
 
     timestamps(type: :utc_datetime)
   end
@@ -30,7 +29,6 @@ defmodule Voile.Catalog.Item do
     |> cast(attrs, [
       :item_code,
       :inventory_code,
-      :barcode,
       :location,
       :status,
       :condition,
@@ -41,13 +39,11 @@ defmodule Voile.Catalog.Item do
     |> validate_required([
       :item_code,
       :inventory_code,
-      :barcode,
       :location,
       :status,
       :condition,
       :availability
     ])
-    |> unique_constraint(:barcode)
     |> unique_constraint(:item_code)
     |> unique_constraint(:inventory_code)
     |> validate_inclusion(:status, @statuses)

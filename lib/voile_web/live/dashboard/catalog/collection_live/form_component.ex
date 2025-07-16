@@ -121,6 +121,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
         phx-submit="save"
       >
         <%= if @step == 1 do %>
+          <.input field={@form[:id]} type="hidden" />
           <.input
             field={@form[:type_id]}
             label="Collection Type"
@@ -606,17 +607,18 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
                       required_value={true}
                     />
                     <.input
-                      field={item_field[:barcode]}
+                      field={item_field[:location]}
                       type="text"
-                      label="Barcode"
+                      label="Location"
                       required_value={true}
                     />
                     <.input
-                      field={item_field[:location]}
+                      field={item_field[:unit_id]}
                       type="select"
-                      label="Location"
+                      label="Unit Location"
                       required_value={true}
                       options={Enum.map(@node_list, fn node -> {node.name, node.id} end)}
+                      disabled={true}
                     />
                     <.input
                       field={item_field[:status]}
@@ -735,8 +737,8 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          %{
            "item_code" => item.item_code,
            "inventory_code" => item.inventory_code,
-           "barcode" => item.barcode,
            "location" => item.location,
+           "unit_id" => item.unit_id,
            "status" => item.status,
            "condition" => item.condition,
            "availability" => item.availability
@@ -771,6 +773,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormComponent do
          Map.merge(
            %{"collection_fields" => seed_params, "items" => item_params},
            %{
+             "id" => collection.id || Ecto.UUID.generate(),
              "title" => collection.title || "",
              "description" => collection.description || "",
              "status" => collection.status || "draft",

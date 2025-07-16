@@ -2,20 +2,15 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Voile.Schema.Accounts.User
-  alias Voile.Schema.Metadata.Property
   alias Voile.Schema.Metadata.ResourceTemplate
+  alias Voile.Schema.Metadata.Property
 
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "resource_template_property" do
     field :position, :integer
-    field :data_type, {:array, :string}
-    field :alternate_label, :string
-    field :alternate_information, :string
-    field :is_required, :boolean, default: false
-    field :permission, :string
-    belongs_to :owner, User
+    field :override_label, :string
+    belongs_to :resource_template, ResourceTemplate, foreign_key: :template_id
     belongs_to :property, Property
-    belongs_to :resource_template, ResourceTemplate
 
     timestamps(type: :utc_datetime)
   end
@@ -24,20 +19,15 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   def changeset(resource_template_property, attrs) do
     resource_template_property
     |> cast(attrs, [
-      :alternate_label,
-      :alternate_information,
       :position,
-      :data_type,
-      :is_required,
-      :permission
+      :override_label,
+      :property_id,
+      :template_id
     ])
     |> validate_required([
-      :alternate_label,
-      :alternate_information,
+      :override_label,
       :position,
-      :data_type,
-      :is_required,
-      :permission
+      :property_id
     ])
   end
 end

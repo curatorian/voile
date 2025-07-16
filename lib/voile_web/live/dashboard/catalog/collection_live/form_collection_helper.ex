@@ -57,6 +57,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
 
     # Safely get collection data
     collection = socket.assigns.collection || %{unit_id: nil, type_id: nil}
+    collection_id = socket.assigns.form.params["id"]
 
     # Safely get unit and type data
     unit_data =
@@ -66,8 +67,12 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
 
     type_data =
       if collection.type_id,
-        do: Voile.Schema.Metadata.get_resource_class!(collection.type_id) || %{local_name: "UNK"},
+        do: Metadata.get_resource_class!(collection.type_id) || %{local_name: "UNK"},
         else: %{local_name: "UNK"}
+
+    dbg(
+      "Adding item to form with collection_id: #{collection_id}, unit: #{unit_data.abbr}, type: #{type_data.local_name}"
+    )
 
     # Get current items
     current_items = current_params["items"] || %{}
@@ -80,6 +85,7 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
         generate_item_code(
           unit_data.abbr,
           type_data.local_name,
+          collection_id,
           socket.assigns.time_identifier,
           to_string(new_index + 1)
         ),
@@ -87,13 +93,14 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.FormCollectionHelper do
         generate_inventory_code(
           unit_data.abbr,
           type_data.local_name,
+          collection.title,
           to_string(new_index + 1)
         ),
-      "barcode" => Ecto.UUID.generate(),
-      "location" => to_string(collection.unit_id),
+      "location" => unit_data.name,
       "status" => "active",
       "condition" => "new",
-      "availability" => "available"
+      "availability" => "available",
+      "unit_id" => collection.unit_id
     }
 
     # Add new item

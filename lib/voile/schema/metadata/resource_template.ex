@@ -4,13 +4,18 @@ defmodule Voile.Schema.Metadata.ResourceTemplate do
 
   alias Voile.Schema.Accounts.User
   alias Voile.Schema.Metadata.ResourceClass
-  alias Voile.Schema.Metadata.Property
+  alias Voile.Schema.Metadata.ResourceTemplateProperty
 
   schema "resource_template" do
     field :label, :string
-    belongs_to :owner, User
+    field :description, :string
+    belongs_to :owner, User, type: :binary_id
     belongs_to :resource_class, ResourceClass
-    belongs_to :property, Property
+
+    has_many :template_properties,
+             ResourceTemplateProperty,
+             foreign_key: :template_id,
+             on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end

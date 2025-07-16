@@ -9,7 +9,7 @@ defmodule Voile.Catalog.Collection do
   alias Voile.Catalog.CollectionField
   alias Voile.Catalog.Item
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: false}
   schema "collections" do
     field :status, :string
     field :description, :string
@@ -33,6 +33,7 @@ defmodule Voile.Catalog.Collection do
   def changeset(collection, attrs) do
     collection
     |> cast(attrs, [
+      :id,
       :title,
       :description,
       :thumbnail,

@@ -6,7 +6,6 @@ defmodule Voile.Repo.Migrations.CreateItems do
       add :id, :binary_id, primary_key: true, null: false
       add :item_code, :string
       add :inventory_code, :string
-      add :barcode, :string
       add :location, :string
       add :status, :string
       add :condition, :string
