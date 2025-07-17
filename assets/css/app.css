@@ -52,6 +52,10 @@ h6 {
   @apply text-xl;
 }
 
+.default-input {
+  @apply w-full p-3 text-sm rounded-md border border-gray-300 focus:border-blue-500 focus:outline-none;
+}
+
 .voile-gradient {
   @apply bg-gradient-to-br from-violet-400 via-violet-700 to-violet-400;
 }

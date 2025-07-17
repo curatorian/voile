@@ -21,6 +21,7 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
+import DragDrop from "./hooks/sortable";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -28,6 +29,9 @@ let csrfToken = document
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
+  hooks: {
+    DragDrop, // Register the DragDrop hook for sortable functionality
+  },
 });
 
 let header = document.getElementById("navigationHeader");

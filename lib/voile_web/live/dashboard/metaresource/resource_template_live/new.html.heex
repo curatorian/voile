@@ -1,0 +1,140 @@
+<div class="max-w-4xl mx-auto px-6 py-12">
+  <h1 class="text-2xl font-bold mb-6">Create New Resource Template</h1>
+  
+  <.form :let={f} for={@form} phx-submit="save" class="space-y-6">
+    <!-- Template Name -->
+    <div>
+      <.label>Template Name</.label>
+      
+      <.input
+        field={f[:label]}
+        type="text"
+        label="Label"
+        placeholder="e.g., Book Template"
+        required_value={true}
+      />
+      <.input
+        field={f[:description]}
+        type="textarea"
+        label="Description"
+        placeholder="Description (optional)"
+        required_value={false}
+      />
+    </div>
+    
+<!-- Property Search -->
+    <div class="space-y-2">
+      <.label>Add Properties</.label>
+      
+      <div class="relative">
+        <input
+          type="text"
+          name="search"
+          placeholder="Search properties..."
+          autocomplete="off"
+          phx-keyup="search"
+          phx-debounce="300"
+          class="default-input"
+        />
+        <div :if={@loading} class="absolute right-3 top-2.5">
+          <.icon name="hero-arrow-path" class="w-5 h-5 animate-spin" />
+        </div>
+      </div>
+      
+<!-- Search Results -->
+      <div class="border rounded max-h-60 overflow-y-auto bg-gray-50">
+        <div
+          :if={Enum.empty?(@properties) && @search_term != ""}
+          class="p-4 text-center text-gray-500"
+        >
+          <%= case {@loading, @search_term, @properties} do %>
+            <% {true, term, _} -> %>
+              Searching for {term}...
+            <% {false, "", []} -> %>
+              No properties found for "{@search_term}"
+            <% {false, _, _} -> %>
+              You can search for properties on the Search Properties searchbox.
+            <% {_, _, _} -> %>
+              You can add other properties by searching for them on the search box.
+          <% end %>
+        </div>
+        
+        <%= for property <- @properties do %>
+          <div
+            class="p-3 hover:bg-gray-100 cursor-pointer border-b"
+            phx-click="add_property"
+            phx-value-id={property.id}
+          >
+            <div class="font-medium">{property.label}</div>
+            
+            <div class="text-sm text-gray-600">{property.local_name}</div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+<!-- Selected Properties -->
+    <div :if={!Enum.empty?(@selected_properties)} class="space-y-4">
+      <.label>Selected Properties</.label>
+      
+      <div id="selected-properties" class="space-y-3" phx-hook="DragDrop" phx-update="stream">
+        <div
+          :for={{id, prop} <- @streams.selected_props}
+          id={"prop-#{id}"}
+          draggable="true"
+          class={"p-3 border rounded bg-white flex justify-between items-start gap-4 #{if @dragging == to_string(id), do: "opacity-50"}"}
+          phx-dragstart="drag_start"
+          phx-value-id={id}
+          phx-dragend="drag_end"
+          phx-drop="drop"
+          phx-target-id={id}
+        >
+          <!-- Drag Handle -->
+          <div class="cursor-move pt-1">
+            <.icon name="hero-arrows-pointing-in" class="w-5 h-5 text-gray-400" />
+          </div>
+          
+<!-- Property Info -->
+          <div class="flex-1">
+            <div class="font-medium">
+              {prop.override_label || prop.label}
+            </div>
+            
+            <div class="text-sm text-gray-600">
+              {prop.local_name}
+            </div>
+            
+<!-- Custom Label Input -->
+            <div class="mt-2">
+              <input
+                type="text"
+                value={prop.override_label || ""}
+                placeholder="Custom label..."
+                phx-blur="update_label"
+                phx-value-id={id}
+                class="default-input"
+              />
+            </div>
+          </div>
+          
+<!-- Remove Button -->
+          <button
+            type="button"
+            class="text-red-500 hover:text-red-700 mt-1"
+            phx-click="remove_property"
+            phx-value-id={id}
+          >
+            <.icon name="hero-x-mark" class="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </div>
+    
+<!-- Submit Button -->
+    <div>
+      <.button type="submit" phx-disable-with="Creating...">
+        Create Template
+      </.button>
+    </div>
+  </.form>
+</div>

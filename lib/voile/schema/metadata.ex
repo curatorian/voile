@@ -246,6 +246,16 @@ defmodule Voile.Schema.Metadata do
     Property.changeset(property, attrs)
   end
 
+  def search_property(term) when is_binary(term) and byte_size(term) > 0 do
+    term_pattern = "%#{term}%"
+
+    Property
+    |> where([p], ilike(p.label, ^term_pattern) or ilike(p.local_name, ^term_pattern))
+    |> order_by([p], asc: p.label)
+    |> limit(10)
+    |> Repo.all()
+  end
+
   @doc """
   Returns the list of resource_class.
 

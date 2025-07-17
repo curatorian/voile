@@ -117,7 +117,12 @@ defmodule VoileWeb.Router do
           resources "/metadata_vocabularies", VocabularyController
           resources "/metadata_properties", PropertyController
           resources "/resource_class", ResourceClassController
-          resources "/resource_template", ResourceTemplateController
+
+          scope "/resource_template" do
+            live "/new", Dashboard.MetaResource.ResourceTemplateLive.New, :new
+            resources "/", ResourceTemplateController, except: [:new]
+          end
+
           resources "/resource_templ_property", ResourceTemplatePropertyController
         end
 
