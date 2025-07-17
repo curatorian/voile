@@ -1,42 +1,44 @@
-defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
+defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
   use VoileWeb, :live_view_dashboard
 
   alias Voile.Schema.Metadata
-  alias Voile.Schema.Metadata.ResourceTemplate
 
   @impl true
-  def mount(_params, _session, socket) do
-    changeset = Metadata.change_resource_template(%ResourceTemplate{})
+  def mount(%{"id" => id}, _session, socket) do
+    resource_template = get_resource_template_with_properties(id)
+    changeset = Metadata.change_resource_template(resource_template)
     resource_class = Metadata.list_resource_class()
+
+    # Convert existing template properties to the format used by the form
+    selected_properties = build_selected_properties(resource_template.template_properties)
 
     socket =
       socket
+      |> assign(:resource_template, resource_template)
       |> assign(:form, to_form(changeset))
       |> assign(:resource_class, resource_class)
       |> assign(:properties, [])
-      |> assign(:selected_properties, [])
+      |> assign(:selected_properties, selected_properties)
       |> assign(:search_term, "")
       |> assign(:loading, false)
       |> assign(:dragging, nil)
-      |> stream(:selected_props, [])
-      |> assign(:initial_values, %{})
+      |> stream(:selected_props, selected_properties)
+      |> assign(:initial_values, build_initial_values(selected_properties))
 
     {:ok, socket}
   end
 
   def handle_event("validate", params, socket) do
-    changeset = Metadata.change_resource_template(%ResourceTemplate{}, params)
+    changeset = Metadata.change_resource_template(socket.assigns.resource_template, params)
     {:noreply, assign(socket, :form, to_form(changeset))}
   end
 
   @impl true
   def handle_event("search", %{"key" => _key, "value" => value}, socket) do
-    dbg(socket.assigns.form.params)
     handle_search(value, socket)
   end
 
   def handle_event("search", %{"value" => value}, socket) do
-    dbg(socket.assigns.form.params)
     handle_search(value, socket)
   end
 
@@ -49,7 +51,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
         property
         |> Map.from_struct()
         |> Map.take([:id, :label, :local_name, :information, :type_value])
-        |> Map.put(:override_label, property.label)
+        |> Map.put(:override_label, nil)
 
       selected = [property_map | socket.assigns.selected_properties]
       initial_values = Map.put(socket.assigns.initial_values, property.id, nil)
@@ -133,20 +135,18 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
     template_params = %{
       label: params["label"],
       description: params["description"],
-      owner_id: socket.assigns.current_user.id,
       resource_class_id: params["resource_class_id"],
       template_properties: build_template_properties(socket.assigns.selected_properties)
     }
 
-    case Metadata.create_resource_template(template_params) do
+    case Metadata.update_resource_template(socket.assigns.resource_template, template_params) do
       {:ok, template} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Template created successfully!")
+         |> put_flash(:info, "Template updated successfully!")
          |> redirect(to: ~p"/manage/metaresource/resource_template/#{template.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        dbg(changeset)
         {:noreply, assign(socket, :form, to_form(changeset))}
     end
   end
@@ -184,6 +184,35 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
   def handle_async(:search_properties, {:exit, reason}, socket) do
     IO.puts("Search failed: #{inspect(reason)}")
     {:noreply, assign(socket, :loading, false)}
+  end
+
+  defp get_resource_template_with_properties(id) do
+    Metadata.get_resource_template!(id)
+    |> Voile.Repo.preload([
+      :resource_class,
+      template_properties: [:property]
+    ])
+  end
+
+  defp build_selected_properties(template_properties) do
+    template_properties
+    |> Enum.sort_by(& &1.position)
+    |> Enum.map(fn tp ->
+      %{
+        id: tp.property.id,
+        label: tp.property.label,
+        local_name: tp.property.local_name,
+        information: tp.property.information,
+        type_value: tp.property.type_value,
+        override_label: tp.override_label
+      }
+    end)
+  end
+
+  defp build_initial_values(selected_properties) do
+    Enum.reduce(selected_properties, %{}, fn prop, acc ->
+      Map.put(acc, prop.id, prop.override_label)
+    end)
   end
 
   defp handle_search(term, socket) do

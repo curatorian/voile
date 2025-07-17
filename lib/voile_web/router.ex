@@ -120,7 +120,8 @@ defmodule VoileWeb.Router do
 
           scope "/resource_template" do
             live "/new", Dashboard.MetaResource.ResourceTemplateLive.New, :new
-            resources "/", ResourceTemplateController, except: [:new]
+            live "/:id/edit", Dashboard.MetaResource.ResourceTemplateLive.Edit, :edit
+            resources "/", ResourceTemplateController, except: [:new, :edit]
           end
 
           resources "/resource_templ_property", ResourceTemplatePropertyController

@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto px-6 py-12">
-  <h1 class="text-2xl font-bold mb-6">Create New Resource Template</h1>
+  <h1 class="text-2xl font-bold mb-6">Edit Resource Template</h1>
   
   <.simple_form :let={f} for={@form} phx-submit="save" phx-change="validate" class="space-y-6">
     <!-- Template Name -->
@@ -80,7 +80,7 @@
     </div>
     
 <!-- Selected Properties -->
-    <div :if={!Enum.empty?(@selected_properties)} class="space-y-4">
+    <div :if={!Enum.empty?(@selected_properties)} class="my-4">
       <.label>Selected Properties</.label>
       
       <div id="selected-properties" class="space-y-3" phx-hook="DragDrop" phx-update="stream">
@@ -139,10 +139,17 @@
     </div>
     
 <!-- Submit Button -->
-    <div>
-      <.button type="submit" phx-disable-with="Creating...">
-        Create Template
+    <div class="flex gap-4">
+      <.button type="submit" phx-disable-with="Updating...">
+        Update Template
       </.button>
+      
+      <.link
+        navigate={~p"/manage/metaresource/resource_template/#{@resource_template.id}"}
+        class="btn btn-secondary"
+      >
+        Cancel
+      </.link>
     </div>
   </.simple_form>
 </div>

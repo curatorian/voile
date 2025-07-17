@@ -23,7 +23,8 @@ defmodule Voile.Schema.Metadata.ResourceTemplate do
   @doc false
   def changeset(resource_template, attrs) do
     resource_template
-    |> cast(attrs, [:label])
-    |> validate_required([:label])
+    |> cast(attrs, [:label, :description, :owner_id, :resource_class_id])
+    |> cast_assoc(:template_properties, with: &ResourceTemplateProperty.changeset/2)
+    |> validate_required([:label, :owner_id, :resource_class_id])
   end
 end

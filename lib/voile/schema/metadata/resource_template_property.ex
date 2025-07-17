@@ -6,7 +6,7 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   alias Voile.Schema.Metadata.Property
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  schema "resource_template_property" do
+  schema "resource_template_properties" do
     field :position, :integer
     field :override_label, :string
     belongs_to :resource_template, ResourceTemplate, foreign_key: :template_id
@@ -16,8 +16,8 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   end
 
   @doc false
-  def changeset(resource_template_property, attrs) do
-    resource_template_property
+  def changeset(resource_template_properties, attrs) do
+    resource_template_properties
     |> cast(attrs, [
       :position,
       :override_label,
@@ -25,7 +25,6 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
       :template_id
     ])
     |> validate_required([
-      :override_label,
       :position,
       :property_id
     ])
