@@ -132,6 +132,33 @@ defmodule VoileWeb.VoileDashboardComponents do
   end
 
   @doc """
+  Render a sidebar for settings in the dashboard.
+  """
+  def dashboard_settings_sidebar(assigns) do
+    ~H"""
+    <.side_bar_dashboard>
+      <.link navigate="/manage/settings/">
+        <h3 class="text-lg font-semibold mb-4">Settings</h3>
+      </.link>
+      
+      <ul class="space-y-2">
+        <li>
+          <.link patch="/manage/settings/user_profile" class="text-blue-600 hover:underline">
+            User Profile
+          </.link>
+        </li>
+        
+        <li>
+          <.link patch="/manage/settings/other_settings" class="text-blue-600 hover:underline">
+            Other Settings
+          </.link>
+        </li>
+      </ul>
+    </.side_bar_dashboard>
+    """
+  end
+
+  @doc """
   Renders a collection modal.
 
   ## Examples
@@ -222,6 +249,7 @@ defmodule VoileWeb.VoileDashboardComponents do
     """
   end
 
+  attr :params, :map, default: %{}
   attr :page, :integer, required: true
   attr :total_pages, :integer, required: true
   attr :event, :string, default: "paginate"
@@ -232,9 +260,13 @@ defmodule VoileWeb.VoileDashboardComponents do
     <nav class="pagination">
       <%= if @page > 1 do %>
         <%= if @path do %>
-          <.link patch={@path <> "?page=#{@page - 1}"} class="primary-btn">Prev</.link>
+          <.link patch={"#{@path}?#{build_query_string(assigns, @page - 1)}"} class="primary-btn">
+            Prev
+          </.link>
         <% else %>
-          <.button phx-click={@event} phx-value-page={@page - 1}>Prev</.button>
+          <.button phx-click={@event} {build_phx_values(assigns, @page - 1)}>
+            Prev
+          </.button>
         <% end %>
       <% else %>
         <.button class="disabled-btn" disabled>Prev</.button>
@@ -246,9 +278,13 @@ defmodule VoileWeb.VoileDashboardComponents do
             <button class="active-pagination" disabled>{p}</button>
           <% else %>
             <%= if @path do %>
-              <.link patch={@path <> "?page=#{p}"} class="pagination-btn">{p}</.link>
+              <.link patch={"#{@path}?#{build_query_string(assigns, p)}"} class="pagination-btn">
+                {p}
+              </.link>
             <% else %>
-              <button phx-click={@event} phx-value-page={p} class="pagination-btn">{p}</button>
+              <button class="pagination-btn" phx-click={@event} {build_phx_values(assigns, p)}>
+                {p}
+              </button>
             <% end %>
           <% end %>
         <% else %>
@@ -258,9 +294,13 @@ defmodule VoileWeb.VoileDashboardComponents do
       
       <%= if @page < @total_pages do %>
         <%= if @path do %>
-          <.link patch={@path <> "?page=#{@page + 1}"} class="primary-btn">Next</.link>
+          <.link patch={"#{@path}?#{build_query_string(assigns, @page + 1)}"} class="primary-btn">
+            Next
+          </.link>
         <% else %>
-          <.button phx-click={@event} phx-value-page={@page + 1}>Next</.button>
+          <.button phx-click={@event} {build_phx_values(assigns, @page + 1)}>
+            Next
+          </.button>
         <% end %>
       <% else %>
         <.button class="disabled-btn" disabled>Next</.button>
@@ -289,6 +329,21 @@ defmodule VoileWeb.VoileDashboardComponents do
           ["..."] ++
           Enum.to_list((current_page - 1)..(current_page + 1)) ++ ["..."] ++ [total_pages]
     end
+  end
+
+  defp build_query_string(assigns, new_page) do
+    assigns.params
+    |> Map.merge(%{"page" => new_page})
+    |> URI.encode_query()
+  end
+
+  defp build_phx_values(assigns, new_page) do
+    params = Map.merge(assigns.params, %{"page" => new_page})
+
+    Enum.reduce(params, %{}, fn {key, value}, acc ->
+      key_str = "phx-value-#{key}"
+      Map.put(acc, key_str, value)
+    end)
   end
 
   def collection_show(js \\ %JS{}, selector) do

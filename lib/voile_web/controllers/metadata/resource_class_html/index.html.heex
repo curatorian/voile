@@ -20,6 +20,10 @@
     {trim_information(resource_class.information, 30)}
   </:col>
   
+  <:col :let={resource_class} label="Vocabulary">
+    {resource_class.vocabulary.label}
+  </:col>
+  
   <:action :let={resource_class}>
     <div class="sr-only">
       <.link navigate={~p"/manage/metaresource/resource_class/#{resource_class}"}>Show</.link>

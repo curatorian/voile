@@ -6,10 +6,17 @@ defmodule VoileWeb.PropertyController do
 
   def index(conn, params) do
     page = Map.get(params, "page", "1") |> String.to_integer()
+    vocabulary_id = Map.get(params, "vocabulary_id", nil)
     per_page = 10
 
     {metadata_properties, total_pages} =
-      Metadata.list_metadata_properties_paginated(page, per_page)
+      case vocabulary_id do
+        nil ->
+          Metadata.list_metadata_properties_paginated(page, per_page)
+
+        _ ->
+          Metadata.list_metadata_properties_by_vocabulary_paginated(vocabulary_id, page, per_page)
+      end
 
     conn
     |> assign(:metadata_properties, metadata_properties)
