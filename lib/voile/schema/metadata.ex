@@ -521,7 +521,10 @@ defmodule Voile.Schema.Metadata do
 
   """
   def list_resource_template_property do
-    Repo.all(ResourceTemplateProperty)
+    ResourceTemplateProperty
+    |> order_by([rtp], desc: rtp.template_id)
+    |> Repo.all()
+    |> Repo.preload([:resource_template, :property])
   end
 
   @doc """

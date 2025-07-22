@@ -12,28 +12,20 @@
   rows={@resource_template_property_collection}
   row_click={&JS.navigate(~p"/manage/metaresource/resource_templ_property/#{&1}")}
 >
-  <:col :let={resource_template_property} label="Alternate label">
-    {resource_template_property.alternate_label}
+  <:col :let={resource_template_property} label="Template Name">
+    {resource_template_property.resource_template.label}
   </:col>
   
-  <:col :let={resource_template_property} label="Alternate information">
-    {resource_template_property.alternate_information}
+  <:col :let={resource_template_property} label="Property Name">
+    {resource_template_property.property.label}
+  </:col>
+  
+  <:col :let={resource_template_property} label="Override label">
+    {resource_template_property.override_label}
   </:col>
   
   <:col :let={resource_template_property} label="Position">
     {resource_template_property.position}
-  </:col>
-  
-  <:col :let={resource_template_property} label="Data type">
-    {resource_template_property.data_type}
-  </:col>
-  
-  <:col :let={resource_template_property} label="Is required">
-    {resource_template_property.is_required}
-  </:col>
-  
-  <:col :let={resource_template_property} label="Permission">
-    {resource_template_property.permission}
   </:col>
   
   <:action :let={resource_template_property}>

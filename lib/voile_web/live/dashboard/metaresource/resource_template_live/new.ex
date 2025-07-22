@@ -31,12 +31,10 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
 
   @impl true
   def handle_event("search", %{"key" => _key, "value" => value}, socket) do
-    dbg(socket.assigns.form.params)
     handle_search(value, socket)
   end
 
   def handle_event("search", %{"value" => value}, socket) do
-    dbg(socket.assigns.form.params)
     handle_search(value, socket)
   end
 
@@ -51,7 +49,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
         |> Map.take([:id, :label, :local_name, :information, :type_value])
         |> Map.put(:override_label, property.label)
 
-      selected = [property_map | socket.assigns.selected_properties]
+      selected = socket.assigns.selected_properties ++ [property_map]
       initial_values = Map.put(socket.assigns.initial_values, property.id, nil)
 
       socket =
@@ -61,7 +59,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
         |> assign(:search_term, "")
         |> assign(:properties, [])
         |> assign(:loading, false)
-        |> stream_insert(:selected_props, property_map)
+        |> rebuild_stream(selected)
 
       {:noreply, socket}
     else
@@ -78,7 +76,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
     socket =
       socket
       |> assign(:selected_properties, selected)
-      |> stream_delete(:selected_props, id)
+      |> rebuild_stream(selected)
 
     {:noreply, socket}
   end
@@ -101,25 +99,11 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
             prop
         end)
 
-      # Find the property to update in the stream
-      property = Enum.find(socket.assigns.selected_properties, &(&1.id == id_int))
-
       # Only update stream if property exists
       socket =
-        if property do
-          updated_prop = %{
-            id: property.id,
-            label: property.label,
-            local_name: property.local_name,
-            override_label: value
-          }
-
-          socket
-          |> assign(:selected_properties, selected)
-          |> stream_insert(:selected_props, updated_prop)
-        else
-          assign(socket, :selected_properties, selected)
-        end
+        socket
+        |> assign(:selected_properties, selected)
+        |> rebuild_stream(selected)
 
       {:noreply, socket}
     else
@@ -167,7 +151,13 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
 
     if dragging_id && dragging_id != target_id do
       selected = reorder_properties(socket.assigns.selected_properties, dragging_id, target_id)
-      {:noreply, assign(socket, :selected_properties, selected)}
+
+      socket =
+        socket
+        |> assign(:selected_properties, selected)
+        |> rebuild_stream(selected)
+
+      {:noreply, socket}
     else
       {:noreply, socket}
     end
@@ -184,6 +174,17 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
   def handle_async(:search_properties, {:exit, reason}, socket) do
     IO.puts("Search failed: #{inspect(reason)}")
     {:noreply, assign(socket, :loading, false)}
+  end
+
+  defp rebuild_stream(socket, selected_properties) do
+    # Clear the stream and rebuild it with correct order
+    socket
+    |> stream(:selected_props, [], reset: true)
+    |> then(fn socket ->
+      Enum.reduce(selected_properties, socket, fn prop, acc_socket ->
+        stream_insert(acc_socket, :selected_props, prop)
+      end)
+    end)
   end
 
   defp handle_search(term, socket) do
@@ -226,25 +227,53 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
   end
 
   defp reorder_properties(properties, dragging_id, target_id) do
-    dragging_id = String.to_integer(dragging_id)
-    target_id = String.to_integer(target_id)
+    # Extract the numeric IDs
+    dragging_id =
+      case String.contains?(dragging_id, "-") do
+        true ->
+          [_prefix, id_str] = String.split(dragging_id, "-")
+          String.to_integer(id_str)
 
-    {dragging, others} = Enum.split_with(properties, &(&1.id == dragging_id))
-
-    if Enum.empty?(dragging) do
-      properties
-    else
-      dragging_prop = hd(dragging)
-
-      {before_list, after_list} = Enum.split_while(others, &(&1.id != target_id))
-
-      if Enum.empty?(after_list) do
-        # Target not found, append to end
-        others ++ dragging
-      else
-        [target | rest] = after_list
-        before_list ++ [target, dragging_prop] ++ rest
+        false ->
+          String.to_integer(dragging_id)
       end
+
+    target_id =
+      case String.contains?(target_id, "-") do
+        true ->
+          [_prefix, id_str] = String.split(target_id, "-")
+          String.to_integer(id_str)
+
+        false ->
+          String.to_integer(target_id)
+      end
+
+    # Find the dragging item and its current index
+    dragging_index = Enum.find_index(properties, &(&1.id == dragging_id))
+    target_index = Enum.find_index(properties, &(&1.id == target_id))
+
+    case {dragging_index, target_index} do
+      # Dragging item not found
+      {nil, _} ->
+        properties
+
+      # Target item not found
+      {_, nil} ->
+        properties
+
+      # Same position
+      {same, same} ->
+        properties
+
+      {drag_idx, target_idx} ->
+        # Remove the dragging item
+        {dragging_item, remaining} = List.pop_at(properties, drag_idx)
+
+        # Calculate new target index (adjust for removed item)
+        new_target_idx = if drag_idx < target_idx, do: target_idx - 1, else: target_idx
+
+        # Insert the dragging item at the new position
+        List.insert_at(remaining, new_target_idx, dragging_item)
     end
   end
 end

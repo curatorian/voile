@@ -22,6 +22,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
       |> assign(:search_term, "")
       |> assign(:loading, false)
       |> assign(:dragging, nil)
+      |> assign(:original_template_properties, resource_template.template_properties)
       |> stream(:selected_props, selected_properties)
       |> assign(:initial_values, build_initial_values(selected_properties))
 
@@ -47,13 +48,17 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
     property = find_property(socket.assigns.properties, id)
 
     if property && !property_selected?(socket.assigns.selected_properties, id) do
+      next_position = length(socket.assigns.selected_properties) + 1
+
       property_map =
         property
         |> Map.from_struct()
         |> Map.take([:id, :label, :local_name, :information, :type_value])
         |> Map.put(:override_label, nil)
+        |> Map.put(:position, next_position)
+        |> Map.put(:template_property_id, nil)
 
-      selected = [property_map | socket.assigns.selected_properties]
+      selected = socket.assigns.selected_properties ++ [property_map]
       initial_values = Map.put(socket.assigns.initial_values, property.id, nil)
 
       socket =
@@ -63,7 +68,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
         |> assign(:search_term, "")
         |> assign(:properties, [])
         |> assign(:loading, false)
-        |> stream_insert(:selected_props, property_map)
+        |> rebuild_stream(selected)
 
       {:noreply, socket}
     else
@@ -80,7 +85,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
     socket =
       socket
       |> assign(:selected_properties, selected)
-      |> stream_delete(:selected_props, id)
+      |> rebuild_stream(selected)
 
     {:noreply, socket}
   end
@@ -103,25 +108,10 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
             prop
         end)
 
-      # Find the property to update in the stream
-      property = Enum.find(socket.assigns.selected_properties, &(&1.id == id_int))
-
-      # Only update stream if property exists
       socket =
-        if property do
-          updated_prop = %{
-            id: property.id,
-            label: property.label,
-            local_name: property.local_name,
-            override_label: value
-          }
-
-          socket
-          |> assign(:selected_properties, selected)
-          |> stream_insert(:selected_props, updated_prop)
-        else
-          assign(socket, :selected_properties, selected)
-        end
+        socket
+        |> assign(:selected_properties, selected)
+        |> rebuild_stream(selected)
 
       {:noreply, socket}
     else
@@ -132,6 +122,11 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
 
   @impl true
   def handle_event("save", params, socket) do
+    IO.inspect(socket.assigns.selected_properties, label: "Selected properties before save")
+
+    template_properties = build_template_properties(socket.assigns.selected_properties)
+    IO.inspect(template_properties, label: "Built template properties")
+
     template_params = %{
       label: params["label"],
       description: params["description"],
@@ -153,11 +148,13 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
 
   @impl true
   def handle_event("drag_start", %{"id" => id}, socket) do
+    IO.inspect(id, label: "Drag start ID")
     {:noreply, assign(socket, :dragging, id)}
   end
 
   @impl true
   def handle_event("drag_end", _params, socket) do
+    IO.inspect("Drag end")
     {:noreply, assign(socket, :dragging, nil)}
   end
 
@@ -165,10 +162,24 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
   def handle_event("drop", %{"target_id" => target_id}, socket) do
     dragging_id = socket.assigns.dragging
 
+    IO.inspect(dragging_id, label: "Dragging ID")
+    IO.inspect(target_id, label: "Target ID")
+    IO.inspect(socket.assigns.selected_properties, label: "Before reorder")
+
     if dragging_id && dragging_id != target_id do
       selected = reorder_properties(socket.assigns.selected_properties, dragging_id, target_id)
-      {:noreply, assign(socket, :selected_properties, selected)}
+
+      IO.inspect(selected, label: "After reorder")
+
+      socket =
+        socket
+        |> assign(:selected_properties, selected)
+        # Changed: rebuild stream to reflect new order
+        |> rebuild_stream(selected)
+
+      {:noreply, socket}
     else
+      IO.inspect("No reordering - same ID or nil dragging_id")
       {:noreply, socket}
     end
   end
@@ -186,6 +197,17 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
     {:noreply, assign(socket, :loading, false)}
   end
 
+  defp rebuild_stream(socket, selected_properties) do
+    # Clear the stream and rebuild it with correct order
+    socket
+    |> stream(:selected_props, [], reset: true)
+    |> then(fn socket ->
+      Enum.reduce(selected_properties, socket, fn prop, acc_socket ->
+        stream_insert(acc_socket, :selected_props, prop)
+      end)
+    end)
+  end
+
   defp get_resource_template_with_properties(id) do
     Metadata.get_resource_template!(id)
     |> Voile.Repo.preload([
@@ -200,11 +222,13 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
     |> Enum.map(fn tp ->
       %{
         id: tp.property.id,
+        template_property_id: tp.id,
         label: tp.property.label,
         local_name: tp.property.local_name,
         information: tp.property.information,
         type_value: tp.property.type_value,
-        override_label: tp.override_label
+        override_label: tp.override_label,
+        position: tp.position
       }
     end)
   end
@@ -243,37 +267,86 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.Edit do
     Enum.any?(selected, &(&1.id == id_int))
   end
 
-  defp build_template_properties(selected) do
-    Enum.with_index(selected, 1)
-    |> Enum.map(fn {property, idx} ->
-      %{
-        position: idx,
+  defp build_template_properties(selected_properties) do
+    selected_properties
+    |> Enum.map(fn property ->
+      base_attrs = %{
+        position: property.position,
         property_id: property.id,
         override_label: property.override_label
       }
+
+      # Include ID for existing records so Ecto knows to update them
+      case property.template_property_id do
+        nil ->
+          # New property - no ID, Ecto will create it
+          base_attrs
+
+        template_property_id ->
+          # Existing property - include ID so Ecto will update it
+          Map.put(base_attrs, :id, template_property_id)
+      end
     end)
   end
 
   defp reorder_properties(properties, dragging_id, target_id) do
-    dragging_id = String.to_integer(dragging_id)
-    target_id = String.to_integer(target_id)
+    IO.inspect({dragging_id, target_id}, label: "Raw IDs")
 
-    {dragging, others} = Enum.split_with(properties, &(&1.id == dragging_id))
+    dragging_id =
+      case String.contains?(dragging_id, "-") do
+        true ->
+          [_prefix, id_str] = String.split(dragging_id, "-")
+          String.to_integer(id_str)
 
-    if Enum.empty?(dragging) do
-      properties
-    else
-      dragging_prop = hd(dragging)
-
-      {before_list, after_list} = Enum.split_while(others, &(&1.id != target_id))
-
-      if Enum.empty?(after_list) do
-        # Target not found, append to end
-        others ++ dragging
-      else
-        [target | rest] = after_list
-        before_list ++ [target, dragging_prop] ++ rest
+        false ->
+          String.to_integer(dragging_id)
       end
-    end
+
+    target_id =
+      case String.contains?(target_id, "-") do
+        true ->
+          [_prefix, id_str] = String.split(target_id, "-")
+          String.to_integer(id_str)
+
+        false ->
+          String.to_integer(target_id)
+      end
+
+    IO.inspect({dragging_id, target_id}, label: "Parsed IDs")
+    dragging_index = Enum.find_index(properties, &(&1.id == dragging_id))
+    target_index = Enum.find_index(properties, &(&1.id == target_id))
+
+    IO.inspect({dragging_index, target_index}, label: "Found indices")
+
+    reordered_properties =
+      case {dragging_index, target_index} do
+        {nil, _} ->
+          properties
+
+        {_, nil} ->
+          properties
+
+        {same, same} ->
+          properties
+
+        {drag_idx, target_idx} ->
+          # Remove the dragging item
+          {dragging_item, remaining} = List.pop_at(properties, drag_idx)
+          # Calculate new target index (adjust for removed item)
+          new_target_idx = if drag_idx < target_idx, do: target_idx - 1, else: target_idx
+          # Insert the dragging item at the new position
+          List.insert_at(remaining, new_target_idx, dragging_item)
+      end
+
+    # Reassign positions based on the new order
+    final_result =
+      reordered_properties
+      |> Enum.with_index(1)
+      |> Enum.map(fn {property, new_position} ->
+        Map.put(property, :position, new_position)
+      end)
+
+    IO.inspect(final_result, label: "Final reordered result")
+    final_result
   end
 end

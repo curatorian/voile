@@ -42,8 +42,6 @@ defmodule VoileWeb.Dashboard.Catalog.CollectionLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    dbg(Catalog.get_collection!(id))
-
     socket
     |> assign(:page_title, "Edit Collection")
     |> assign(:collection, Catalog.get_collection!(id))
