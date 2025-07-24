@@ -18,15 +18,7 @@ defmodule Voile.Schema.Metadata.ResourceTemplateProperty do
   @doc false
   def changeset(resource_template_properties, attrs) do
     resource_template_properties
-    |> cast(attrs, [
-      :position,
-      :override_label,
-      :property_id,
-      :template_id
-    ])
-    |> validate_required([
-      :position,
-      :property_id
-    ])
+    |> cast(attrs, [:position, :property_id, :override_label, :template_id])
+    |> validate_required([:position, :property_id])
   end
 end
