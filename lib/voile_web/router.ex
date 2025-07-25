@@ -99,6 +99,10 @@ defmodule VoileWeb.Router do
           end
         end
 
+        scope "/circulation" do
+          live "/", Dashboard.Circulation.Index, :index
+        end
+
         scope "/master" do
           live "/", Dashboard.Master.MasterLive
 

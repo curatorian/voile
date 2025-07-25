@@ -38,6 +38,12 @@ vocab = [
     prefix: "foaf",
     label: "Friend of a Friend",
     information: "Relationships between people and organizations (FOAF)"
+  },
+  %{
+    namespace_url: "https://kandaga.unpad.ac.id/vocab/book/",
+    prefix: "kandaga_book",
+    label: "Kandaga Book Vocabulary",
+    information: "Vocabulary for Kandaga book metadata"
   }
 ]
 

@@ -6,6 +6,7 @@ vocabulary_1 = Repo.get!(Metadata.Vocabulary, 1)
 vocabulary_2 = Repo.get!(Metadata.Vocabulary, 2)
 vocabulary_3 = Repo.get!(Metadata.Vocabulary, 3)
 vocabulary_4 = Repo.get!(Metadata.Vocabulary, 4)
+vocabulary_5 = Repo.get!(Metadata.Vocabulary, 5)
 
 properties_list = [
   %{
@@ -1497,6 +1498,190 @@ properties_list = [
     label: "status user",
     comment:
       "A string expressing what the user is happy for the general public (normally) to know about their current activity.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "title",
+    label: "Title",
+    comment: "The title of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "sor",
+    label: "Statement of Responsibility",
+    comment:
+      "A statement of responsibility for the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "textarea"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "edition",
+    label: "Edition",
+    comment: "The edition of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "isbn",
+    label: "International Standard Book Number",
+    comment: "The ISBN of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "issn",
+    label: "International Standard Serial Number",
+    comment: "The ISSN of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "publisher",
+    label: "Publisher",
+    comment:
+      "The publisher of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "publishedYear",
+    label: "Published Year",
+    comment:
+      "The year the resource was published based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "number"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "publishedDate",
+    label: "Published Date",
+    comment:
+      "The date the resource was published based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "date"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "publishedPlace",
+    label: "Published Place",
+    comment:
+      "The place where the resource was published based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "collation",
+    label: "Collation",
+    comment:
+      "The collation of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "seriesTitle",
+    label: "Series Title",
+    comment:
+      "The series title of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "callNumber",
+    label: "Call Number",
+    comment:
+      "The call number of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "languageType",
+    label: "Language Type",
+    comment:
+      "The language type of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "sourceOfResource",
+    label: "Source of Resource",
+    comment: "The source of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "classification",
+    label: "Classification",
+    comment:
+      "The classification of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "notes",
+    label: "Notes",
+    comment:
+      "Additional notes about the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "textarea"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "frequency",
+    label: "Frequency",
+    comment:
+      "The frequency of the resource released based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "specDetailInfo",
+    label: "Special Detail Information",
+    comment:
+      "Special detail information about the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "textarea"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "contentType",
+    label: "Content Type",
+    comment:
+      "The content type of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "mediaType",
+    label: "Media Type",
+    comment:
+      "The media type of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
+    type_value: "text"
+  },
+  %{
+    owner_id: nil,
+    vocabulary_id: 5,
+    local_name: "carrierType",
+    label: "Carrier Type",
+    comment:
+      "The carrier type of the resource based on Perpustakaan Universitas Padjadjaran's Book.",
     type_value: "text"
   }
 ]
