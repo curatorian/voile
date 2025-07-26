@@ -4,11 +4,12 @@ defmodule Voile.Repo.Migrations.CreateCollections do
   def change do
     create table(:collections, primary_key: false) do
       add :id, :binary_id, primary_key: true, null: false
-      add :title, :string
+      add :title, :text
       add :description, :text
       add :thumbnail, :string
       add :status, :string
       add :access_level, :string
+      add :old_biblio_id, :integer
       add :type_id, references(:resource_class, on_delete: :nilify_all)
       add :template_id, references(:resource_template, on_delete: :nilify_all)
       add :creator_id, references(:mst_creator, on_delete: :nilify_all)

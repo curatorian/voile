@@ -16,12 +16,13 @@ defmodule Voile.Catalog.Collection do
     field :title, :string
     field :thumbnail, :string
     field :access_level, :string
+    field :old_biblio_id, :integer
     belongs_to :resource_class, ResourceClass, foreign_key: :type_id
     belongs_to :resource_template, ResourceTemplate, foreign_key: :template_id
     belongs_to :mst_creator, Creator, foreign_key: :creator_id
     belongs_to :node, Node, foreign_key: :unit_id
     has_many :collection_fields, CollectionField, on_replace: :delete
-    has_many :items, Voile.Catalog.Item, on_replace: :delete
+    has_many :items, Item, on_delete: :delete_all, foreign_key: :collection_id
 
     timestamps(type: :utc_datetime)
   end

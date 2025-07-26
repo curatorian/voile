@@ -7,8 +7,8 @@ defmodule Voile.Repo.Migrations.CreateCollectionLogs do
       add :title, :string
       add :message, :text
       add :action, :string
-      add :collection_id, references(:collections, on_delete: :nothing, type: :uuid)
-      add :user_id, references(:users, on_delete: :nothing, type: :uuid)
+      add :collection_id, references(:collections, on_delete: :nothing, type: :binary_id)
+      add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end

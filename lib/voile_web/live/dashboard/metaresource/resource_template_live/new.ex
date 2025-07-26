@@ -2,6 +2,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
   use VoileWeb, :live_view_dashboard
 
   alias Voile.Schema.Metadata.ResourceTemplate
+  alias VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.FormComponent
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,6 +11,18 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
      |> assign(:resource_template, %ResourceTemplate{})
      |> assign(:page_title, "New Resource Template")
      |> assign(:live_action, :new)}
+  end
+
+  @impl true
+  def handle_event("reorder_by_index", params, socket) do
+    # Forward the event to the FormComponent
+    send_update(FormComponent,
+      id: :new,
+      action: :reorder_by_index,
+      params: params
+    )
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -27,7 +40,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.New do
   def render(assigns) do
     ~H"""
     <.live_component
-      module={VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.FormComponent}
+      module={FormComponent}
       id={:new}
       current_user={@current_user}
       resource_template={@resource_template}

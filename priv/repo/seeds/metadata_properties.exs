@@ -1695,6 +1695,7 @@ for property <- properties_list do
         2 -> vocabulary_2.id
         3 -> vocabulary_3.id
         4 -> vocabulary_4.id
+        5 -> vocabulary_5.id
       end,
     local_name: property[:local_name],
     label: property[:label],

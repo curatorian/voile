@@ -13,7 +13,7 @@ defmodule Voile.Catalog.Item do
     field :inventory_code, :string
     field :condition, :string
     field :availability, :string
-    belongs_to :collection, Collection, on_replace: :nilify, type: :binary_id
+    belongs_to :collection, Collection, type: :binary_id
     belongs_to :node, Node, foreign_key: :unit_id
 
     timestamps(type: :utc_datetime)

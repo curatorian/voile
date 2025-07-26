@@ -49,6 +49,7 @@ defmodule Voile.MixProject do
        depth: 1},
       {:html_sanitize_ex, "~> 1.4"},
       {:jason, "~> 1.2"},
+      {:nimble_csv, "~> 1.2"},
       {:pbkdf2_elixir, "~> 2.0"},
       {:phoenix, "~> 1.7.17"},
       {:phoenix_ecto, "~> 4.5"},
@@ -80,8 +81,7 @@ defmodule Voile.MixProject do
         "run priv/repo/seeds/seeds.exs",
         "run priv/repo/seeds/metadata_resource_class.exs",
         "run priv/repo/seeds/metadata_properties.exs",
-        "run priv/repo/seeds/master.exs",
-        "run priv/repo/seeds/sample_collection.exs"
+        "run priv/repo/seeds/master.exs"
       ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],

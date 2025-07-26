@@ -66,8 +66,6 @@ defmodule VoileWeb.Dashboard.Master.CreatorLive.Index do
     per_page = 10
     {creators, total_pages} = Master.list_mst_creator_paginated(page, per_page)
 
-    dbg(page)
-
     socket =
       socket
       |> assign(:creators, creators)

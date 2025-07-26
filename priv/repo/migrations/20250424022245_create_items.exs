@@ -11,7 +11,7 @@ defmodule Voile.Repo.Migrations.CreateItems do
       add :condition, :string
       add :availability, :string
       add :unit_id, references(:nodes, on_delete: :nilify_all)
-      add :collection_id, references(:collections, on_delete: :nilify_all, type: :uuid)
+      add :collection_id, references(:collections, on_delete: :delete_all, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end

@@ -111,6 +111,7 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.FormComponent do
             class="space-y-3"
             phx-hook="DragDrop"
             phx-update="stream"
+            data-target={@myself}
           >
             <div
               :for={{dom_id, prop} <- @streams.selected_props}
@@ -216,6 +217,24 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.FormComponent do
   end
 
   @impl true
+  def update(%{action: :reorder_by_index, params: params}, socket) do
+    # Handle forwarded reorder event
+    %{"old_index" => old_index, "new_index" => new_index} = params
+
+    IO.inspect({old_index, new_index}, label: "Reorder indices")
+    IO.inspect(socket.assigns.selected_properties, label: "Before reorder")
+
+    selected = reorder_by_index(socket.assigns.selected_properties, old_index, new_index)
+
+    IO.inspect(selected, label: "After reorder")
+
+    {:ok,
+     socket
+     |> assign(:selected_properties, selected)
+     |> rebuild_stream(selected)}
+  end
+
+  @impl true
   def handle_event("validate", %{"resource_template" => params}, socket) do
     changeset =
       case socket.assigns.resource_template.id do
@@ -313,14 +332,16 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.FormComponent do
     end
   end
 
-  def handle_event("save", %{"resource_template" => params}, socket) do
+  def handle_event("save", params, socket) do
+    resource_template_params = Map.get(params, "resource_template", params)
+
     owner_id = socket.assigns.current_user.id
     template_properties = build_template_properties(socket.assigns.selected_properties)
 
     template_params = %{
-      label: params["label"],
-      description: params["description"],
-      resource_class_id: params["resource_class_id"],
+      label: resource_template_params["label"],
+      description: resource_template_params["description"],
+      resource_class_id: resource_template_params["resource_class_id"],
       owner_id: owner_id,
       template_properties: template_properties
     }
@@ -341,32 +362,12 @@ defmodule VoileWeb.Dashboard.MetaResource.ResourceTemplateLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Template #{template.label} #{action} successfully!")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         IO.inspect(changeset.errors, label: "Changeset errors")
         {:noreply, assign(socket, :form, to_form(changeset))}
     end
-  end
-
-  def handle_event(
-        "reorder_by_index",
-        %{"old_index" => old_index, "new_index" => new_index},
-        socket
-      ) do
-    IO.inspect({old_index, new_index}, label: "Reorder indices")
-    IO.inspect(socket.assigns.selected_properties, label: "Before reorder")
-
-    selected = reorder_by_index(socket.assigns.selected_properties, old_index, new_index)
-
-    IO.inspect(selected, label: "After reorder")
-
-    socket =
-      socket
-      |> assign(:selected_properties, selected)
-      |> rebuild_stream(selected)
-
-    {:noreply, socket}
   end
 
   @impl true
