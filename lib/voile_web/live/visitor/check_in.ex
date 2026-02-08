@@ -13,6 +13,11 @@ defmodule VoileWeb.Visitor.CheckIn do
     ip_address = get_connect_info(socket, :peer_data) |> get_ip_address()
     user_agent = get_connect_info(socket, :user_agent)
 
+    # Get app logo and name from system settings
+    app_logo = System.get_setting_value("app_logo_url", nil)
+    app_name = System.get_setting_value("app_name", "GLAM System")
+    app_website = System.get_setting_value("app_website", nil)
+
     socket =
       socket
       |> assign(:page_title, "Visitor Check-In & Survey")
@@ -32,9 +37,13 @@ defmodule VoileWeb.Visitor.CheckIn do
       |> assign(:user_agent, user_agent)
       |> assign(:rating, 0)
       |> assign(:comment, "")
+      |> assign(:staff_rating, 0)
       |> assign(:show_survey_success, false)
       |> assign(:survey_error_message, nil)
       |> assign(:keyboard_shift_active, false)
+      |> assign(:app_logo, app_logo)
+      |> assign(:app_name, app_name)
+      |> assign(:app_website, app_website)
 
     {:ok, socket}
   end
@@ -76,11 +85,16 @@ defmodule VoileWeb.Visitor.CheckIn do
     node_id = String.to_integer(node_id)
     locations = Master.list_locations(node_id: node_id, is_active: true)
 
+    # Get node name to auto-fill visitor_origin
+    node = Enum.find(socket.assigns.nodes, &(&1.id == node_id))
+    visitor_origin = if node, do: node.name, else: ""
+
     socket =
       socket
       |> assign(:selected_node, node_id)
       |> assign(:locations, locations)
       |> assign(:selected_location, nil)
+      |> assign(:selected_origin, visitor_origin)
       |> assign(:step, :select_room)
 
     {:noreply, socket}
@@ -189,13 +203,7 @@ defmodule VoileWeb.Visitor.CheckIn do
       {:noreply, assign(socket, :error_message, "Please enter your identifier")}
     else
       # Try to find user by identifier to get their full name
-      alias Voile.Schema.Accounts
-
-      visitor_name =
-        case Accounts.get_user_by_identifier(identifier) do
-          nil -> identifier
-          user -> user.fullname || identifier
-        end
+      visitor_name = lookup_visitor_name(identifier)
 
       attrs = %{
         "visitor_identifier" => identifier,
@@ -217,7 +225,7 @@ defmodule VoileWeb.Visitor.CheckIn do
             |> assign(:error_message, nil)
 
           # Auto-close modal after 4 seconds
-          Process.send_after(self(), :close_modal, 4000)
+          Process.send_after(self(), :close_modal, 1000)
 
           {:noreply, socket}
 
@@ -234,6 +242,12 @@ defmodule VoileWeb.Visitor.CheckIn do
   end
 
   @impl true
+  def handle_event("set_staff_rating", %{"rating" => rating}, socket) do
+    rating = String.to_integer(rating)
+    {:noreply, assign(socket, :staff_rating, rating)}
+  end
+
+  @impl true
   def handle_event("update_comment", %{"comment" => comment}, socket) do
     {:noreply, assign(socket, :comment, comment)}
   end
@@ -243,6 +257,7 @@ defmodule VoileWeb.Visitor.CheckIn do
     %{
       rating: rating,
       comment: comment,
+      staff_rating: staff_rating,
       selected_location: location,
       selected_node: node_id,
       ip_address: ip_address,
@@ -252,6 +267,12 @@ defmodule VoileWeb.Visitor.CheckIn do
     if rating == 0 do
       {:noreply, assign(socket, :survey_error_message, "Please select a rating")}
     else
+      additional_data = if staff_rating > 0 do
+        %{"staff_rating" => staff_rating}
+      else
+        nil
+      end
+
       attrs = %{
         "rating" => rating,
         "comment" => if(comment == "", do: nil, else: comment),
@@ -259,7 +280,8 @@ defmodule VoileWeb.Visitor.CheckIn do
         "node_id" => node_id,
         "ip_address" => ip_address,
         "user_agent" => user_agent,
-        "survey_type" => "general"
+        "survey_type" => "general",
+        "additional_data" => additional_data
       }
 
       case System.create_visitor_survey(attrs) do
@@ -270,7 +292,7 @@ defmodule VoileWeb.Visitor.CheckIn do
             |> assign(:survey_error_message, nil)
 
           # Auto-reset after 3 seconds
-          Process.send_after(self(), :reset_survey, 3000)
+          Process.send_after(self(), :reset_survey, 2000)
 
           {:noreply, socket}
 
@@ -287,6 +309,7 @@ defmodule VoileWeb.Visitor.CheckIn do
       socket
       |> assign(:show_survey_success, false)
       |> assign(:rating, 0)
+      |> assign(:staff_rating, 0)
       |> assign(:comment, "")
       |> assign(:survey_error_message, nil)
 
@@ -326,6 +349,7 @@ defmodule VoileWeb.Visitor.CheckIn do
     socket =
       socket
       |> assign(:rating, 0)
+      |> assign(:staff_rating, 0)
       |> assign(:comment, "")
       |> assign(:show_survey_success, false)
       |> assign(:survey_error_message, nil)
@@ -355,12 +379,73 @@ defmodule VoileWeb.Visitor.CheckIn do
 
   defp get_ip_address(_), do: nil
 
+  # Lookup visitor name from local database or external API
+  defp lookup_visitor_name(identifier) do
+    case Decimal.parse(identifier) do
+      {_decimal, ""} ->
+        # Identifier is numeric, try local database first
+        alias Voile.Schema.Accounts
+
+        case Accounts.get_user_by_identifier(identifier) do
+          nil ->
+            # Not found locally, try external API if configured
+            lookup_from_external_api(identifier)
+
+          user ->
+            user.fullname || identifier
+        end
+
+      _ ->
+        # Identifier is not numeric, use it as-is (guest/unregistered visitor)
+        identifier
+    end
+  end
+
+  # Fetch user data from external API
+  defp lookup_from_external_api(identifier) do
+    api_url = get_external_api_url()
+
+    # Return identifier as-is if no API URL configured
+    if api_url == "" or is_nil(api_url) do
+      identifier
+    else
+      url = "#{api_url}/#{identifier}"
+
+      case Req.get(url, receive_timeout: 5000) do
+        {:ok, %{status: 200, body: body}} ->
+          # Try to extract fullname from response
+          # Adjust the key based on your API response structure
+          extract_fullname_from_response(body, identifier)
+
+        _ ->
+          # API request failed, use identifier as-is
+          identifier
+      end
+    end
+  end
+
+  # Get external API URL from config or environment variable
+  # Priority: 1. Environment variable, 2. Application config, 3. Default
+  defp get_external_api_url do
+    Elixir.System.get_env("VOILE_EXTERNAL_USER_API") ||
+      Application.get_env(:voile, :external_user_api_url) ||
+      "https://voile.id/user"
+  end
+
+  # Extract fullname from API response
+  defp extract_fullname_from_response(body, fallback) when is_map(body) do
+    # Try common field names for fullname
+    body["fullname"] || body["full_name"] || body["name"] || fallback
+  end
+
+  defp extract_fullname_from_response(_body, fallback), do: fallback
+
   @impl true
   @spec render(any()) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
     <div
-      class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-blue-900 py-8 px-4"
+      class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-blue-900 py-8 px-4 pb-32"
       phx-hook="CheckInStorage"
       id="check-in-container"
       data-node-id={@selected_node}
@@ -368,9 +453,25 @@ defmodule VoileWeb.Visitor.CheckIn do
     >
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="text-center mb-8">
-          <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">Visitor Services</h1>
-          <p class="text-gray-600 dark:text-gray-300">Check in or share your feedback</p>
+        <div class="mb-8">
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <%= if @app_logo do %>
+              <img
+                src={@app_logo}
+                alt={@app_name}
+                class="h-16 sm:h-20 w-auto object-contain flex-shrink-0"
+              />
+            <% end %>
+            <div class="text-center sm:text-left">
+              <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-1">
+                {@app_name}
+              </h1>
+              <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300">Visitor Services</p>
+              <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                Check in or share your feedback
+              </p>
+            </div>
+          </div>
         </div>
 
         <%= if @step == :select_location do %>
@@ -484,9 +585,9 @@ defmodule VoileWeb.Visitor.CheckIn do
           </div>
           
     <!-- Two Column Layout -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="flex flex-col lg:flex-row gap-6">
             <!-- Check-in Form -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <div class="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               <div class="mb-4">
                 <h3 class="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-2">
                   <.icon name="hero-clipboard-document-check" class="w-6 h-6 inline-block" /> Check In
@@ -555,7 +656,7 @@ defmodule VoileWeb.Visitor.CheckIn do
             </div>
             
     <!-- Survey Form -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <div class="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               <div class="mb-4">
                 <h3 class="text-2xl font-semibold text-purple-600 dark:text-purple-400 mb-2">
                   <.icon name="hero-chat-bubble-left-right" class="w-6 h-6 inline-block" /> Feedback
@@ -611,6 +712,39 @@ defmodule VoileWeb.Visitor.CheckIn do
                   <% end %>
                 </div>
 
+                <%= if @rating > 0 do %>
+                  <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 text-center">
+                      Rate our staff (Optional)
+                    </label>
+                    <div class="flex justify-center space-x-0.5">
+                      <%= for star <- 1..5 do %>
+                        <button
+                          type="button"
+                          phx-click="set_staff_rating"
+                          phx-value-rating={star}
+                          class="focus:outline-none transition-transform hover:scale-110"
+                        >
+                          <%= if star <= @staff_rating do %>
+                            <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          <% else %>
+                            <svg class="w-6 h-6 text-gray-300 dark:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          <% end %>
+                        </button>
+                      <% end %>
+                    </div>
+                    <%= if @staff_rating > 0 do %>
+                      <p class="text-center text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        {@staff_rating} {if @staff_rating == 1, do: "star", else: "stars"}
+                      </p>
+                    <% end %>
+                  </div>
+                <% end %>
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Comments (Optional)
@@ -634,6 +768,32 @@ defmodule VoileWeb.Visitor.CheckIn do
                   Submit Feedback
                 </button>
               </form>
+              
+    <!-- Registration Info -->
+              <%= if @app_website do %>
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <div class="flex items-start gap-3">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <.icon name="hero-user-plus" class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div class="flex-1">
+                      <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                        New to our system?
+                      </h5>
+                      <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        Register for a member account to access more features.
+                      </p>
+                      <a
+                        href={"#{@app_website}/register"}
+                        target="_blank"
+                        class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white text-xs font-medium rounded-lg transition-colors"
+                      >
+                        Register Now <.icon name="hero-arrow-top-right-on-square" class="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
             </div>
           </div>
         <% end %>
@@ -731,6 +891,40 @@ defmodule VoileWeb.Visitor.CheckIn do
           </div>
         </div>
       <% end %>
+      
+    <!-- Footer -->
+      <footer class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Clock and Date -->
+            <div class="flex items-center gap-3" phx-hook="RealtimeClock" id="realtime-clock">
+              <.icon name="hero-clock" class="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+              <div class="flex flex-col">
+                <span
+                  class="font-mono text-3xl font-bold text-gray-900 dark:text-white leading-tight"
+                  data-clock-time
+                >
+                  00:00:00
+                </span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 font-medium" data-clock-date>
+                  Sunday, 01 Jan 2026
+                </span>
+              </div>
+            </div>
+            
+    <!-- Software Info -->
+            <div class="flex items-center gap-3 text-center md:text-right">
+              <div class="text-xs text-gray-600 dark:text-gray-400">
+                <div class="font-semibold">{@app_name}</div>
+                <div class="flex items-center gap-1 justify-center md:justify-end">
+                  <span>Powered by Voile Framework</span>
+                  <span class="text-gray-400 dark:text-gray-500">v1.0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
     """
   end
