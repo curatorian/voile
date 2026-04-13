@@ -3725,6 +3725,124 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/observability/openobserve/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenObserve
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4828,26 +4946,45 @@
 
 <h1 id="voile-application-architecture-overview">Voile Application Architecture Overview<a class="headerlink" href="#voile-application-architecture-overview" title="Permanent link">&para;</a></h1>
 <h2 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">&para;</a></h2>
+<p>Voile is designed as a GLAM platform for Galleries, Libraries, Archives, and Museums. The core architecture is built around a shared catalog and metadata model, with GLAM-aware resource classes, role-based access, and multi-node support.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                     VOILE LIBRARY SYSTEM                        │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                   Phoenix LiveView Application                   │
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│               VOILE GLAM MANAGEMENT PLATFORM                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│          Phoenix LiveView + Ecto + Plugin Extension             │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└─────────────────────────────────────────────────────────────────┘
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                                │
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                ┌───────────────┴───────────────┐
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                │                               │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ┌───────▼────────┐             ┌───────▼────────┐
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │  CATALOG       │             │  CIRCULATION   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        │  SYSTEM        │             │  SYSTEM        │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        └───────┬────────┘             └───────┬────────┘
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ┌───────▼────────┐             ┌────────▼────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │   GALLERY      │             │   LIBRARY       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        │   DOMAIN       │             │   DOMAIN        │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        └───────┬────────┘             └────────┬────────┘
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                │                               │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        ┌───────▼───────────┐           ┌──────▼──────────┐
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        │ - Collections     │           │ - Transactions  │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        │ - Items           │           │ - Reservations  │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        │ - Metadata        │           │ - Requisitions  │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        │ - Attachments     │           │ - Fines         │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        └───────────────────┘           │ - History       │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                                        └─────────────────┘
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        ┌───────▼───────────┐           ┌───────▼──────────┐
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        │   ARCHIVE         │           │   MUSEUM         │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        │   DOMAIN          │           │   DOMAIN         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        └───────┬───────────┘           └───────┬──────────┘
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                │                               │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                └───────────────┬───────────────┘
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                                │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                     ┌──────────▼───────────┐
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                     │  Shared Catalog &amp;    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                     │  Metadata Core       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                     └──────────┬───────────┘
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                                │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                ┌───────────────┴───────────────┐
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                │                               │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        ┌───────▼────────────┐         ┌────────▼────────────┐
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        │  Collections       │         │  Items              │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        └───────┬────────────┘         └────────┬────────────┘
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>                │                            │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        ┌───────▼────────────┐               │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        │  CollectionFields  │&lt;──────────────┘
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        └────────────────────┘
 </code></pre></div>
+<p>Collections are the primary GLAM resource containers in Voile. Each collection belongs to a <code>ResourceClass</code> with a <code>glam_type</code> (Gallery, Library, Archive, or Museum) and may include shared content, attachments, and child items.</p>
+<p>Items are the collection-specific units that inherit catalog metadata from their parent collection. <code>collection_fields</code> are flexible metadata entries attached to a collection, used to store custom field values such as call numbers, provenance details, or domain-specific properties that can be mapped into exports and GLAM workflows.</p>
+<p>The GLAM model is enforced through <code>ResourceClass.glam_type</code>, institution-scoped <code>node_id</code>, and curated roles such as <code>librarian</code>, <code>archivist</code>, <code>gallery_curator</code>, and <code>museum_curator</code>.</p>
+<p><code>Voile.GLAM.CollectionHelper</code> and <code>VoileWeb.Auth.GLAMAuthorization</code> implement the access rules that keep collections and metadata filtered by GLAM type.</p>
 <h2 id="module-family-structure">Module Family Structure<a class="headerlink" href="#module-family-structure" title="Permanent link">&para;</a></h2>
 <h3 id="catalog-family-voilewebdashboardcatalog">Catalog Family (<code>VoileWeb.Dashboard.Catalog</code>)<a class="headerlink" href="#catalog-family-voilewebdashboardcatalog" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Catalog.Index                           [Dashboard Overview]
@@ -5269,11 +5406,11 @@
 <a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>    └── library/                            [Circulation Schemas]
 </code></pre></div>
 <hr />
-<p><strong>Architecture Type:</strong> Modular Monolith with LiveView<br />
-<strong>Pattern:</strong> MVC with LiveView<br />
-<strong>Database:</strong> PostgreSQL with Ecto<br />
-<strong>Frontend:</strong> Server-rendered with LiveView<br />
-<strong>Real-time:</strong> WebSocket via Phoenix Channels  </p>
+<p><strong>Architecture Type:</strong> Modular Monolith with LiveView
+<strong>Pattern:</strong> MVC with LiveView
+<strong>Database:</strong> PostgreSQL with Ecto
+<strong>Frontend:</strong> Server-rendered with LiveView
+<strong>Real-time:</strong> WebSocket via Phoenix Channels</p>
 
 
 
