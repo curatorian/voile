@@ -5464,9 +5464,9 @@
 - Access summary panel</p>
 <h2 id="routes">Routes<a class="headerlink" href="#routes" title="Permanent link">&para;</a></h2>
 <p>Added to <code>/manage/catalog/attachments</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">scope</span><span class="w"> </span><span class="s2">&quot;/attachments&quot;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Dashboard.Catalog.Attachment.Index</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">&quot;/:id/access&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Dashboard.Catalog.Attachment.Index</span><span class="p">,</span><span class="w"> </span><span class="ss">:manage_access</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">scope</span><span class="w"> </span><span class="s2">"/attachments"</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w"> </span><span class="nc">Dashboard.Catalog.Attachment.Index</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">"/:id/access"</span><span class="p">,</span><span class="w"> </span><span class="nc">Dashboard.Catalog.Attachment.Index</span><span class="p">,</span><span class="w"> </span><span class="ss">:manage_access</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">end</span>
 </code></pre></div>
 <p><strong>URLs</strong>:
@@ -5574,12 +5574,12 @@
 <ol>
 <li>
 <p>Add assign in <code>mount/3</code>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="ss">:filter_new_field</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="ss">:filter_new_field</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">)</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Add to <code>build_filters_from_params/1</code>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">maybe_add_filter</span><span class="p">(</span><span class="ss">:new_field</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;new_field&quot;</span><span class="p">])</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">maybe_add_filter</span><span class="p">(</span><span class="ss">:new_field</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">[</span><span class="s2">"new_field"</span><span class="p">])</span>
 </code></pre></div></p>
 </li>
 <li>

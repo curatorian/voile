@@ -5543,12 +5543,12 @@
 
 <h1 id="permission-management-quick-reference">Permission Management Quick Reference<a class="headerlink" href="#permission-management-quick-reference" title="Permanent link">&para;</a></h1>
 <h2 id="routes">Routes<a class="headerlink" href="#routes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># In router.ex under scope &quot;/settings&quot;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">scope</span><span class="w"> </span><span class="s2">&quot;/permissions&quot;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">&quot;/new&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive</span><span class="p">,</span><span class="w"> </span><span class="ss">:new</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">&quot;/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive.Show</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">&quot;/:id/edit&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive.Edit</span><span class="p">,</span><span class="w"> </span><span class="ss">:edit</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># In router.ex under scope "/settings"</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">scope</span><span class="w"> </span><span class="s2">"/permissions"</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">"/new"</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive</span><span class="p">,</span><span class="w"> </span><span class="ss">:new</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">"/:id"</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive.Show</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="n">live</span><span class="w"> </span><span class="s2">"/:id/edit"</span><span class="p">,</span><span class="w"> </span><span class="nc">Users.Permission.ManageLive.Edit</span><span class="p">,</span><span class="w"> </span><span class="ss">:edit</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">end</span>
 </code></pre></div>
 <h2 id="liveview-components">LiveView Components<a class="headerlink" href="#liveview-components" title="Permanent link">&para;</a></h2>
@@ -5580,15 +5580,15 @@
 </code></pre></div>
 <h3 id="create-a-permission">Create a permission<a class="headerlink" href="#create-a-permission" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nc">PermissionManager</span><span class="o">.</span><span class="n">create_permission</span><span class="p">(%{</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;collections.create&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="ss">resource</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;collections&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;create&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Create new collections&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s2">"collections.create"</span><span class="p">,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="ss">resource</span><span class="p">:</span><span class="w"> </span><span class="s2">"collections"</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"create"</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">"Create new collections"</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">})</span>
 </code></pre></div>
 <h3 id="update-a-permission">Update a permission<a class="headerlink" href="#update-a-permission" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nc">PermissionManager</span><span class="o">.</span><span class="n">update_permission</span><span class="p">(</span><span class="n">permission</span><span class="p">,</span><span class="w"> </span><span class="p">%{</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Updated description&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">"Updated description"</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">})</span>
 </code></pre></div>
 <h3 id="delete-a-permission">Delete a permission<a class="headerlink" href="#delete-a-permission" title="Permanent link">&para;</a></h3>
@@ -5596,13 +5596,13 @@
 </code></pre></div>
 <h2 id="template-helpers">Template Helpers<a class="headerlink" href="#template-helpers" title="Permanent link">&para;</a></h2>
 <h3 id="check-permission-in-template">Check Permission in Template<a class="headerlink" href="#check-permission-in-template" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&lt;%= if can?(@current_scope.user, &quot;permissions.manage&quot;) do %&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&lt;%= if can?(@current_scope.user, "permissions.manage") do %&gt;
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  &lt;.button&gt;New Permission&lt;/.button&gt;
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>&lt;% end %&gt;
 </code></pre></div>
 <h3 id="authorize-in-liveview">Authorize in LiveView<a class="headerlink" href="#authorize-in-liveview" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">def</span><span class="w"> </span><span class="n">mount</span><span class="p">(</span><span class="n">_params</span><span class="p">,</span><span class="w"> </span><span class="n">_session</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="n">authorize!</span><span class="p">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;permissions.manage&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="n">authorize!</span><span class="p">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="s2">"permissions.manage"</span><span class="p">)</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">}</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">end</span>
 </code></pre></div>
@@ -5645,21 +5645,21 @@
 </code></pre></div>
 <h2 id="access-control">Access Control<a class="headerlink" href="#access-control" title="Permanent link">&para;</a></h2>
 <p>All permission management requires:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="s2">&quot;permissions.manage&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="s2">"permissions.manage"</span>
 </code></pre></div>
 <h2 id="ui-elements">UI Elements<a class="headerlink" href="#ui-elements" title="Permanent link">&para;</a></h2>
 <h3 id="resource-badge-blue">Resource Badge (Blue)<a class="headerlink" href="#resource-badge-blue" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&lt;span class=&quot;inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200&quot;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&lt;span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"&gt;
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  {permission.resource}
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>&lt;/span&gt;
 </code></pre></div>
 <h3 id="action-badge-green">Action Badge (Green)<a class="headerlink" href="#action-badge-green" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>&lt;span class=&quot;inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200&quot;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>&lt;span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"&gt;
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  {permission.action}
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>&lt;/span&gt;
 </code></pre></div>
 <h3 id="system-role-badge-purple">System Role Badge (Purple)<a class="headerlink" href="#system-role-badge-purple" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>&lt;span class=&quot;inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200&quot;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>&lt;span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"&gt;
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  System
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>&lt;/span&gt;
 </code></pre></div>
@@ -5717,11 +5717,11 @@
 </ul>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="cannot-delete-permission-in-use">Cannot delete permission in use<a class="headerlink" href="#cannot-delete-permission-in-use" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Cannot delete permission that is assigned to N role(s)&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="s2">"Cannot delete permission that is assigned to N role(s)"</span><span class="p">}</span>
 </code></pre></div>
 <h3 id="invalid-permission-format">Invalid permission format<a class="headerlink" href="#invalid-permission-format" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Changeset error</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="p">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;must be in format resource.action (e.g., collections.create)&quot;</span><span class="p">]}</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="p">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"must be in format resource.action (e.g., collections.create)"</span><span class="p">]}</span>
 </code></pre></div>
 <h2 id="success-criteria">Success Criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h2>
 <p>Your permission management system is working correctly if:</p>

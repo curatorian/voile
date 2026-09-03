@@ -5333,8 +5333,8 @@
 <li>Copy the access_token and refresh_token</li>
 </ol>
 <h3 id="step-6-add-tokens-to-env">Step 6: Add Tokens to .env<a class="headerlink" href="#step-6-add-tokens-to-env" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ya29.a0AfB_byD...&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">&quot;1//0gL...&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">"ya29.a0AfB_byD..."</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">"1//0gL..."</span>
 </code></pre></div>
 <h3 id="step-7-reload-environment">Step 7: Reload Environment<a class="headerlink" href="#step-7-reload-environment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">source</span><span class="w"> </span>.env
@@ -5343,10 +5343,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># In IEx:</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nc">Voile.Mailer</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nc">Swoosh.Email</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-email@example.com&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="ss">from</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;Library System&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;library@youruniversity.edu&quot;</span><span class="p">},</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="ss">subject</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Test Email via Gmail API&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="ss">text_body</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;If you receive this, Gmail API is working!&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-email@example.com"</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="ss">from</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s2">"Library System"</span><span class="p">,</span><span class="w"> </span><span class="s2">"library@youruniversity.edu"</span><span class="p">},</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="ss">subject</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test Email via Gmail API"</span><span class="p">,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="ss">text_body</span><span class="p">:</span><span class="w"> </span><span class="s2">"If you receive this, Gmail API is working!"</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">)</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">)</span>
 </code></pre></div>

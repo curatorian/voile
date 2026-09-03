@@ -5650,10 +5650,10 @@
 <h4 id="5-update-email-from-address">5. Update Email "From" Address<a class="headerlink" href="#5-update-email-from-address" title="Permanent link">&para;</a></h4>
 <p>Edit <code>/lib/voile/notifications/loan_reminder_email.ex</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Change from:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">from</span><span class="p">({</span><span class="s2">&quot;Library System&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;noreply@library.system&quot;</span><span class="p">})</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">from</span><span class="p">({</span><span class="s2">"Library System"</span><span class="p">,</span><span class="w"> </span><span class="s2">"noreply@library.system"</span><span class="p">})</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># To:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">from</span><span class="p">({</span><span class="s2">&quot;University Library&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;library-system@youruniversity.edu&quot;</span><span class="p">})</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">from</span><span class="p">({</span><span class="s2">"University Library"</span><span class="p">,</span><span class="w"> </span><span class="s2">"library-system@youruniversity.edu"</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="google-workspace-limits">Google Workspace Limits<a class="headerlink" href="#google-workspace-limits" title="Permanent link">&para;</a></h3>
 <table>
@@ -5766,14 +5766,14 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>yourdomain.edu.  IN  MX  10  mail.yourdomain.edu.
 </code></pre></div></p>
 <p><strong>SPF Record:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>yourdomain.edu.  IN  TXT  &quot;v=spf1 mx ip4:YOUR_SERVER_IP ~all&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>yourdomain.edu.  IN  TXT  "v=spf1 mx ip4:YOUR_SERVER_IP ~all"
 </code></pre></div></p>
 <p><strong>DKIM Record</strong> (generate with OpenDKIM):
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>opendkim<span class="w"> </span>opendkim-tools
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>opendkim-genkey<span class="w"> </span>-t<span class="w"> </span>-s<span class="w"> </span>mail<span class="w"> </span>-d<span class="w"> </span>yourdomain.edu
 </code></pre></div></p>
 <p><strong>DMARC Record:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>_dmarc.yourdomain.edu.  IN  TXT  &quot;v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.edu&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>_dmarc.yourdomain.edu.  IN  TXT  "v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.edu"
 </code></pre></div></p>
 <h4 id="6-configure-ssl-certificate-lets-encrypt">6. Configure SSL Certificate (Let's Encrypt)<a class="headerlink" href="#6-configure-ssl-certificate-lets-encrypt" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>certbot
@@ -5852,15 +5852,15 @@
 <a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="na">User</span><span class="o">=</span><span class="s">voile</span>
 <a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="na">Group</span><span class="o">=</span><span class="s">voile</span>
 <a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/opt/voile</span>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;PORT=4000&quot;</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;PHX_HOST=library.youruniversity.edu&quot;</span>
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;PHX_SERVER=true&quot;</span>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;MAILER_ADAPTER=smtp&quot;</span>
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SMTP_RELAY=smtp.gmail.com&quot;</span>
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SMTP_PORT=587&quot;</span>
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SMTP_USERNAME=library-system@youruniversity.edu&quot;</span>
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SMTP_PASSWORD=your_app_password&quot;</span>
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SMTP_SSL=false&quot;</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"PORT=4000"</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"PHX_HOST=library.youruniversity.edu"</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"PHX_SERVER=true"</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"MAILER_ADAPTER=smtp"</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"SMTP_RELAY=smtp.gmail.com"</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"SMTP_PORT=587"</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"SMTP_USERNAME=library-system@youruniversity.edu"</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"SMTP_PASSWORD=your_app_password"</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="na">Environment</span><span class="o">=</span><span class="s">"SMTP_SSL=false"</span>
 <a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">/opt/voile/.env</span>
 <a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/opt/voile/bin/voile start</span>
 <a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
@@ -5896,11 +5896,11 @@
 <a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>iex&gt;<span class="w"> </span>import<span class="w"> </span>Swoosh.Email
 <a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>
 <a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>iex&gt;<span class="w"> </span>new<span class="o">()</span>
-<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>to<span class="o">(</span><span class="s2">&quot;your-email@example.com&quot;</span><span class="o">)</span>
-<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>from<span class="o">({</span><span class="s2">&quot;Library System&quot;</span>,<span class="w"> </span><span class="s2">&quot;library-system@youruniversity.edu&quot;</span><span class="o">})</span>
-<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>subject<span class="o">(</span><span class="s2">&quot;Test Email from Production&quot;</span><span class="o">)</span>
-<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>html_body<span class="o">(</span><span class="s2">&quot;&lt;h1&gt;Hello!&lt;/h1&gt;&lt;p&gt;This is a test email.&lt;/p&gt;&quot;</span><span class="o">)</span>
-<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>text_body<span class="o">(</span><span class="s2">&quot;Hello! This is a test email.&quot;</span><span class="o">)</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>to<span class="o">(</span><span class="s2">"your-email@example.com"</span><span class="o">)</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>from<span class="o">({</span><span class="s2">"Library System"</span>,<span class="w"> </span><span class="s2">"library-system@youruniversity.edu"</span><span class="o">})</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>subject<span class="o">(</span><span class="s2">"Test Email from Production"</span><span class="o">)</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>html_body<span class="o">(</span><span class="s2">"&lt;h1&gt;Hello!&lt;/h1&gt;&lt;p&gt;This is a test email.&lt;/p&gt;"</span><span class="o">)</span>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>text_body<span class="o">(</span><span class="s2">"Hello! This is a test email."</span><span class="o">)</span>
 <a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>...&gt;<span class="w"> </span><span class="p">|</span>&gt;<span class="w"> </span>Mailer.deliver<span class="o">()</span>
 </code></pre></div>
 <h3 id="2-test-loan-reminder-manually">2. Test Loan Reminder Manually<a class="headerlink" href="#2-test-loan-reminder-manually" title="Permanent link">&para;</a></h3>
@@ -5982,8 +5982,8 @@
 </code></pre></div></p>
 <h4 id="2-authentication-failed">2. Authentication Failed<a class="headerlink" href="#2-authentication-failed" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Check credentials</span>
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;SMTP_USERNAME: </span><span class="nv">$SMTP_USERNAME</span><span class="s2">&quot;</span>
-<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;SMTP_PASSWORD: </span><span class="nv">$SMTP_PASSWORD</span><span class="s2">&quot;</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"SMTP_USERNAME: </span><span class="nv">$SMTP_USERNAME</span><span class="s2">"</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"SMTP_PASSWORD: </span><span class="nv">$SMTP_PASSWORD</span><span class="s2">"</span>
 <a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
 <a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1"># Test SMTP auth manually</span>
 <a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>telnet<span class="w"> </span>smtp.gmail.com<span class="w"> </span><span class="m">587</span>
@@ -6012,7 +6012,7 @@
 <a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>sudo<span class="w"> </span>postconf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rate
 <a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
 <a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Adjust if needed</span>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;smtpd_client_message_rate_limit = 100&#39;</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>sudo<span class="w"> </span>postconf<span class="w"> </span>-e<span class="w"> </span><span class="s1">'smtpd_client_message_rate_limit = 100'</span>
 <a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>sudo<span class="w"> </span>postfix<span class="w"> </span>reload
 </code></pre></div></p>
 <h3 id="email-deliverability-checklist">Email Deliverability Checklist<a class="headerlink" href="#email-deliverability-checklist" title="Permanent link">&para;</a></h3>
@@ -6059,10 +6059,10 @@
 <a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SMTP_USERNAME</span><span class="o">=</span>library-system@youruniversity.edu
 <a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SMTP_PASSWORD</span><span class="o">=</span>your_app_password
 <a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>
-<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="c1"># 3. Update email &quot;from&quot; address in code</span>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="c1"># 3. Update email "from" address in code</span>
 <a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1"># Edit: lib/voile/notifications/loan_reminder_email.ex</span>
-<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="c1"># Change: from({&quot;Library System&quot;, &quot;noreply@library.system&quot;})</span>
-<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a><span class="c1"># To:     from({&quot;University Library&quot;, &quot;library-system@youruniversity.edu&quot;})</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="c1"># Change: from({"Library System", "noreply@library.system"})</span>
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a><span class="c1"># To:     from({"University Library", "library-system@youruniversity.edu"})</span>
 <a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>
 <a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a><span class="c1"># 4. Deploy and test</span>
 <a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>./bin/voile<span class="w"> </span>restart

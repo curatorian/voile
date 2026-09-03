@@ -5044,16 +5044,16 @@
 <h3 id="4-set-environment-variables">4. Set Environment Variables<a class="headerlink" href="#4-set-environment-variables" title="Permanent link">&para;</a></h3>
 <p>Create or update your <code>.env</code> file:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Gmail API OAuth2 Credentials</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">VOILE_GMAIL_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your-client-id.apps.googleusercontent.com&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">VOILE_GMAIL_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your-client-secret&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">VOILE_GMAIL_REDIRECT_URI</span><span class="o">=</span><span class="s2">&quot;http://localhost:4000/auth/gmail/callback&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">VOILE_GMAIL_CLIENT_ID</span><span class="o">=</span><span class="s2">"your-client-id.apps.googleusercontent.com"</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">VOILE_GMAIL_CLIENT_SECRET</span><span class="o">=</span><span class="s2">"your-client-secret"</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">VOILE_GMAIL_REDIRECT_URI</span><span class="o">=</span><span class="s2">"http://localhost:4000/auth/gmail/callback"</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># These will be generated in next step</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">""</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">""</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Set mailer adapter to use Gmail API</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">VOILE_MAILER_ADAPTER</span><span class="o">=</span><span class="s2">&quot;gmail_api&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">VOILE_MAILER_ADAPTER</span><span class="o">=</span><span class="s2">"gmail_api"</span>
 </code></pre></div>
 <h3 id="5-get-oauth-tokens-one-time-setup">5. Get OAuth Tokens (One-Time Setup)<a class="headerlink" href="#5-get-oauth-tokens-one-time-setup" title="Permanent link">&para;</a></h3>
 <p>Start your Phoenix server or IEx:</p>
@@ -5068,8 +5068,8 @@
 3. Ask you to authorize the app
 4. Provide you with access and refresh tokens</p>
 <p>Copy the tokens and add them to your <code>.env</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ya29.a0AfB_byD...&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">&quot;1//0gL...&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">"ya29.a0AfB_byD..."</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">"1//0gL..."</span>
 </code></pre></div>
 <p><strong>Important</strong>: The refresh token is generated only once! Save it securely.</p>
 <h3 id="6-test-email-sending">6. Test Email Sending<a class="headerlink" href="#6-test-email-sending" title="Permanent link">&para;</a></h3>
@@ -5084,26 +5084,26 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">email</span><span class="w"> </span><span class="o">=</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="n">new</span><span class="p">()</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;recipient@example.com&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">from</span><span class="p">({</span><span class="s2">&quot;Voile&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your-gmail@gmail.com&quot;</span><span class="p">})</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;Test Email via Gmail API&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">text_body</span><span class="p">(</span><span class="s2">&quot;This email was sent using Gmail API!&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">html_body</span><span class="p">(</span><span class="s2">&quot;&lt;p&gt;This email was sent using &lt;strong&gt;Gmail API&lt;/strong&gt;!&lt;/p&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">to</span><span class="p">(</span><span class="s2">"recipient@example.com"</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">from</span><span class="p">({</span><span class="s2">"Voile"</span><span class="p">,</span><span class="w"> </span><span class="s2">"your-gmail@gmail.com"</span><span class="p">})</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">subject</span><span class="p">(</span><span class="s2">"Test Email via Gmail API"</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">text_body</span><span class="p">(</span><span class="s2">"This email was sent using Gmail API!"</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">html_body</span><span class="p">(</span><span class="s2">"&lt;p&gt;This email was sent using &lt;strong&gt;Gmail API&lt;/strong&gt;!&lt;/p&gt;"</span><span class="p">)</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nc">Voile.Mailer</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
 </code></pre></div>
 <p>If successful, you should see:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p">%{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;message_id&quot;</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p">%{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="s2">"message_id"</span><span class="p">}}</span>
 </code></pre></div></p>
 <h2 id="production-deployment">Production Deployment<a class="headerlink" href="#production-deployment" title="Permanent link">&para;</a></h2>
 <h3 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
 <p>Set these in your production environment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_MAILER_ADAPTER</span><span class="o">=</span><span class="s2">&quot;gmail_api&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your-client-id.apps.googleusercontent.com&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your-client-secret&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">&quot;ya29.a0AfB_byD...&quot;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">&quot;1//0gL...&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_REDIRECT_URI</span><span class="o">=</span><span class="s2">&quot;https://yourdomain.com/auth/gmail/callback&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_MAILER_ADAPTER</span><span class="o">=</span><span class="s2">"gmail_api"</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_CLIENT_ID</span><span class="o">=</span><span class="s2">"your-client-id.apps.googleusercontent.com"</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_CLIENT_SECRET</span><span class="o">=</span><span class="s2">"your-client-secret"</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_ACCESS_TOKEN</span><span class="o">=</span><span class="s2">"ya29.a0AfB_byD..."</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">"1//0gL..."</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_GMAIL_REDIRECT_URI</span><span class="o">=</span><span class="s2">"https://yourdomain.com/auth/gmail/callback"</span>
 </code></pre></div>
 <h3 id="token-refresh">Token Refresh<a class="headerlink" href="#token-refresh" title="Permanent link">&para;</a></h3>
 <p>The adapter automatically refreshes the access token when it expires using the refresh token. No manual intervention needed!</p>

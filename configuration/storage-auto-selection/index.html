@@ -4750,8 +4750,8 @@
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <h3 id="with-s3-credentials-minios3-storage">With S3 Credentials (MinIO/S3 Storage)<a class="headerlink" href="#with-s3-credentials-minios3-storage" title="Permanent link">&para;</a></h3>
 <p>If these environment variables are set:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">&quot;your-access-key&quot;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;your-secret-key&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">"your-access-key"</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">"your-secret-key"</span>
 </code></pre></div></p>
 <p>→ <strong>Uses <code>Client.Storage.S3</code></strong> (MinIO/S3 storage)</p>
 <h3 id="without-s3-credentials-local-filesystem">Without S3 Credentials (Local Filesystem)<a class="headerlink" href="#without-s3-credentials-local-filesystem" title="Permanent link">&para;</a></h3>
@@ -4761,20 +4761,20 @@
 <h3 id="automatic-selection-recommended">Automatic Selection (Recommended)<a class="headerlink" href="#automatic-selection-recommended" title="Permanent link">&para;</a></h3>
 <p>Just set or unset the S3 credentials:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Option 1: Use MinIO/S3</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">&quot;access-key&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;secret-key&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_BUCKET_NAME</span><span class="o">=</span><span class="s2">&quot;glam-storage&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_PUBLIC_URL</span><span class="o">=</span><span class="s2">&quot;https://library.unpad.ac.id&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">"access-key"</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">"secret-key"</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_BUCKET_NAME</span><span class="o">=</span><span class="s2">"glam-storage"</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_PUBLIC_URL</span><span class="o">=</span><span class="s2">"https://library.unpad.ac.id"</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Option 2: Use Local Storage</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Simply don&#39;t set the S3 credentials, or unset them:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Simply don't set the S3 credentials, or unset them:</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">unset</span><span class="w"> </span>VOILE_S3_ACCESS_KEY_ID
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">unset</span><span class="w"> </span>VOILE_S3_SECRET_ACCESS_KEY
 </code></pre></div>
 <h3 id="manual-override-optional">Manual Override (Optional)<a class="headerlink" href="#manual-override-optional" title="Permanent link">&para;</a></h3>
 <p>You can explicitly set the adapter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_STORAGE_ADAPTER</span><span class="o">=</span><span class="s2">&quot;s3&quot;</span><span class="w">    </span><span class="c1"># Force S3</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_STORAGE_ADAPTER</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="w"> </span><span class="c1"># Force Local</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_STORAGE_ADAPTER</span><span class="o">=</span><span class="s2">"s3"</span><span class="w">    </span><span class="c1"># Force S3</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_STORAGE_ADAPTER</span><span class="o">=</span><span class="s2">"local"</span><span class="w"> </span><span class="c1"># Force Local</span>
 </code></pre></div>
 <h2 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h2>
 <ol>
@@ -4787,13 +4787,13 @@
 <p>Test which adapter is active:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># With credentials</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">source</span><span class="w"> </span>.env
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mix<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;IO.inspect(Application.get_env(:voile, :storage_adapter))&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mix<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span><span class="s1">'IO.inspect(Application.get_env(:voile, :storage_adapter))'</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># =&gt; Client.Storage.S3</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Without credentials  </span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">unset</span><span class="w"> </span>VOILE_S3_ACCESS_KEY_ID
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">unset</span><span class="w"> </span>VOILE_S3_SECRET_ACCESS_KEY
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>mix<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;IO.inspect(Application.get_env(:voile, :storage_adapter))&#39;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>mix<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span><span class="s1">'IO.inspect(Application.get_env(:voile, :storage_adapter))'</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># =&gt; Client.Storage.Local</span>
 </code></pre></div>
 <h2 id="migration-path">Migration Path<a class="headerlink" href="#migration-path" title="Permanent link">&para;</a></h2>
@@ -4808,10 +4808,10 @@
 <li>
 <p><strong>Production</strong> (MinIO/S3):
    <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># .env.production</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">&quot;prod-access-key&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;prod-secret-key&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_BUCKET_NAME</span><span class="o">=</span><span class="s2">&quot;glam-storage&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_PUBLIC_URL</span><span class="o">=</span><span class="s2">&quot;https://library.unpad.ac.id&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">"prod-access-key"</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">"prod-secret-key"</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_BUCKET_NAME</span><span class="o">=</span><span class="s2">"glam-storage"</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VOILE_S3_PUBLIC_URL</span><span class="o">=</span><span class="s2">"https://library.unpad.ac.id"</span>
 </code></pre></div></p>
 </li>
 </ol>

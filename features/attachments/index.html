@@ -5574,7 +5574,7 @@
 <h3 id="3-filter-queries">3. Filter Queries<a class="headerlink" href="#3-filter-queries" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">attachments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nc">Attachment</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Attachment</span><span class="o">.</span><span class="n">for_entity</span><span class="p">(</span><span class="n">collection_id</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;collection&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Attachment</span><span class="o">.</span><span class="n">for_entity</span><span class="p">(</span><span class="n">collection_id</span><span class="p">,</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">)</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">accessible_by</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </code></pre></div>
@@ -5629,7 +5629,7 @@
 <li>Access granted by role OR user</li>
 <li>Respects embargo dates</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">attachment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_attachment</span><span class="p">(%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;limited&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">attachment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_attachment</span><span class="p">(%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">"limited"</span><span class="p">})</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">grant_role_access</span><span class="p">(</span><span class="n">attachment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">staff_role</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="restricted">Restricted<a class="headerlink" href="#restricted" title="Permanent link">&para;</a></h3>
@@ -5640,7 +5640,7 @@
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">update_access_control</span><span class="p">(</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="n">attachment</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;restricted&quot;</span><span class="p">},</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">"restricted"</span><span class="p">},</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="n">admin_user</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
 </code></pre></div>
@@ -5744,7 +5744,7 @@
 <h3 id="2-staff-only-documents">2. Staff-Only Documents<a class="headerlink" href="#2-staff-only-documents" title="Permanent link">&para;</a></h3>
 <p><strong>Use Case</strong>: Internal procedures, staff manuals<br />
 <strong>Configuration</strong>: 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">attachment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_attachment</span><span class="p">(%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;limited&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">attachment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_attachment</span><span class="p">(%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">"limited"</span><span class="p">})</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">grant_role_access</span><span class="p">(</span><span class="n">attachment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">staff_role</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </code></pre></div></p>
 <h3 id="3-research-papers-with-embargo">3. Research Papers with Embargo<a class="headerlink" href="#3-research-papers-with-embargo" title="Permanent link">&para;</a></h3>
@@ -5753,7 +5753,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">update_access_control</span><span class="p">(</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="n">attachment</span><span class="p">,</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="p">%{</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;public&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">"public"</span><span class="p">,</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="ss">embargo_start_date</span><span class="p">:</span><span class="w"> </span><span class="n">publication_date</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="p">},</span>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="n">admin_user</span>
@@ -5776,7 +5776,7 @@
 <strong>Configuration</strong>:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">update_access_control</span><span class="p">(</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="n">attachment</span><span class="p">,</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="p">%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;restricted&quot;</span><span class="p">},</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="p">%{</span><span class="ss">access_level</span><span class="p">:</span><span class="w"> </span><span class="s2">"restricted"</span><span class="p">},</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="n">admin_user</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">)</span>
 </code></pre></div></p>
@@ -5791,10 +5791,10 @@
 </code></pre></div></p>
 <h2 id="integration-examples">🔧 Integration Examples<a class="headerlink" href="#integration-examples" title="Permanent link">&para;</a></h2>
 <h3 id="liveview">LiveView<a class="headerlink" href="#liveview" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">def</span><span class="w"> </span><span class="n">mount</span><span class="p">(%{</span><span class="s2">&quot;id&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p">},</span><span class="w"> </span><span class="n">_session</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">def</span><span class="w"> </span><span class="n">mount</span><span class="p">(%{</span><span class="s2">"id"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p">},</span><span class="w"> </span><span class="n">_session</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="n">attachments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nc">Attachment</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Attachment</span><span class="o">.</span><span class="n">for_entity</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;collection&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Attachment</span><span class="o">.</span><span class="n">for_entity</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">)</span>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">accessible_by</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">current_scope</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
@@ -5802,26 +5802,26 @@
 <a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="k">end</span>
 </code></pre></div>
 <h3 id="controller">Controller<a class="headerlink" href="#controller" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">def</span><span class="w"> </span><span class="n">download</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p">%{</span><span class="s2">&quot;id&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p">})</span><span class="w"> </span><span class="k">do</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">def</span><span class="w"> </span><span class="n">download</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p">%{</span><span class="s2">"id"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p">})</span><span class="w"> </span><span class="k">do</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="n">attachment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Repo</span><span class="o">.</span><span class="n">get!</span><span class="p">(</span><span class="nc">Attachment</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">)</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nc">AttachmentAccess</span><span class="o">.</span><span class="n">can_access?</span><span class="p">(</span><span class="n">attachment</span><span class="p">,</span><span class="w"> </span><span class="n">conn</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">current_scope</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="n">send_file</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="n">attachment</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="k">else</span>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">    </span><span class="n">conn</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p">(</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Access denied&quot;</span><span class="p">)</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p">(</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="s2">"Access denied"</span><span class="p">)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p"/"</span><span class="p">)</span>
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span><span class="k">end</span>
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="k">end</span>
 </code></pre></div>
 <h3 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&lt;div :for={attachment &lt;- @attachments}&gt;
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  &lt;%= if AttachmentAccess.can_access?(attachment, @current_scope.user) do %&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    &lt;.link href={~p&quot;/attachments/#{attachment.id}/download&quot;}&gt;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    &lt;.link href={~p"/attachments/#{attachment.id}/download"}&gt;
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>      Download {attachment.original_name}
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    &lt;/.link&gt;
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  &lt;% else %&gt;
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    &lt;span class=&quot;text-gray-500&quot;&gt;Access Restricted&lt;/span&gt;
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    &lt;span class="text-gray-500"&gt;Access Restricted&lt;/span&gt;
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  &lt;% end %&gt;
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>&lt;/div&gt;
 </code></pre></div>

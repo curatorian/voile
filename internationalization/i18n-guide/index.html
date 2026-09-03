@@ -5386,7 +5386,7 @@
 <p>The i18n configuration is in <code>config/config.exs</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">config</span><span class="w"> </span><span class="ss">:voile</span><span class="p">,</span><span class="w"> </span><span class="nc">VoileWeb.Gettext</span><span class="p">,</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="ss">locales</span><span class="p">:</span><span class="w"> </span><span class="sx">~w(id en)</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="ss">default_locale</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;id&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="ss">default_locale</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span>
 </code></pre></div>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <h3 id="1-locale-detection">1. Locale Detection<a class="headerlink" href="#1-locale-detection" title="Permanent link">&para;</a></h3>
@@ -5403,33 +5403,33 @@
 <h3 id="basic-translation">Basic Translation<a class="headerlink" href="#basic-translation" title="Permanent link">&para;</a></h3>
 <p>In LiveViews, Controllers, and Components:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Simple translation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># Returns: &quot;Simpan&quot; (Indonesian) or &quot;Save&quot; (English)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">gettext</span><span class="p">(</span><span class="s2">"Save"</span><span class="p">)</span><span class="w">  </span><span class="c1"># Returns: "Simpan" (Indonesian) or "Save" (English)</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Translation with variables</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Hello, %{name}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">gettext</span><span class="p">(</span><span class="s2">"Hello, %{name}!"</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="in-templates-heex">In Templates (HEEx)<a class="headerlink" href="#in-templates-heex" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&lt;!-- Simple text --&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>&lt;h1&gt;{gettext(&quot;Welcome&quot;)}&lt;/h1&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>&lt;h1&gt;{gettext("Welcome")}&lt;/h1&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>&lt;!-- In attributes --&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>&lt;button title={gettext(&quot;Save&quot;)}&gt;{gettext(&quot;Save&quot;)}&lt;/button&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>&lt;button title={gettext("Save")}&gt;{gettext("Save")}&lt;/button&gt;
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>&lt;!-- With variables --&gt;
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>&lt;p&gt;{gettext(&quot;Showing %{count} items&quot;, count: @total)}&lt;/p&gt;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>&lt;p&gt;{gettext("Showing %{count} items", count: @total)}&lt;/p&gt;
 </code></pre></div>
 <h3 id="domain-based-translation">Domain-Based Translation<a class="headerlink" href="#domain-based-translation" title="Permanent link">&para;</a></h3>
 <p>Use domains to organize translations by context:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Using the &quot;errors&quot; domain (for validation errors)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;can&#39;t be blank&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Using the "errors" domain (for validation errors)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">"errors"</span><span class="p">,</span><span class="w"> </span><span class="s2">"can't be blank"</span><span class="p">)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Using the &quot;default&quot; domain (for UI text)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Save&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Using the "default" domain (for UI text)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Save"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="plural-translations">Plural Translations<a class="headerlink" href="#plural-translations" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ngettext</span><span class="p">(</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="s2">&quot;One item&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;%{count} items&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="s2">"One item"</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">"%{count} items"</span><span class="p">,</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="n">count</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
 </code></pre></div>
@@ -5448,18 +5448,18 @@
 </code></pre></div>
 <h3 id="translation-file-format">Translation File Format<a class="headerlink" href="#translation-file-format" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">## Comment explaining the source</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">msgid</span> <span class="s">&quot;Save&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">msgstr</span> <span class="s">&quot;Simpan&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">msgid</span> <span class="s">"Save"</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">msgstr</span> <span class="s">"Simpan"</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">## With variables</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">msgid</span> <span class="s">&quot;Hello, %{name}!&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">msgstr</span> <span class="s">&quot;Halo, %{name}!&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">msgid</span> <span class="s">"Hello, %{name}!"</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">msgstr</span> <span class="s">"Halo, %{name}!"</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">## Plural forms</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">msgid</span> <span class="s">&quot;One item&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nv">msgid_plural</span> <span class="s">&quot;%{count} items&quot;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">msgstr[</span><span class="mi">0</span><span class="nv">]</span> <span class="s">&quot;Satu item&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">msgstr[</span><span class="mi">1</span><span class="nv">]</span> <span class="s">&quot;%{count} item&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">msgid</span> <span class="s">"One item"</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nv">msgid_plural</span> <span class="s">"%{count} items"</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">msgstr[</span><span class="mi">0</span><span class="nv">]</span> <span class="s">"Satu item"</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">msgstr[</span><span class="mi">1</span><span class="nv">]</span> <span class="s">"%{count} item"</span>
 </code></pre></div>
 <h2 id="common-translations">Common Translations<a class="headerlink" href="#common-translations" title="Permanent link">&para;</a></h2>
 <p>We've pre-translated common UI elements in <code>default.po</code>:</p>
@@ -5504,7 +5504,7 @@
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>&lt;/nav&gt;
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>&lt;!-- With custom class --&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>&lt;.locale_switcher class=&quot;my-4&quot; current_path={@current_path} /&gt;
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>&lt;.locale_switcher class="my-4" current_path={@current_path} /&gt;
 </code></pre></div>
 <p>The switcher automatically:
 - Shows the current locale with flag emoji
@@ -5514,22 +5514,22 @@
 <h2 id="utility-functions">Utility Functions<a class="headerlink" href="#utility-functions" title="Permanent link">&para;</a></h2>
 <p>Use <code>VoileWeb.Utils.Locale</code> for locale management:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Get current locale</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">get_locale</span><span class="p">()</span><span class="w">  </span><span class="c1"># Returns: &quot;id&quot; or &quot;en&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">get_locale</span><span class="p">()</span><span class="w">  </span><span class="c1"># Returns: "id" or "en"</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Set locale</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">put_locale</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">put_locale</span><span class="p">(</span><span class="s2">"en"</span><span class="p">)</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Get locale display name</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">locale_name</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># Returns: &quot;Bahasa Indonesia&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">locale_name</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="w">  </span><span class="c1"># Returns: "Bahasa Indonesia"</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Get locale flag</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">locale_flag</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># Returns: &quot;🇮🇩&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">locale_flag</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="w">  </span><span class="c1"># Returns: "🇮🇩"</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Get all locales</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nc">VoileWeb.Utils.Locale</span><span class="o">.</span><span class="n">all_locales</span><span class="p">()</span>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Returns: [</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1">#   %{code: &quot;id&quot;, name: &quot;Bahasa Indonesia&quot;, flag: &quot;🇮🇩&quot;},</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">#   %{code: &quot;en&quot;, name: &quot;English&quot;, flag: &quot;🇬🇧&quot;}</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1">#   %{code: "id", name: "Bahasa Indonesia", flag: "🇮🇩"},</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">#   %{code: "en", name: "English", flag: "🇬🇧"}</span>
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># ]</span>
 </code></pre></div>
 <h2 id="adding-new-translations">Adding New Translations<a class="headerlink" href="#adding-new-translations" title="Permanent link">&para;</a></h2>
@@ -5544,8 +5544,8 @@
 <h3 id="3-add-translations-manually">3. Add translations manually<a class="headerlink" href="#3-add-translations-manually" title="Permanent link">&para;</a></h3>
 <p>Edit the <code>.po</code> files in <code>priv/gettext/id/LC_MESSAGES/</code> and <code>priv/gettext/en/LC_MESSAGES/</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">## In your LiveView</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">msgid</span> <span class="s">&quot;New translation&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">msgstr</span> <span class="s">&quot;Terjemahan baru&quot;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">msgid</span> <span class="s">"New translation"</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">msgstr</span> <span class="s">"Terjemahan baru"</span>
 </code></pre></div>
 <h3 id="4-compile-translations">4. Compile translations<a class="headerlink" href="#4-compile-translations" title="Permanent link">&para;</a></h3>
 <p>Translations are automatically compiled when you start your server, but you can manually compile:</p>
@@ -5559,28 +5559,28 @@
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="o">&lt;</span><span class="n">button</span><span class="o">&gt;</span><span class="nc">Save</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># ✅ Good</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="o">&lt;</span><span class="n">button</span><span class="o">&gt;</span><span class="p">{</span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">)}</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="o">&lt;</span><span class="n">button</span><span class="o">&gt;</span><span class="p">{</span><span class="n">gettext</span><span class="p">(</span><span class="s2">"Save"</span><span class="p">)}</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Use domains</strong> to organize translations
    <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># For UI elements</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Save&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Save"</span><span class="p">)</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># For errors</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;can&#39;t be blank&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">dgettext</span><span class="p">(</span><span class="s2">"errors"</span><span class="p">,</span><span class="w"> </span><span class="s2">"can't be blank"</span><span class="p">)</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Provide context in comments</strong>
    <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">## Button to save user profile</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">msgid</span> <span class="s">&quot;Save&quot;</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nv">msgstr</span> <span class="s">&quot;Simpan&quot;</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">msgid</span> <span class="s">"Save"</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nv">msgstr</span> <span class="s">"Simpan"</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Use variables</strong> for dynamic content
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Welcome, %{name}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">gettext</span><span class="p">(</span><span class="s2">"Welcome, %{name}!"</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -5598,17 +5598,17 @@
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="n">mount</span><span class="p">(</span><span class="n">_params</span><span class="p">,</span><span class="w"> </span><span class="n">_session</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">     </span><span class="n">socket</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">     </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="ss">:page_title</span><span class="p">,</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Products&quot;</span><span class="p">))</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">     </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="ss">:empty_message</span><span class="p">,</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;No products found&quot;</span><span class="p">))}</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">     </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="ss">:page_title</span><span class="p">,</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">"Products"</span><span class="p">))</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">     </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">assign</span><span class="p">(</span><span class="ss">:empty_message</span><span class="p">,</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">"No products found"</span><span class="p">))}</span>
 <a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span><span class="k">end</span>
 <a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
 <a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="n">render</span><span class="p">(</span><span class="n">assigns</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="sx">~H</span><span class="sh">&quot;&quot;&quot;</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="sx">~H</span><span class="sh">"""</span>
 <a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="sh">    &lt;div&gt;</span>
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="sh">      &lt;h1&gt;{@page_title}&lt;/h1&gt;</span>
 <a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="sh">      &lt;button phx-click=&quot;create&quot;&gt;</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="sh">        {gettext(&quot;Create Product&quot;)}</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="sh">      &lt;button phx-click="create"&gt;</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="sh">        {gettext("Create Product")}</span>
 <a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="sh">      &lt;/button&gt;</span>
 <a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>
 <a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="sh">      &lt;%= if @products == [] do %&gt;</span>
@@ -5617,24 +5617,24 @@
 <a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>
 <a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="sh">      &lt;.locale_switcher current_path={@current_path} /&gt;</span>
 <a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="sh">    &lt;/div&gt;</span>
-<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">    </span><span class="sh">&quot;&quot;&quot;</span>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">    </span><span class="sh">"""</span>
 <a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">  </span><span class="k">end</span>
 <a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="k">end</span>
 </code></pre></div>
 <h3 id="example-2-flash-messages">Example 2: Flash Messages<a class="headerlink" href="#example-2-flash-messages" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">socket</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Product successfully created&quot;</span><span class="p">))</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">push_navigate</span><span class="p">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/products&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">"Product successfully created"</span><span class="p">))</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="o">|&gt;</span><span class="w"> </span><span class="n">push_navigate</span><span class="p">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p"/products"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="example-3-form-validation">Example 3: Form Validation<a class="headerlink" href="#example-3-form-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kd">def</span><span class="w"> </span><span class="n">changeset</span><span class="p">(</span><span class="n">product</span><span class="p">,</span><span class="w"> </span><span class="n">attrs</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="n">product</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">cast</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="ss">:name</span><span class="p">,</span><span class="w"> </span><span class="ss">:price</span><span class="p">])</span>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">validate_required</span><span class="p">([</span><span class="ss">:name</span><span class="p">,</span><span class="w"> </span><span class="ss">:price</span><span class="p">],</span><span class="w"> </span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">       </span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;can&#39;t be blank&quot;</span><span class="p">))</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">       </span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">"can't be blank"</span><span class="p">))</span>
 <a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">validate_number</span><span class="p">(</span><span class="ss">:price</span><span class="p">,</span><span class="w"> </span>
 <a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">       </span><span class="ss">greater_than</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">       </span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;must be greater than 0&quot;</span><span class="p">))</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">       </span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="n">gettext</span><span class="p">(</span><span class="s2">"must be greater than 0"</span><span class="p">))</span>
 <a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="k">end</span>
 </code></pre></div>
 <h2 id="testing-translations">Testing Translations<a class="headerlink" href="#testing-translations" title="Permanent link">&para;</a></h2>
@@ -5643,14 +5643,14 @@
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">iex</span><span class="w"> </span><span class="o">-</span><span class="nc">S</span><span class="w"> </span><span class="n">mix</span>
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Test Indonesian (default)</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nc">Gettext</span><span class="o">.</span><span class="n">put_locale</span><span class="p">(</span><span class="nc">VoileWeb.Gettext</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="nc">VoileWeb.Gettext</span><span class="o">.</span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Returns: &quot;Simpan&quot;</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nc">Gettext</span><span class="o">.</span><span class="n">put_locale</span><span class="p">(</span><span class="nc">VoileWeb.Gettext</span><span class="p">,</span><span class="w"> </span><span class="s2">"id"</span><span class="p">)</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="nc">VoileWeb.Gettext</span><span class="o">.</span><span class="n">gettext</span><span class="p">(</span><span class="s2">"Save"</span><span class="p">)</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Returns: "Simpan"</span>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
 <a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Test English</span>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nc">Gettext</span><span class="o">.</span><span class="n">put_locale</span><span class="p">(</span><span class="nc">VoileWeb.Gettext</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="nc">VoileWeb.Gettext</span><span class="o">.</span><span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Returns: &quot;Save&quot;</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nc">Gettext</span><span class="o">.</span><span class="n">put_locale</span><span class="p">(</span><span class="nc">VoileWeb.Gettext</span><span class="p">,</span><span class="w"> </span><span class="s2">"en"</span><span class="p">)</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="nc">VoileWeb.Gettext</span><span class="o">.</span><span class="n">gettext</span><span class="p">(</span><span class="s2">"Save"</span><span class="p">)</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Returns: "Save"</span>
 </code></pre></div>
 <h3 id="test-in-browser">Test in browser:<a class="headerlink" href="#test-in-browser" title="Permanent link">&para;</a></h3>
 <ol>

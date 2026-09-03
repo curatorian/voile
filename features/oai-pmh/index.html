@@ -5631,10 +5631,10 @@
 <p>For development, the default configuration works out of the box:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># config/dev.exs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">config</span><span class="w"> </span><span class="ss">:voile</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="ss">oai_pmh_repository_id</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost:4000&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="ss">oai_pmh_repository_id</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost:4000"</span>
 </code></pre></div>
 <p>For production, set environment variable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OAI_REPOSITORY_ID</span><span class="o">=</span><span class="s2">&quot;library.university.edu&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OAI_REPOSITORY_ID</span><span class="o">=</span><span class="s2">"library.university.edu"</span>
 </code></pre></div>
 <p><strong>Admin Email</strong>: The admin email shown in OAI-PMH responses is automatically read from the database setting <code>app_contact_email</code>. Set this in the admin interface at <strong>Settings &gt; App Profile</strong> (<code>/manage/settings/app-profile</code>).</p>
 <h3 id="2-test-the-endpoint">2. Test the Endpoint<a class="headerlink" href="#2-test-the-endpoint" title="Permanent link">&para;</a></h3>
@@ -5642,24 +5642,24 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mix<span class="w"> </span>phx.server
 </code></pre></div>
 <p>Test with curl:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=Identify&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=Identify"</span>
 </code></pre></div>
 <p>You should see XML output with your repository information!</p>
 <h3 id="3-basic-usage">3. Basic Usage<a class="headerlink" href="#3-basic-usage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get repository information</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=Identify&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=Identify"</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List all collections (sets)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListSets&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListSets"</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List all item identifiers</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListIdentifiers&amp;metadataPrefix=oai_dc&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListIdentifiers&amp;metadataPrefix=oai_dc"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Get full metadata records</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc"</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Get a single record</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=GetRecord&amp;identifier=oai:domain.com:item:ID&amp;metadataPrefix=oai_dc&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=GetRecord&amp;identifier=oai:domain.com:item:ID&amp;metadataPrefix=oai_dc"</span>
 </code></pre></div>
 <h2 id="oai-pmh-verbs">OAI-PMH Verbs<a class="headerlink" href="#oai-pmh-verbs" title="Permanent link">&para;</a></h2>
 <table>
@@ -5757,21 +5757,21 @@
 <h2 id="advanced-features">Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
 <h3 id="selective-harvesting-by-date">Selective Harvesting by Date<a class="headerlink" href="#selective-harvesting-by-date" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Records updated after specific date</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;from=2024-01-01T00:00:00Z&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;from=2024-01-01T00:00:00Z"</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Records within date range</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;from=2024-01-01T00:00:00Z&amp;until=2024-12-31T23:59:59Z&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;from=2024-01-01T00:00:00Z&amp;until=2024-12-31T23:59:59Z"</span>
 </code></pre></div>
 <h3 id="filtering-by-collection-set">Filtering by Collection (Set)<a class="headerlink" href="#filtering-by-collection-set" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Only records from specific collection</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;set=collection:BK001&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;set=collection:BK001"</span>
 </code></pre></div>
 <h3 id="pagination-with-resumption-tokens">Pagination with Resumption Tokens<a class="headerlink" href="#pagination-with-resumption-tokens" title="Permanent link">&para;</a></h3>
 <p>When results exceed the page size, you'll receive a resumption token:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;resumptionToken</span><span class="w"> </span><span class="na">cursor=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">completeListSize=</span><span class="s">&quot;500&quot;</span><span class="nt">&gt;</span>eyJvZmZzZXQiOjEwMH0=<span class="nt">&lt;/resumptionToken&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;resumptionToken</span><span class="w"> </span><span class="na">cursor=</span><span class="s">"0"</span><span class="w"> </span><span class="na">completeListSize=</span><span class="s">"500"</span><span class="nt">&gt;</span>eyJvZmZzZXQiOjEwMH0=<span class="nt">&lt;/resumptionToken&gt;</span>
 </code></pre></div>
 <p>Use it to fetch the next page:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=ListRecords&amp;resumptionToken=eyJvZmZzZXQiOjEwMH0=&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=ListRecords&amp;resumptionToken=eyJvZmZzZXQiOjEwMH0="</span>
 </code></pre></div>
 <h2 id="production-deployment">Production Deployment<a class="headerlink" href="#production-deployment" title="Permanent link">&para;</a></h2>
 <h3 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h3>
@@ -5791,9 +5791,9 @@
 <h3 id="configuration-example">Configuration Example<a class="headerlink" href="#configuration-example" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># config/runtime.exs (automatically configured)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">config</span><span class="w"> </span><span class="ss">:voile</span><span class="p">,</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="ss">oai_pmh_repository_id</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">&quot;OAI_REPOSITORY_ID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">host</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="ss">oai_pmh_repository_id</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"OAI_REPOSITORY_ID"</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">host</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Admin email is read from database setting &#39;app_contact_email&#39;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Admin email is read from database setting 'app_contact_email'</span>
 </code></pre></div>
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <h3 id="run-tests">Run Tests<a class="headerlink" href="#run-tests" title="Permanent link">&para;</a></h3>
@@ -5805,10 +5805,10 @@
 </code></pre></div>
 <h3 id="manual-testing">Manual Testing<a class="headerlink" href="#manual-testing" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Test with curl</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=Identify&quot;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=Identify"</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Format output nicely</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:4000/api/oai?verb=Identify&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xmllint<span class="w"> </span>--format<span class="w"> </span>-
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>curl<span class="w"> </span><span class="s2">"http://localhost:4000/api/oai?verb=Identify"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xmllint<span class="w"> </span>--format<span class="w"> </span>-
 </code></pre></div>
 <h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
 <p>Validate your implementation with the official OAI-PMH validator:</p>
@@ -5817,25 +5817,25 @@
 <h3 id="python-using-sickle">Python (using Sickle)<a class="headerlink" href="#python-using-sickle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sickle</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sickle</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">sickle</span> <span class="o">=</span> <span class="n">Sickle</span><span class="p">(</span><span class="s1">&#39;http://localhost:4000/api/oai&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">sickle</span> <span class="o">=</span> <span class="n">Sickle</span><span class="p">(</span><span class="s1">'http://localhost:4000/api/oai'</span><span class="p">)</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Get repository info</span>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">identify</span> <span class="o">=</span> <span class="n">sickle</span><span class="o">.</span><span class="n">Identify</span><span class="p">()</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">identify</span><span class="o">.</span><span class="n">repositoryName</span><span class="p">)</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Harvest all records</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">records</span> <span class="o">=</span> <span class="n">sickle</span><span class="o">.</span><span class="n">ListRecords</span><span class="p">(</span><span class="n">metadataPrefix</span><span class="o">=</span><span class="s1">&#39;oai_dc&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">records</span> <span class="o">=</span> <span class="n">sickle</span><span class="o">.</span><span class="n">ListRecords</span><span class="p">(</span><span class="n">metadataPrefix</span><span class="o">=</span><span class="s1">'oai_dc'</span><span class="p">)</span>
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 <a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="bash-script-incremental-harvest">Bash Script (Incremental Harvest)<a class="headerlink" href="#bash-script-incremental-harvest" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">BASE_URL</span><span class="o">=</span><span class="s2">&quot;http://localhost:4000/api/oai&quot;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">FROM_DATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;yesterday&quot;</span><span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">BASE_URL</span><span class="o">=</span><span class="s2">"http://localhost:4000/api/oai"</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">FROM_DATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">"yesterday"</span><span class="w"> </span>+<span class="s2">"%Y-%m-%dT%H:%M:%SZ"</span><span class="k">)</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE_URL</span><span class="si">}</span><span class="s2">?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;from=</span><span class="si">${</span><span class="nv">FROM_DATE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;harvest_</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.xml&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BASE_URL</span><span class="si">}</span><span class="s2">?verb=ListRecords&amp;metadataPrefix=oai_dc&amp;from=</span><span class="si">${</span><span class="nv">FROM_DATE</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">"harvest_</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.xml"</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="no-records-found">No Records Found<a class="headerlink" href="#no-records-found" title="Permanent link">&para;</a></h3>
@@ -5844,9 +5844,9 @@
 1. Ensure collections have <code>status = "published"</code>
 2. Verify items exist in published collections
 3. Check database:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">collections</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;published&#39;</span><span class="p">;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">collections</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'published'</span><span class="p">;</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">collection_id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">collections</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;published&#39;</span><span class="p">);</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">collections</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'published'</span><span class="p">);</span>
 </code></pre></div></p>
 <h3 id="invalid-date-format">Invalid Date Format<a class="headerlink" href="#invalid-date-format" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Error when using date filters</p>
