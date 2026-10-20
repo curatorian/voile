@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.54] - 2026-10-20
+
+### Fixed
+
+- **Audit field preservation in create/update_collection** — `create_collection/2` and `update_collection/3` no longer overwrite valid `created_by_id`/`updated_by_id` values from attrs when `user_id` argument is nil. Added `put_audit_field/3` helper that only applies explicit user_id when non-nil, preserving changeset values from attrs otherwise. Fixes integration bug where downstream callers (Atrium, CSV imports) passed audit fields in attrs but had them nullified by default nil user_id argument. Explicit user_id still overrides attrs (backward compatible). Added 5 tests covering all scenarios.
+
+- **Login IP capture for IPv6 and reverse proxies** — `log_in_user/3` now correctly captures client IP for IPv6 connections (previously recorded nil due to 4-tuple-only logic) and extracts real client IP from X-Forwarded-For/Forwarded headers when behind trusted reverse proxies. Added configurable trusted proxy ranges (Docker bridge, private networks, localhost) with header spoofing protection—headers only trusted from configured proxies. Uses `:inet.ntoa/1` for proper IPv4/IPv6 formatting, truncates to 45 chars. Added 5 tests: IPv4 direct, IPv6 direct, trusted proxy header extraction, untrusted header rejection, truncation.
+
+---
+
 ## [0.1.52] - 2026-10-20
 
 ### Fixed
