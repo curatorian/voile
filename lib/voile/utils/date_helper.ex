@@ -198,10 +198,6 @@ defmodule Voile.Utils.DateHelper do
 
   # Private helper functions
 
-  defp apply_format(dt, format) when is_binary(format) do
-    Calendar.strftime(dt, format)
-  end
-
   defp apply_format(dt, :indonesian) do
     day_name = get_indonesian_day_name(dt)
     month_name = get_indonesian_month_name(dt)
@@ -224,7 +220,7 @@ defmodule Voile.Utils.DateHelper do
     apply_format(dt, Atom.to_string(country_code))
   end
 
-  defp apply_format(dt, country_code) do
+  defp apply_format(dt, country_code) when is_binary(country_code) do
     case String.upcase(country_code) do
       "US" -> format_us(dt)
       "GB" -> format_gb(dt)
@@ -238,7 +234,13 @@ defmodule Voile.Utils.DateHelper do
       "AU" -> format_au(dt)
       "CA" -> format_ca(dt)
       "IN" -> format_in(dt)
-      _ -> DateTime.to_iso8601(dt)
+      # If it's not a country code, treat it as a strftime format
+      _ ->
+        if String.contains?(country_code, "%") do
+          Calendar.strftime(dt, country_code)
+        else
+          DateTime.to_iso8601(dt)
+        end
     end
   end
 

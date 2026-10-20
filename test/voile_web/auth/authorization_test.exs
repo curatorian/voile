@@ -89,7 +89,7 @@ defmodule VoileWeb.Auth.AuthorizationTest do
       user: user,
       read_permission: read_permission
     } do
-      yesterday = DateTime.utc_now() |> DateTime.add(-1, :day)
+      yesterday = DateTime.utc_now() |> DateTime.add(-1, :day) |> DateTime.truncate(:second)
 
       grant_direct_permission(user.id, read_permission.id, expires_at: yesterday)
 
@@ -263,14 +263,19 @@ defmodule VoileWeb.Auth.AuthorizationTest do
     Repo.insert!(%User{
       email: "test#{System.unique_integer()}@example.com",
       username: "user#{System.unique_integer()}",
-      hashed_password: Bcrypt.hash_pwd_salt("password123"),
-      confirmed_at: DateTime.utc_now()
+      hashed_password: Pbkdf2.hash_pwd_salt("password123"),
+      confirmed_at: DateTime.utc_now() |> DateTime.truncate(:second)
     })
   end
 
   defp insert_permission(name) do
+    # Split name like "collections.read" into resource and action
+    [resource, action] = String.split(name, ".", parts: 2)
+
     Repo.insert!(%Permission{
       name: name,
+      resource: resource,
+      action: action,
       description: "Test permission: #{name}"
     })
   end
@@ -293,7 +298,8 @@ defmodule VoileWeb.Auth.AuthorizationTest do
       scope_type: scope_type,
       scope_id: scope_id,
       granted: true,
-      expires_at: expires_at
+      expires_at: expires_at,
+      assigned_at: DateTime.utc_now() |> DateTime.truncate(:second)
     })
   end
 
@@ -306,7 +312,8 @@ defmodule VoileWeb.Auth.AuthorizationTest do
       permission_id: permission_id,
       scope_type: scope_type,
       scope_id: scope_id,
-      granted: false
+      granted: false,
+      assigned_at: DateTime.utc_now() |> DateTime.truncate(:second)
     })
   end
 
@@ -325,7 +332,8 @@ defmodule VoileWeb.Auth.AuthorizationTest do
       user_id: user_id,
       role_id: role_id,
       scope_type: scope_type,
-      scope_id: scope_id
+      scope_id: scope_id,
+      assigned_at: DateTime.utc_now() |> DateTime.truncate(:second)
     })
   end
 end

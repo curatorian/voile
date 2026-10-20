@@ -435,10 +435,10 @@ defmodule Voile.Schema.Library.CirculationTest do
       item = fine_fixture().item
       librarian = user_fixture()
 
-      # Make sure item is available and has a unit_id
+      # Item should already have unit_id from fixture, just make sure it's available
       item =
         Repo.get!(Item, item.id)
-        |> Ecto.Changeset.change(availability: "available", unit_id: 1)
+        |> Ecto.Changeset.change(availability: "available")
         |> Repo.update!()
 
       assert {:ok, transaction} =
