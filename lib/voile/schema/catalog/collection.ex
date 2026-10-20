@@ -63,7 +63,6 @@ defmodule Voile.Schema.Catalog.Collection do
   def changeset(collection, attrs) do
     collection
     |> cast(attrs, [
-      :id,
       :collection_code,
       :title,
       :description,
@@ -76,7 +75,9 @@ defmodule Voile.Schema.Catalog.Collection do
       :unit_id,
       :parent_id,
       :sort_order,
-      :collection_type
+      :collection_type,
+      :created_by_id,
+      :updated_by_id
     ])
     |> cast_assoc(:collection_fields, with: &CollectionField.changeset/2, required: false)
     |> cast_assoc(:items, with: &Item.changeset/2, required: false)

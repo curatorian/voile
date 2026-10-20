@@ -445,14 +445,17 @@ defmodule VoileWeb.Auth.Authorization do
         on: up.permission_id == p.id,
         where: up.user_id == ^user_id,
         where: p.name == ^permission_name,
-        where: up.scope_type == ^scope_type,
         where: is_nil(up.expires_at) or up.expires_at > ^DateTime.utc_now()
 
     query =
       if scope_id do
-        from [up, p] in query, where: up.scope_id == ^scope_id or up.scope_type == "global"
+        from [up, p] in query,
+          where:
+            up.scope_type == "global" or
+              (up.scope_type == ^scope_type and up.scope_id == ^scope_id)
       else
-        from [up, p] in query, where: is_nil(up.scope_id) or up.scope_type == "global"
+        from [up, p] in query,
+          where: up.scope_type == "global" or (up.scope_type == ^scope_type and is_nil(up.scope_id))
       end
 
     Repo.exists?(query)
@@ -467,17 +470,20 @@ defmodule VoileWeb.Auth.Authorization do
         on: up.permission_id == p.id,
         where: up.user_id == ^user_id,
         where: p.name == ^permission_name,
-        where: up.scope_type == ^scope_type,
         where: is_nil(up.expires_at) or up.expires_at > ^DateTime.utc_now(),
         select: up.granted,
-        order_by: [desc: up.inserted_at],
+        order_by: [desc: up.assigned_at],
         limit: 1
 
     query =
       if scope_id do
-        from [up, p] in query, where: up.scope_id == ^scope_id or up.scope_type == "global"
+        from [up, p] in query,
+          where:
+            up.scope_type == "global" or
+              (up.scope_type == ^scope_type and up.scope_id == ^scope_id)
       else
-        from [up, p] in query, where: is_nil(up.scope_id) or up.scope_type == "global"
+        from [up, p] in query,
+          where: up.scope_type == "global" or (up.scope_type == ^scope_type and is_nil(up.scope_id))
       end
 
     Repo.one(query) || false
