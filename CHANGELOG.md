@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.52] - 2026-10-20
+
+### Fixed
+
+- **oai_dc element restoration (round 3 of the OAI-PMH interop loop)** — the round-2 mapper rewrite left record payloads silent on several Dublin Core elements. Fixed:
+  - `dc:relation` — the parent collection link moved back to `dc:relation` (was relocated to `dc:source` in round 2). `dc:relation` was 10/10 in the 14-Okt pre-rework harvest and 0/50 in the 20-Okt round-2 harvest; collection linkage is a "reference to a related resource", so it belongs here. `dc:source` is emitted only when a genuine source-record field exists (`dcterms:source`, `foaf:homepage`, Kandaga GLAM `glam_institution` holdings).
+  - New field mappings for data that existed in `collection_fields` but was never mapped: `bibo:authorList`/`editorList`/`contributorList` (newline-separated person lists → `dc:contributor`, split per person, commas preserved for "Last, First" names), `bibo:translator`/`director` (→ `dc:contributor`), `bibo:translationOf` (→ `dc:relation`), and the Kandaga GLAM import family `glam_keywords` (→ `dc:subject`, comma-split), `glam_creator` (→ `dc:creator`), `glam_location` (→ `dc:coverage`), `glam_publication_date`/`glam_created_date` (→ `dc:date`), `glam_type` (→ `dc:type`), `glam_institution` (→ `dc:source`).
+  - `dc:subject`, `dc:description`, `dc:publisher`, `dc:date` (one per record), `dc:format`, `dc:language` and `dc:contributor` were verified against dev/prod data to already be emitted wherever data exists — the round-2 "dropped elements" harvest sample hit only collections with zero `collection_fields` rows (empty-element rule working as specified). Elements remain absent only for records with no underlying data; nothing renders empty placeholders or `NULL`.
+- GetRecord oai_dc spot-check on a freshly harvested gallery object now emits 11 of 15 elements (all the ones that record's fields support) and validates against the official OAI-PMH 2.0 schema set (archived `wrapper.xsd` composite).
+
+### Added
+
+- **Plugin localization (i18n)** — plugins can now localize their UI with just translation files: they ship standard Gettext `.po` files under `priv/gettext/<locale>/LC_MESSAGES/` in their own app plus a one-line backend module (`use Voile.Plugin.Gettext, otp_app: :<plugin_app>`). Voile discovers the backend by convention (`<PluginModule>.Gettext`) on plugin activation and reactivation, registers it in a lightweight `:persistent_term` registry, and keeps its locale in sync whenever the site locale switches; deactivating or uninstalling the plugin unregisters it. Locales are restricted to the site's supported set (`id`, `en`); a plugin proposing a new locale ships the `.po` files in its PR and the locale becomes live once added centrally to voile (`priv/gettext/` + `locale_name/1`/`locale_flag/1`). Because Gettext 1.0 stores locales per process, dashboard LiveViews now auto-attach the locale hook (`VoileWeb.live_view_dashboard` injects `on_mount`), and `PluginRouterLive` passes the resolved locale through `live_render` child sessions so nested plugin LiveViews render translated.
+
+---
+
 ## [0.1.51] - 2026-10-19
 
 ### Fixed
