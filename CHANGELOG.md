@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.55] - 2026-11-23
+
+### Added
+
+- **Usability tab in Circulation Report** — new "Usability/Pemanfaatan" tab on `/manage/glam/library/circulation/report` showing circulation usage rankings per node and year+month period (defaults to the current month): most loaned titles (grouped by collection), most active members (fullname + NPM/ID), and most frequent visitors (name + scanned ID). Backed by `Voile.get_usability_stats/2` (loan/visit aggregates with node + period scoping, top-50 per ranking, 5 rows per page with independent pagination per list), a shared node/year/month filter row extracted from the Overview tab, and summary cards (total loans, unique borrowers, library visits). All new UI strings are gettext-translated (id locale filled).
+
+- **Dashboard mobile navigation drawer** — the bottom-nav "More" button on `/manage/*` now opens a left slide-in drawer with the full navigation tree (same sections/children as the sidebar, collapsible groups, active highlighting) plus Front page, theme toggle, and locale switcher in its footer, instead of opening the search palette. New `voile_mobile_drawer` component + `DashboardMobileNav` hook; drawer closes on backdrop click, Esc, the close button, and after following any link.
+
+- **Digital Collections API (v1)** — new read-only endpoints for the Kandaga "Koleksi E-Book" integration: `GET /api/v1/digital-collections` (list/search/filter published collections that carry digital attachments — `search`, `unit_id`, `file_type` (default `document`), `access_level`, `page`/`limit`) and `GET /api/v1/digital-collections/:id` (full attachment list + metadata). Responses expose ACL-respecting relative paths only (`reader_url` → voile's e-book reader, `download_url` → the access-controlled download endpoint); raw storage URLs are never returned, drafts/embargoed files are excluded. Same token auth as the rest of `/api/v1`. Added 9 controller tests.
+
+### Fixed
+
+- **Command palette closes on outside click** — the backdrop-click handler compared the wrong dataset key (`rdCmdBackdrop` vs the actual `data-voile-cmd-backdrop`), so clicking outside the palette only closed via Esc. Backdrop clicks now close it. Also fixed the same wrong key in the search filter (`rdCmdSearch` → `voileCmdSearch`), and the palette's Navigation group is now generated from the full dashboard nav tree (~40 menu paths) instead of 5 hardcoded links.
+- **Collapsed sidebar no longer shows the clipped "Front page" text** — the bottom "Front page" link now uses the `voile-sidebar-label` class (hidden in the collapsed icon rail, tooltip remains), matching the other nav links.
+
+- **Silenced the `~~~` deprecation warning** — the trusted-proxy CIDR check in `UserAuth` now uses `Bitwise.bnot/1` instead of the deprecated `~~~` operator (identical semantics), so `mix compile` is warning-free.
+
+- **Swagger JSON no longer regenerated on every compile** — `[:phoenix_swagger]` was removed from the project `compilers` (it regenerated `priv/static/swagger.json` on every `mix compile` and `mix phx.server`, with no staleness tracking). Generate on demand with `mix phx.swagger.generate` — now also part of `mix setup` so fresh clones get the file for the dev SwaggerUI at `/api/swagger`.
+
+- **Dashboard greeting follows local clock** — the `/manage` greeting was computed from UTC hours, so it said "Good morning" at 16:31 WIB. It now uses Asia/Jakarta time with four buckets: morning ≤12:00, afternoon ≤15:00, evening ≤15:01–19:00, night 19:01–23:59 (id translations: pagi/siang/sore/malam). Also removed the decorative non-functional "G H" shortcut hint from the sidebar Home item (no chord handler ever implemented it).
+
+---
+
 ## [0.1.54] - 2026-10-20
 
 ### Fixed

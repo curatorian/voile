@@ -684,7 +684,7 @@ defmodule VoileWeb.UserAuth do
     # IPv4 check
     ip_int = a <<< 24 ||| b <<< 16 ||| c <<< 8 ||| d
     prefix_int = pa <<< 24 ||| pb <<< 16 ||| pc <<< 8 ||| pd
-    mask_int = ~~~0 <<< (32 - mask)
+    mask_int = bnot(0) <<< (32 - mask)
     (ip_int &&& mask_int) == (prefix_int &&& mask_int)
   end
 

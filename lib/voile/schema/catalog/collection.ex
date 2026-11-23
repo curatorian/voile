@@ -29,6 +29,10 @@ defmodule Voile.Schema.Catalog.Collection do
     field :items_count, :integer, virtual: true
     field :attachments_count, :integer, virtual: true
 
+    # Digital attachments (non-embargoed, file-type filtered) attached by the
+    # DigitalCollections API context functions.
+    field :digital_attachments, {:array, :map}, virtual: true, default: []
+
     belongs_to :parent, __MODULE__, type: :binary_id
     belongs_to :resource_class, ResourceClass, foreign_key: :type_id, type: :integer
     belongs_to :resource_template, ResourceTemplate, foreign_key: :template_id, type: :integer

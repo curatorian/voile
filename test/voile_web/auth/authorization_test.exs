@@ -257,6 +257,72 @@ defmodule VoileWeb.Auth.AuthorizationTest do
     end
   end
 
+  describe "disallowed_role_ids/2" do
+    test "super admin can manage all roles" do
+      admin = insert_user()
+      super_admin_role = get_or_insert_role("super_admin")
+      assign_role_to_user(admin.id, super_admin_role.id)
+
+      roles = [
+        super_admin_role,
+        get_or_insert_role("admin"),
+        get_or_insert_role("librarian"),
+        get_or_insert_role("viewer")
+      ]
+
+      assert Authorization.disallowed_role_ids(admin, roles) == []
+    end
+
+    test "admin cannot manage roles equal or higher than its own rank" do
+      admin = insert_user()
+      admin_role = get_or_insert_role("admin")
+      assign_role_to_user(admin.id, admin_role.id)
+
+      super_admin_role = get_or_insert_role("super_admin")
+      librarian_role = get_or_insert_role("librarian")
+      viewer_role = get_or_insert_role("viewer")
+      roles = [super_admin_role, admin_role, librarian_role, viewer_role]
+
+      disallowed = Authorization.disallowed_role_ids(admin, roles)
+
+      assert admin_role.id in disallowed
+      assert super_admin_role.id in disallowed
+      refute librarian_role.id in disallowed
+      refute viewer_role.id in disallowed
+    end
+
+    test "librarian cannot manage admin or super_admin roles" do
+      librarian = insert_user()
+      librarian_role = get_or_insert_role("librarian")
+      assign_role_to_user(librarian.id, librarian_role.id)
+
+      admin_role = get_or_insert_role("admin")
+      super_admin_role = get_or_insert_role("super_admin")
+      viewer_role = get_or_insert_role("viewer")
+      roles = [librarian_role, admin_role, super_admin_role, viewer_role]
+
+      disallowed = Authorization.disallowed_role_ids(librarian, roles)
+
+      assert librarian_role.id in disallowed
+      assert admin_role.id in disallowed
+      assert super_admin_role.id in disallowed
+      refute viewer_role.id in disallowed
+    end
+
+    test "user without roles cannot manage any ranked role" do
+      user = insert_user()
+
+      roles = [
+        %{id: Ecto.UUID.generate(), name: "super_admin"},
+        %{id: Ecto.UUID.generate(), name: "viewer"}
+      ]
+
+      disallowed = Authorization.disallowed_role_ids(user, roles)
+
+      assert Enum.all?(roles, &(&1.id in disallowed))
+    end
+  end
+
   # Helper functions
 
   defp insert_user do
@@ -285,6 +351,20 @@ defmodule VoileWeb.Auth.AuthorizationTest do
       name: name,
       description: "Test role: #{name}"
     })
+  end
+
+  defp get_or_insert_role(name) do
+    case Repo.get_by(Role, name: name) do
+      nil ->
+        try do
+          insert_role(name)
+        rescue
+          Ecto.ConstraintError -> Repo.get_by!(Role, name: name)
+        end
+
+      role ->
+        role
+    end
   end
 
   defp grant_direct_permission(user_id, permission_id, opts \\ []) do

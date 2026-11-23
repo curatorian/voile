@@ -222,18 +222,42 @@ defmodule Voile.Utils.DateHelper do
 
   defp apply_format(dt, country_code) when is_binary(country_code) do
     case String.upcase(country_code) do
-      "US" -> format_us(dt)
-      "GB" -> format_gb(dt)
-      "DE" -> format_de(dt)
-      "FR" -> format_fr(dt)
-      "JP" -> format_jp(dt)
-      "CN" -> format_cn(dt)
-      "KR" -> format_kr(dt)
-      "ID" -> format_id(dt)
-      "BR" -> format_br(dt)
-      "AU" -> format_au(dt)
-      "CA" -> format_ca(dt)
-      "IN" -> format_in(dt)
+      "US" ->
+        format_us(dt)
+
+      "GB" ->
+        format_gb(dt)
+
+      "DE" ->
+        format_de(dt)
+
+      "FR" ->
+        format_fr(dt)
+
+      "JP" ->
+        format_jp(dt)
+
+      "CN" ->
+        format_cn(dt)
+
+      "KR" ->
+        format_kr(dt)
+
+      "ID" ->
+        format_id(dt)
+
+      "BR" ->
+        format_br(dt)
+
+      "AU" ->
+        format_au(dt)
+
+      "CA" ->
+        format_ca(dt)
+
+      "IN" ->
+        format_in(dt)
+
       # If it's not a country code, treat it as a strftime format
       _ ->
         if String.contains?(country_code, "%") do

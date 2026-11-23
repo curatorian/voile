@@ -3101,4 +3101,205 @@ defmodule Voile.Schema.Catalog do
         changeset
     end
   end
+
+  # ===========================================================================
+  # DIGITAL COLLECTIONS - collections that carry readable digital files
+  # (attachments) for the public DigitalCollections API. A collection counts as
+  # digital when it has at least one non-embargoed "collection" attachment.
+  # "document" file types (PDFs etc.) are the default interest; the file_type
+  # filter can be overridden or disabled with "all".
+  # ===========================================================================
+
+  @digital_default_file_type "document"
+  @digital_collection_attachable_type "collection"
+
+  @doc """
+  Lists published collections that carry digital attachments, paginated.
+
+  A collection is "digital" when it has at least one non-embargoed attachment
+  with `attachable_type == "collection"` matching the file-type filter
+  (default: documents — PDFs and similar; `file_type: "all"` disables it).
+
+  Supported filters:
+
+    - `:search` — ilike match on title, collection_code, creator name
+    - `:unit_id` — organizing node (faculty)
+    - `:file_type` — attachment file_type ("document" by default, "all" disables)
+    - `:access_level` — attachment access level ("public", "limited", "restricted")
+
+  Returns `{collections, total_pages, total_count}`. Each collection is
+  preloaded with `:digital_attachments` (the matching, ordered attachments).
+  """
+  def list_digital_collections_paginated(page \\ 1, per_page \\ 10, search \\ nil, filters \\ %{}) do
+    offset = (page - 1) * per_page
+
+    # Shared base (filters + search) so the count matches the listed rows.
+    base =
+      digital_collections_query(filters)
+      |> digital_collections_search(search)
+
+    collections =
+      base
+      |> order_by([c], desc: c.inserted_at, desc: c.id)
+      |> limit(^per_page)
+      |> offset(^offset)
+      |> preload([:resource_class, :mst_creator, :node])
+      |> Repo.all()
+      |> attach_digital_attachments(filters)
+
+    total_count =
+      base
+      |> select([c], count(c.id, :distinct))
+      |> Repo.one() || 0
+
+    total_pages = max(ceil(total_count / per_page), 1)
+
+    {collections, total_pages, total_count}
+  end
+
+  @doc """
+  Returns a single published digital collection with its digital attachments
+  and metadata, or nil when the collection does not exist, is not published,
+  or carries no digital attachments matching the default file-type filter.
+  """
+  def get_digital_collection(id) when is_binary(id) do
+    filters = %{file_type: @digital_default_file_type}
+
+    from(c in Collection,
+      as: :collection,
+      where: c.id == ^id and c.status == "published",
+      distinct: true,
+      limit: 1
+    )
+    |> digital_collections_join(filters)
+    |> preload([
+      :resource_class,
+      :mst_creator,
+      :node,
+      collection_fields: [metadata_properties: :vocabulary]
+    ])
+    |> Repo.one()
+    |> case do
+      nil ->
+        nil
+
+      %Collection{} = collection ->
+        [with_attachments] = attach_digital_attachments([collection], filters)
+        with_attachments
+    end
+  end
+
+  # Base query for digital collections: published collections joined to their
+  # digital attachments. The join doubles as the existence check.
+  defp digital_collections_query(filters) do
+    from(c in Collection, as: :collection, where: c.status == "published", distinct: true)
+    |> apply_digital_unit_filter(filters)
+    |> digital_collections_join(filters)
+  end
+
+  defp apply_digital_unit_filter(query, filters) do
+    case parse_int_filter(filters[:unit_id]) do
+      nil -> query
+      unit_id -> where(query, [collection: c], c.unit_id == ^unit_id)
+    end
+  end
+
+  defp parse_int_filter(nil), do: nil
+  defp parse_int_filter(value) when is_integer(value), do: value
+
+  defp parse_int_filter(value) when is_binary(value) do
+    case Integer.parse(value) do
+      {parsed, ""} -> parsed
+      _ -> nil
+    end
+  end
+
+  defp parse_int_filter(_), do: nil
+
+  # Inner join on the collection's non-embargoed digital attachments. The join
+  # conditions double as the "is this collection digital?" existence check.
+  defp digital_collections_join(query, filters) do
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    on_condition =
+      dynamic(
+        [collection: c, attachment: a],
+        a.attachable_id == c.id and ^digital_attachment_conditions(filters, now)
+      )
+
+    join(query, :inner, [c], a in Attachment, on: ^on_condition, as: :attachment)
+  end
+
+  # Conditions applied to the attachment side of the digital-collections query.
+  # Uses a named binding so the same dynamic composes in both the collection
+  # join and the batched attachment fetch.
+  defp digital_attachment_conditions(filters, now) do
+    conditions =
+      dynamic(
+        [attachment: a],
+        a.attachable_type == ^@digital_collection_attachable_type and
+          (is_nil(a.embargo_start_date) or a.embargo_start_date <= ^now) and
+          (is_nil(a.embargo_end_date) or a.embargo_end_date >= ^now)
+      )
+
+    conditions =
+      case digital_file_type(filters) do
+        nil -> conditions
+        file_type -> dynamic([attachment: a], ^conditions and a.file_type == ^file_type)
+      end
+
+    case filters[:access_level] do
+      level when is_binary(level) and level != "" and level != "all" ->
+        dynamic([attachment: a], ^conditions and a.access_level == ^level)
+
+      _ ->
+        conditions
+    end
+  end
+
+  defp digital_file_type(filters) do
+    case filters[:file_type] do
+      "all" -> nil
+      type when is_binary(type) and type != "" -> type
+      _ -> @digital_default_file_type
+    end
+  end
+
+  defp digital_collections_search(query, search) when is_binary(search) and search != "" do
+    pattern = "%#{search}%"
+
+    # NOTE: no `distinct` here — the base query already sets it and Ecto
+    # rejects a second distinct expression.
+    from [c, a] in query,
+      left_join: cr in assoc(c, :mst_creator),
+      where:
+        ilike(c.title, ^pattern) or
+          ilike(c.collection_code, ^pattern) or
+          ilike(fragment("COALESCE(?, '')", cr.creator_name), ^pattern)
+  end
+
+  defp digital_collections_search(query, _), do: query
+
+  # Attaches the matching digital attachments to each collection in one batched
+  # query (no N+1), ordered primary-first then by sort_order.
+  defp attach_digital_attachments(collections, _filters) when collections == [], do: collections
+
+  defp attach_digital_attachments(collections, filters) do
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    attachments_by_collection =
+      from(a in Attachment, as: :attachment)
+      # NOTE: the `in` filter and the pinned dynamic must stay in separate
+      # `where` calls — Ecto cannot merge `x in ^ids and ^dynamic` in one go.
+      |> where([attachment: a], a.attachable_id in ^Enum.map(collections, & &1.id))
+      |> where([attachment: a], ^digital_attachment_conditions(filters, now))
+      |> order_by([attachment: a], desc: a.is_primary, asc: a.sort_order, asc: a.inserted_at)
+      |> Repo.all()
+      |> Enum.group_by(& &1.attachable_id)
+
+    Enum.map(collections, fn collection ->
+      attachments = Map.get(attachments_by_collection, collection.id, [])
+      Map.put(collection, :digital_attachments, attachments)
+    end)
+  end
 end

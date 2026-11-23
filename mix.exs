@@ -1,7 +1,7 @@
 defmodule Voile.MixProject do
   use Mix.Project
 
-  @version "0.1.54"
+  @version "0.1.55"
   @source_url "https://github.com/curatorian/voile"
 
   def project do
@@ -13,7 +13,7 @@ defmodule Voile.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      compilers: [:phoenix_live_view] ++ Mix.compilers() ++ [:phoenix_swagger],
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
       name: "Voile",
       description: description(),
@@ -148,7 +148,13 @@ defmodule Voile.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      setup: [
+        "deps.get",
+        "ecto.setup",
+        "assets.setup",
+        "assets.build",
+        "phx.swagger.generate"
+      ],
       "ecto.setup": [
         "ecto.create",
         "ecto.migrate",
